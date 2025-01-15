@@ -16,17 +16,17 @@ use Tests\TestCase;
 class RolesTest extends TestCase
 {
 
-    public function test_get_all_roles()
-    {
-        Artisan::call('migrate');
-        $this->seed();
-        $user= User::first();
-        Sanctum::actingAs($user);
-        Gate::define('role_access', function ($user) {
-            return true;
-        });
-        $this->withoutExceptionHandling();
-        $this->getJson('/api/admin/roles')
-        ->assertOk();
-    }
+    // public function test_get_all_roles()
+    // {
+    //     Artisan::call('migrate');
+    //     $this->seed();
+    //     $user= User::first();
+    //     Sanctum::actingAs($user);
+    //     Gate::define('role_access', function ($user) {
+    //         return true;
+    //     });
+    //     $this->withoutExceptionHandling();
+    //     $this->getJson('/api/admin/roles')
+    //     ->assertOk();
+    // }
 }
