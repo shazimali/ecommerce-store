@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
+use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Middleware\ApiJsonResponseMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -10,23 +11,32 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 //Admin
-Route::prefix('admin')->group(function(){
-    
+Route::prefix('admin')->group(function () {
+
     //Auth
-    Route::prefix('auth')->group(function(){
-        Route::post('/token',[AuthController::class,'token']);
+    Route::prefix('auth')->group(function () {
+        Route::post('/token', [AuthController::class, 'token']);
     });
-    Route::middleware(['auth:sanctum',ApiJsonResponseMiddleware::class])->group(function () {
+    Route::middleware(['auth:sanctum', ApiJsonResponseMiddleware::class])->group(function () {
+
         //Roles
         Route::prefix('/roles')->group(function () {
-            Route::get('/',[RolesController::class, 'index']);
-            Route::get('/create',[RolesController::class, 'create']);
-            Route::post('/store',[RolesController::class, 'store']);
-            Route::get('/edit/{id}',[RolesController::class, 'edit']);
-            Route::put('/update/{id}',[RolesController::class, 'update']);
-            Route::delete('/delete/{id}',[RolesController::class, 'destroy']);
+            Route::get('/', [RolesController::class, 'index']);
+            Route::get('/get-all-permission', [RolesController::class, 'getAllPermission']);
+            Route::post('/store', [RolesController::class, 'store']);
+            Route::get('/edit/{id}', [RolesController::class, 'edit']);
+            Route::put('/update/{id}', [RolesController::class, 'update']);
+            Route::delete('/delete/{id}', [RolesController::class, 'destroy']);
+        });
+
+        //Roles
+        Route::prefix('/users')->group(function () {
+            Route::get('/', [UsersController::class, 'index']);
+            Route::get('/get-all-roles', [UsersController::class, 'getAllRoles']);
+            Route::post('/store', [UsersController::class, 'store']);
+            Route::get('/edit/{id}', [UsersController::class, 'edit']);
+            Route::put('/update/{id}', [UsersController::class, 'update']);
+            Route::delete('/delete/{id}', [UsersController::class, 'destroy']);
         });
     });
-
-
 });
