@@ -23,11 +23,11 @@ class RolesController extends Controller
         return  $this->rolesService->getAll($request);
     }
 
-    public function create()
+    public function getAllPermission()
     {
         $this->authorize('role_create');
 
-        return  $this->rolesService->create();
+        return  $this->rolesService->getAllPermissions();
     }
     public function store(StoreRoleRequest $request)
     {
