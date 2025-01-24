@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AuthController;
+use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Middleware\ApiJsonResponseMiddleware;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -37,6 +39,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [UsersController::class, 'edit']);
             Route::put('/update/{id}', [UsersController::class, 'update']);
             Route::delete('/delete/{id}', [UsersController::class, 'destroy']);
+        });
+
+        //Permissions
+        Route::prefix('/permissions')->group(function () {
+            Route::get('/', [PermissionsController::class, 'index']);
+            Route::post('/store', [PermissionsController::class, 'store']);
+            Route::get('/edit/{id}', [PermissionsController::class, 'edit']);
+            Route::put('/update/{id}', [PermissionsController::class, 'update']);
+            Route::delete('/delete/{id}', [PermissionsController::class,'destroy']);
         });
     });
 });

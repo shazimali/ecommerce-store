@@ -15,7 +15,7 @@ class UserRoleSeeder extends Seeder
     public function run(): void
     {
         $user =  User::first();
-        $role =  Role::first();
+        $role =  Role::first(); 
         $user->roles()->sync([$role->id]);
     }
 }
