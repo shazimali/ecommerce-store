@@ -17,10 +17,11 @@ class AuthController extends Controller
     }
     public function token(TokenRequest $request)
     {
-       return $this->authService->getAuthToken($request);
+        return $this->authService->getAuthToken($request);
     }
 
-    public function register(){
-
+    public function logout(int $id)
+    {
+        return $this->authService->logOut($id);
     }
 }

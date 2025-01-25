@@ -23,8 +23,8 @@ class StoreUserRequest extends JsonFormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|unique:users,email',
-            'password' => 'required|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
             'roles'    => [
                 'required',
                 'array',
