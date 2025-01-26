@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\API\Admin\Users;
+namespace App\Http\Requests\API\Admin\Websites;
 
-use App\Http\Requests\JsonFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends JsonFormRequest
+class StoreWebsiteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,13 +22,7 @@ class StoreUserRequest extends JsonFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-            'roles'    => [
-                'required',
-                'array',
-            ],
+            //
         ];
     }
 }
