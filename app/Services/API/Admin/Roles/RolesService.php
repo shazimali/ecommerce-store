@@ -24,7 +24,7 @@ class RolesService implements RolesInterface
             $role = Role::with('permissions')->where('name', 'like', "%{$request->search}%")->paginate($request->item_per_page);
         }
         if ($roles) {
-            return  RoleListResource::collection(Role::with('permissions')->get());
+            return  RoleListResource::collection(Role::paginate($request->item_per_page));
         }
         return response()->json(['message' => 'No roles found'], 200);
     }
