@@ -37,14 +37,19 @@ class PermissionsService implements PermissionsInterface
     {
         $permission = Permission::find($id);
         if ($permission) {
-            return  response()->json([
-                'message' => 'Permission Fetch Successfully',
-                'data' => [
-                    'name' => $permission->name,
-                    'key' => $permission->key
+            // make a resource which name should be PermissionEditResource     id, name, key
+            // return new RoleEditResource($permission);
 
-                ]
-            ]);
+            //ROME This code 
+
+            // return  response()->json([
+            //     'message' => 'Permission Fetch Successfully',
+            //     'data' => [
+            //         'name' => $permission->name,
+            //         'key' => $permission->key
+
+            //     ]
+            // ]);
         } else {
             return response()->json(['message' => 'Permission not found'], 404);
         }
