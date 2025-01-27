@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AuthController;
+use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
@@ -59,6 +60,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [WebsitesController::class, 'edit']);
             Route::put('/update/{id}', [WebsitesController::class, 'update']);
             Route::delete('/delete/{id}', [WebsitesController::class, 'destroy']);
+        });
+
+        //Categories
+        Route::prefix('/categories')->group(function () {
+            Route::get('/', [CategoryController::class, 'index']);
+            Route::get('/get-all-categories', [CategoryController::class, 'getAllCategories']);
+            Route::post('/store', [CategoryController::class, 'store']);
+            Route::get('/edit/{id}', [CategoryController::class, 'edit']);
+            Route::put('/update/{id}', [CategoryController::class, 'update']);
+            Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
         });
     });
 });
