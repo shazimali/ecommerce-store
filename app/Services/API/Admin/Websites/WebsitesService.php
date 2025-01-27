@@ -30,7 +30,7 @@ class WebsitesService implements WebsitesInterface
         if ($websites) {
             return response()->json(['message' => 'Website Stored Successfully'], 200);
         } else {
-            return response()->json(['message' => 'Website Not found'], 500);
+            return response()->json(['message' => 'Website Not found'], 201);
         }
     }
     public function edit(int $id)
@@ -39,7 +39,7 @@ class WebsitesService implements WebsitesInterface
         if ($websites) {
             return new WebsiteEditResource($websites);
         } else {
-            return response()->json(['message' => 'Data does not exist'], 500);
+            return response()->json(['message' => 'Data does not exist'], 201);
         }
     }
     public function update(UpdateWebsiteRequest $request, int $id)
@@ -74,7 +74,7 @@ class WebsitesService implements WebsitesInterface
             $websites->delete();
             return response()->json(['message' => 'Website delete Successfully'], 200);
         } else {
-            return response()->json(['message' => 'Website not exist'], 404);
+            return response()->json(['message' => 'Website not exist'], 201);
         }
     }
 }
