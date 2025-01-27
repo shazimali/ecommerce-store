@@ -11,7 +11,7 @@ class UpdateWebsiteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,24 @@ class UpdateWebsiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title'     => [
+                'required',
+                'unique:websites,title',
+
+            ],
+            'domain'    => [
+                'required',
+                'unique:websites,domain',
+            ],
+            'phone' => [
+                'required',
+            ],
+            'status' => [
+                'required',
+            ],
+            'order' => [
+                'required',
+            ],
         ];
     }
 }

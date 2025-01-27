@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
+use App\Http\Controllers\API\Admin\Websites\WebsitesController;
 use App\Http\Middleware\ApiJsonResponseMiddleware;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +49,16 @@ Route::prefix('admin')->group(function () {
             Route::post('/store', [PermissionsController::class, 'store']);
             Route::get('/edit/{id}', [PermissionsController::class, 'edit']);
             Route::put('/update/{id}', [PermissionsController::class, 'update']);
-            Route::delete('/delete/{id}', [PermissionsController::class,'destroy']);
+            Route::delete('/delete/{id}', [PermissionsController::class, 'destroy']);
+        });
+
+        //Websites
+        Route::prefix('/websites')->group(function () {
+            Route::get('/', [WebsitesController::class, 'index']);
+            Route::post('/store', [WebsitesController::class, 'store']);
+            Route::get('/edit/{id}', [WebsitesController::class, 'edit']);
+            Route::put('/update/{id}', [WebsitesController::class, 'update']);
+            Route::delete('/delete/{id}', [WebsitesController::class, 'destroy']);
         });
     });
 });

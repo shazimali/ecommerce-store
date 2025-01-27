@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests\API\Admin\Websites;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\JsonFormRequest;
 
-class StoreWebsiteRequest extends FormRequest
+
+class StoreWebsiteRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,25 @@ class StoreWebsiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title'     => [
+                'required',
+                'unique:websites,title',
+
+            ],
+            'domain'    => [
+                'required',
+                'unique:websites,domain',
+            ],
+            'phone' => [
+                'required',
+            ],
+            'status' => [
+                'required',
+            ],
+            'order' => [
+                'required',
+            ],
+
         ];
     }
 }

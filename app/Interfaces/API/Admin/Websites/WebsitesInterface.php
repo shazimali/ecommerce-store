@@ -1,8 +1,11 @@
 <?php
 
+namespace App\Interfaces\API\Admin\Websites;
+
 use App\Http\Requests\API\Admin\Websites\StoreWebsiteRequest;
 use App\Http\Requests\API\Admin\Websites\UpdateWebsiteRequest;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
+
 
 interface WebsitesInterface
 {

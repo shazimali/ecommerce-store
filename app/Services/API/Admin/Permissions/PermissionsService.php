@@ -4,20 +4,23 @@ namespace App\Services\API\Admin\Permissions;
 
 use App\Http\Requests\API\Admin\Permissions\StorePermissionRequest;
 use App\Http\Requests\API\Admin\Permissions\UpdatePermissionRequest;
+use App\Http\Resources\API\Admin\Permissions\PermissionEditResource;
 use App\Http\Resources\API\Admin\Permissions\PermissionListResource;
 use App\Interfaces\API\Admin\Permissions\PermissionsInterface;
 use App\Models\Permission;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 
 class PermissionsService implements PermissionsInterface
 {
-    public function getAllPermissions()
+    public function getAllPermissions(Request $request)
     {
-        $permission = Permission::all();
+        $itemsPerPge = $request->get('items_per_page', 10);
+        $permission = Permission::paginate($itemsPerPge);
         if ($permission) {
-            return PermissionListResource::collection(Permission::all());
+            return PermissionListResource::collection($permission);
         }
         return response()->json(['message' => 'No permissions found'], 200);
     }
@@ -37,19 +40,7 @@ class PermissionsService implements PermissionsInterface
     {
         $permission = Permission::find($id);
         if ($permission) {
-            // make a resource which name should be PermissionEditResource     id, name, key
-            // return new RoleEditResource($permission);
-
-            //ROME This code 
-
-            // return  response()->json([
-            //     'message' => 'Permission Fetch Successfully',
-            //     'data' => [
-            //         'name' => $permission->name,
-            //         'key' => $permission->key
-
-            //     ]
-            // ]);
+            return new PermissionEditResource($permission);
         } else {
             return response()->json(['message' => 'Permission not found'], 404);
         }

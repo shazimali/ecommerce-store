@@ -17,10 +17,10 @@ class PermissionsController extends Controller
         $this->permissionsService = $permissionsService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
 
-        return $this->permissionsService->getAllPermissions();
+        return $this->permissionsService->getAllPermissions($request);
     }
 
     public function store(StorePermissionRequest $request)
