@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
+use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Controllers\API\Admin\Websites\WebsitesController;
 use App\Http\Middleware\ApiJsonResponseMiddleware;
@@ -65,11 +66,21 @@ Route::prefix('admin')->group(function () {
         //Categories
         Route::prefix('/categories')->group(function () {
             Route::get('/', [CategoryController::class, 'index']);
-            Route::get('/get-all-categories', [CategoryController::class, 'getAllCategories']);
+            Route::get('/get-all-countries', [CategoryController::class, 'getAllCountries']);
             Route::post('/store', [CategoryController::class, 'store']);
             Route::get('/edit/{id}', [CategoryController::class, 'edit']);
             Route::put('/update/{id}', [CategoryController::class, 'update']);
             Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
+        });
+
+        //SubCategories
+        Route::prefix('/subcategories')->group(function () {
+            Route::get('/', [subCategoryController::class, 'index']);
+            Route::get('/get-all-categories' ,[subCategoryController::class,'getAllCategories']);
+            Route::post('/store', [subCategoryController::class, 'store']);
+            Route::get('/edit/{id}' ,[subCategoryController::class,'edit']);
+            Route::put('/update/{id}', [subCategoryController::class,'update']);
+            Route::delete('/delete/{id}', [subCategoryController::class,'destroy']);
         });
     });
 });

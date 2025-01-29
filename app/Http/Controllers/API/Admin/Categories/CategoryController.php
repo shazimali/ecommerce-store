@@ -23,7 +23,7 @@ class CategoryController extends Controller
         return $this->categoryService->getAll($request);
     }
 
-    public function getAllCategories()
+    public function getAllCountries()
     {
         return $this->categoryService->getAllCountries();
     }
