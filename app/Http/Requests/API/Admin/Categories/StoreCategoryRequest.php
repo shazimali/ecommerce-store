@@ -25,6 +25,7 @@ class StoreCategoryRequest extends  JsonFormRequest
         return [
             'title' => 'required|unique:categories,title',
             'slug' => 'required|unique:categories,slug',
+            'countries' => 'required|array'
         ];
     }
 }

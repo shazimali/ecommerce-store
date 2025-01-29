@@ -18,14 +18,26 @@ class CategoryService implements CategoryInterface
 {
     public function getAll(Request $request)
     {
-        $categories = Category::with('countries')->paginate($request->item_per_page);
-        if ($request->search) {
-            $categories = Category::with('countries')->where('id', 'like', "%{$request->search}%")->paginate($request->item_per_page);
-        }
-        if ($categories) {
-            return CategoryListResource::collection(Category::paginate($request->item_per_page));
-        }
-        return response()->json(['message' => 'No Categories found'], 200);
+        $search = $request->search;
+        $country_id = $request->country_id;
+
+        $query = Category::query();
+
+        $query->when($search, function ($q) use ($search) {
+            return $q->where('title', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%");
+        });
+
+        $query->when($country_id, function ($q) use ($country_id) {
+            return $q->whereHas('countries', function ($inner_q) use ($country_id) {
+                return $inner_q->where('id', $country_id);
+            });
+        });
+
+        return response()->json([
+            'categories' => CategoryListResource::collection($query->paginate($request->item_per_page)),
+            'countries' => Country::all()
+        ]);
     }
 
     public function getAllCountries()
@@ -41,8 +53,8 @@ class CategoryService implements CategoryInterface
     {
         DB::beginTransaction();
         try {
-            $categories = Category::create($request->except('countries'));
-            $categories->countries()->sync($request->countries);
+            $category = Category::create($request->except('countries'));
+            $category->countries()->attach($request->countries);
             DB::commit();
             return response()->json(['message' => 'Categories Stored Successfully'], 200);
         } catch (\Throwable $th) {
