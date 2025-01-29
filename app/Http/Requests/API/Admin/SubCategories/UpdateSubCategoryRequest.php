@@ -22,9 +22,10 @@ class UpdateSubCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|unique:sub_categories,title',
-            'slug' => 'required|unique:sub_categories,slug',
-            
+            'title' => 'required|unique:sub_categories,title,' . $this->id,
+            'slug' => 'required|unique:sub_categories,slug,' . $this->id,
+            'categories' => 'required|array'
+
         ];
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class SubCategory extends Model
 {
 
-    protected $fillable = ['title', 'slug', 'image', 'order', 'created_at', 'updated_at'];
+    protected $fillable = ['title', 'slug', 'image', 'order', 'categories', 'created_at', 'updated_at'];
 
     public function categories(): BelongsToMany
     {

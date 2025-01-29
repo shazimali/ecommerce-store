@@ -17,12 +17,26 @@ class subCategoryService implements subCategoryInterface
 {
     public function getAll(Request $request)
     {
-        $itemsPerPge = $request->get('items_per_page', 10);
-        $subCategory = SubCategory::paginate($itemsPerPge);
-        if ($subCategory) {
-            return SubCategoryListResource::collection($subCategory);
-        }
-        return response()->json(['message' => 'No SubCategory found'], 200);
+        $search = $request->search;
+        $category_id = $request->category_id;
+
+        $query = SubCategory::query();
+
+        $query->when($search, function ($q) use ($search) {
+            return $q->where('title', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%");
+        });
+
+        $query->when($category_id, function ($q) use ($category_id) {
+            return $q->whereHas('categories', function ($inner_q) use ($category_id) {
+                return $inner_q->where('id', $category_id);
+            });
+        });
+
+        return response()->json([
+            'sub_categories' => SubCategoryListResource::collection($query->paginate($request->item_per_page)),
+            'categories' =>  Category::all()
+        ], 200);
     }
 
     public function getAllCategories()
@@ -36,20 +50,14 @@ class subCategoryService implements subCategoryInterface
 
     public function store(StoreSubCategoryRequest $request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
-            $subCategory = SubCategory::create($request->all());
-
-            // $subCategory->categories()->attach($request->categories);
+            $subCategory = SubCategory::create($request->except('categories'));
+            $subCategory->categories()->sync($request->categories);
+            DB::commit();
             return response()->json(['message' => 'SubCategory Stored Successfully'], 200);
-
-            // if ($subCategory) {
-
-            //     return response()->json(['message' => 'SubCategory Stored Successfully'], 200);
-            //     DB::commit();
-            // }
         } catch (\Throwable $th) {
-            // DB::rollBack();
+            DB::rollBack();
             return response()->json($th->getMessage(), 201);
         }
     }
@@ -75,7 +83,7 @@ class subCategoryService implements subCategoryInterface
                 'order' => $request->order,
             ];
             $subCategory->update($data);
-            // $subCategory->categories()->sync($request->countries);
+            $subCategory->categories()->sync($request->countries);
             return response()->json(['message' => 'SubCategory Updated Successfully'], 200);
         } else {
             return response()->json(['message' => 'SubCategory not updated'], 201);

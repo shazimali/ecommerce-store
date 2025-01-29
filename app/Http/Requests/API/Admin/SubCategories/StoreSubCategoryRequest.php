@@ -25,7 +25,7 @@ class StoreSubCategoryRequest extends JsonFormRequest
         return [
             'title' => 'required|unique:sub_categories,title',
             'slug' => 'required|unique:sub_categories,slug',
-
+            'categories' => 'required|array'
 
         ];
     }
