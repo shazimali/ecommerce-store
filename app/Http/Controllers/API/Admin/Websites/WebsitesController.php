@@ -19,26 +19,31 @@ class WebsitesController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('website_access');
         return $this->websiteService->getAll($request);
     }
 
     public function store(StoreWebsiteRequest $request)
     {
+        $this->authorize('website_create');
         return $this->websiteService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('website_edit');
         return $this->websiteService->edit($id);
     }
 
     public function update(UpdateWebsiteRequest $request, int $id)
     {
+        $this->authorize('website_edit');
         return $this->websiteService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('website_delete');
         return $this->websiteService->destroy($id);
     }
 }

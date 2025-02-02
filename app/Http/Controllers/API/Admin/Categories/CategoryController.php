@@ -19,32 +19,37 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-
+        $this->authorize('category_access');
         return $this->categoryService->getAll($request);
     }
 
     public function getAllCountries()
     {
+        $this->authorize('category_create');
         return $this->categoryService->getAllCountries();
     }
 
     public function store(StoreCategoryRequest $request)
     {
+        $this->authorize('category_create');
         return $this->categoryService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('category_edit');
         return $this->categoryService->edit($id);
     }
 
     public function update(UpdateCategoryRequest $request, int $id)
     {
+        $this->authorize('category_edit');
         return $this->categoryService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('category_delete');
         return $this->categoryService->destroy($id);
     }
 }

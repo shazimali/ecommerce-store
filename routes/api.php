@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
+use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
@@ -76,11 +77,20 @@ Route::prefix('admin')->group(function () {
         //SubCategories
         Route::prefix('/subcategories')->group(function () {
             Route::get('/', [subCategoryController::class, 'index']);
-            Route::get('/get-all-categories' ,[subCategoryController::class,'getAllCategories']);
+            Route::get('/get-all-categories', [subCategoryController::class, 'getAllCategories']);
             Route::post('/store', [subCategoryController::class, 'store']);
-            Route::get('/edit/{id}' ,[subCategoryController::class,'edit']);
-            Route::put('/update/{id}', [subCategoryController::class,'update']);
-            Route::delete('/delete/{id}', [subCategoryController::class,'destroy']);
+            Route::get('/edit/{id}', [subCategoryController::class, 'edit']);
+            Route::put('/update/{id}', [subCategoryController::class, 'update']);
+            Route::delete('/delete/{id}', [subCategoryController::class, 'destroy']);
+        });
+
+        //Products
+        Route::prefix('/products')->group(function () {
+            Route::get('/', [ProductController::class, 'index']);
+            Route::post('/store', [ProductController::class, 'store']);
+            Route::get('/edit/{id}', [ProductController::class, 'edit']);
+            Route::put('/update/{id}', [ProductController::class, 'update']);
+            Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
         });
     });
 });

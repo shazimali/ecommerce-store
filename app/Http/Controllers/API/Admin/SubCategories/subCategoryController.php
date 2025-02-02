@@ -19,31 +19,37 @@ class subCategoryController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('subcategory_access');
         return $this->subCategoryService->getAll($request);
     }
 
     public function getAllCategories()
     {
+        $this->authorize('subcategory_create');
         return $this->subCategoryService->getAllCategories();
     }
 
     public function store(StoreSubCategoryRequest $request)
     {
+        $this->authorize('subcategory_create');
         return $this->subCategoryService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('subcategory_edit');
         return $this->subCategoryService->edit($id);
     }
 
     public function update(UpdateSubCategoryRequest $request, int $id)
     {
+        $this->authorize('subcategory_edit');
         return $this->subCategoryService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('subcategory_delete');
         return $this->subCategoryService->destroy($id);
     }
 }
