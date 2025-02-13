@@ -21,10 +21,10 @@ class RolesService implements RolesInterface
         $roles = Role::with('permissions')->paginate($request->item_per_page);
 
         if ($request->search) {
-            $role = Role::with('permissions')->where('name', 'like', "%{$request->search}%")->paginate($request->item_per_page);
+            $roles = Role::with('permissions')->where('name', 'like', "%{$request->search}%")->paginate($request->item_per_page);
         }
         if ($roles) {
-            return  RoleListResource::collection(Role::paginate($request->item_per_page));
+            return  RoleListResource::collection($roles);
         }
         return response()->json(['message' => 'No roles found'], 200);
     }
@@ -79,7 +79,7 @@ class RolesService implements RolesInterface
             if ($is_role_attached_with_user)
                 return  response()->json(['message' => 'Role attached with users, can not delete.'], 201);
 
-            $role->delete();
+            // $role->delete();
             return  response()->json(['message' => 'Role deleted successfully.'], 200);
         } else {
             return response()->json(['message' => 'Role not found'], 201);

@@ -23,8 +23,8 @@ class UpdatePermissionRequest extends FormRequest
     {
         return [
 
-            'name' => 'required|unique:permissions,name',
-            'key' => 'required|unique:permissions,key',
+            'name' => 'required|unique:permissions,name,' . $this->id,
+            'key' => 'required|unique:permissions,key,' . $this->id,
 
         ];
     }

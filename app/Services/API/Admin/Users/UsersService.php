@@ -26,7 +26,7 @@ class UsersService implements UsersInterface
                 ->paginate($request->item_per_page);
         }
         if ($users) {
-            return  UserListResource::collection(User::with('roles')->get());
+            return  UserListResource::collection($users);
         }
         return response()->json(['message' => 'No user found'], 200);
     }

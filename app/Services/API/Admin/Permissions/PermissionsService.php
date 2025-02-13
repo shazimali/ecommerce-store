@@ -17,10 +17,14 @@ class PermissionsService implements PermissionsInterface
 {
     public function getAllPermissions(Request $request)
     {
-        $itemsPerPge = $request->get('items_per_page', 10);
-        $permission = Permission::paginate($itemsPerPge);
-        if ($permission) {
-            return PermissionListResource::collection($permission);
+        $permissions = Permission::paginate($request->item_per_page);
+        if ($request->search) {
+            $permissions = Permission::where('name', 'like', "%{$request->search}%")
+                ->orWhere('key', 'like', "%{$request->search}%")
+                ->paginate($request->item_per_page);
+        }
+        if ($permissions) {
+            return PermissionListResource::collection($permissions);
         }
         return response()->json(['message' => 'No permissions found'], 200);
     }
@@ -49,12 +53,12 @@ class PermissionsService implements PermissionsInterface
     public function update(UpdatePermissionRequest $request, int $id)
     {
         $permission = Permission::find($id);
+
         if ($permission) {
-            $data = [
+            $permission->update([
                 'name' => $request->name,
                 'key' => $request->key,
-            ];
-            $permission->save($data);
+            ]);
             return response()->json(['message' => 'Permission Updated Successfully'], 200);
         } else {
             return response()->json(['message' => 'Permission not found'], 201);
@@ -65,10 +69,10 @@ class PermissionsService implements PermissionsInterface
     {
         $permission = Permission::find($id);
         if (!$permission) {
-            return response()->json(['message', 'Permission does not exist'], 404);
+            return response()->json(['message' => 'Permission does not exist'], 404);
         } else {
             $permission->delete();
-            return response()->json(['message', 'Permission Deleted Successfully'], 200);
+            return response()->json(['message' => 'Permission Deleted Successfully'], 200);
         }
     }
 }
