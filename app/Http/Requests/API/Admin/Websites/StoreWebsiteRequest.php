@@ -25,12 +25,17 @@ class StoreWebsiteRequest extends JsonFormRequest
         return [
             'title'     => [
                 'required',
-                'unique:websites,title',
-
+                'unique:websites,title'
             ],
             'domain'    => [
                 'required',
-                'unique:websites,domain',
+                'unique:websites,domain'
+            ],
+            'logo'    => [
+                'nullable',
+                'image',
+                'size:512',
+
             ],
             'phone' => [
                 'required',
@@ -40,6 +45,7 @@ class StoreWebsiteRequest extends JsonFormRequest
             ],
             'order' => [
                 'required',
+                'numeric'
             ],
 
         ];
