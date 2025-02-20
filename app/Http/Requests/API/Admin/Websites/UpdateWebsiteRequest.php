@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\API\Admin\Websites;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\JsonFormRequest;
 
-class UpdateWebsiteRequest extends FormRequest
+class UpdateWebsiteRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,21 @@ class UpdateWebsiteRequest extends FormRequest
         return [
             'title'     => [
                 'required',
-                'unique:websites,title',
-
+                'unique:websites,title,' . $this->id,
             ],
             'domain'    => [
                 'required',
-                'unique:websites,domain',
+                'unique:websites,domain,' . $this->id,
+            ],
+            'email' => [
+                'nullable',
+                'email',
+            ],
+            'logo'    => [
+                'nullable',
+                'image',
+                'max:100',
+
             ],
             'phone' => [
                 'required',
@@ -39,6 +48,7 @@ class UpdateWebsiteRequest extends FormRequest
             ],
             'order' => [
                 'required',
+                'numeric'
             ],
         ];
     }
