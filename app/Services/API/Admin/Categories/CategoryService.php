@@ -34,10 +34,7 @@ class CategoryService implements CategoryInterface
             });
         });
 
-        return response()->json([
-            'categories' => CategoryListResource::collection($query->paginate($request->item_per_page)),
-            'countries' => Country::all()
-        ]);
+        return response()->json(CategoryListResource::collection($query->paginate($request->item_per_page)), 200);
     }
 
     public function getAllCountries()

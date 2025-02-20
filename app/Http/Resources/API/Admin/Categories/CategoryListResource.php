@@ -20,7 +20,7 @@ class CategoryListResource extends JsonResource
             'slug' => $this->slug,
             'order' => $this->order,
             'created_at' => $this->created_at->toDateString(),
-            'countries' =>  $this->countries->pluck('id')
+            'countries' =>  $this->countries->pluck('name')
         ];
     }
 }
