@@ -70,8 +70,8 @@ class WebsitesService implements WebsitesInterface
                 'about' => $request->about,
             ];
             if ($request->hasFile('logo')) {
-                if (Storage::exists($request->logo)) {
-                    Storage::delete($request->logo);
+                if (Storage::exists($website->logo)) {
+                    Storage::delete($website->logo);
                 }
                 $data['logo'] = Storage::disk('public')->put('/', $request->file('logo'));
             }

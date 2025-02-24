@@ -72,6 +72,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [CategoryController::class, 'edit']);
             Route::put('/update/{id}', [CategoryController::class, 'update']);
             Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
+            Route::get('/get-all-websites', [CategoryController::class, 'getAllWebsites']);
         });
 
         //SubCategories
