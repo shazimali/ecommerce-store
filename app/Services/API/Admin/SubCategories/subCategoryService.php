@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class subCategoryService implements subCategoryInterface
 {
@@ -33,10 +34,7 @@ class subCategoryService implements subCategoryInterface
             });
         });
 
-        return response()->json([
-            'sub_categories' => SubCategoryListResource::collection($query->paginate($request->item_per_page)),
-            'categories' =>  Category::all()
-        ], 200);
+        return  SubCategoryListResource::collection($query->paginate($request->item_per_page));
     }
 
     public function getAllCategories()
@@ -50,14 +48,15 @@ class subCategoryService implements subCategoryInterface
 
     public function store(StoreSubCategoryRequest $request)
     {
-        DB::beginTransaction();
+        $data = $request->except('categories');
         try {
-            $subCategory = SubCategory::create($request->except('categories'));
-            $subCategory->categories()->sync($request->categories);
-            DB::commit();
+            if ($request->hasFile('image')) {
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
+            $sub_category = SubCategory::create($data);
+            $sub_category->categories()->attach($request->categories);
             return response()->json(['message' => 'SubCategory Stored Successfully'], 200);
         } catch (\Throwable $th) {
-            DB::rollBack();
             return response()->json($th->getMessage(), 201);
         }
     }
