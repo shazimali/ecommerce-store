@@ -4,6 +4,7 @@ namespace App\Http\Resources\API\Admin\Websites;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class WebsiteListResource extends JsonResource
 {
@@ -19,9 +20,9 @@ class WebsiteListResource extends JsonResource
             'title' => $this->title,
             'domain' => $this->domain,
             'phone' => $this->phone,
-            'phone1' => $this->phon1,
+            'phone1' => $this->phone1,
             'address' => $this->address,
-            'logo' => $this->logo,
+            'logo' => Env('APP_URL') . Storage::url($this->logo),
             'news' => $this->news,
             'email' => $this->email,
             'status' => $this->status,

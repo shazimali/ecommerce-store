@@ -7,12 +7,16 @@ use App\Http\Requests\API\Admin\Categories\UpdateCategoryRequest;
 use App\Http\Resources\API\Admin\Categories\CategoryEditResource;
 use App\Http\Resources\API\Admin\Categories\CategoryListResource;
 use App\Http\Resources\API\Admin\Countries\CountryListResource;
+use App\Http\Resources\API\Admin\Websites\WebsiteListResource;
 use App\Interfaces\API\Admin\Categories\CategoryInterface;
 use App\Models\Category;
 use App\Models\CategoryCountry;
+use App\Models\CategoryWebsite;
 use App\Models\Country;
+use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryService implements CategoryInterface
 {
@@ -34,10 +38,7 @@ class CategoryService implements CategoryInterface
             });
         });
 
-        return response()->json([
-            'categories' => CategoryListResource::collection($query->paginate($request->item_per_page)),
-            'countries' => Country::all()
-        ]);
+        return CategoryListResource::collection($query->paginate($request->item_per_page));
     }
 
     public function getAllCountries()
@@ -46,19 +47,30 @@ class CategoryService implements CategoryInterface
         if ($countries) {
             return CountryListResource::collection(Country::all());
         }
-        return response()->json(['message' => 'No countries found'], 200);
+        return response()->json(['message' => 'No country found'], 201);
+    }
+
+    public function getAllWebsites()
+    {
+        $websites = Website::active()->get();
+        if ($websites) {
+            return WebsiteListResource::collection($websites);
+        }
+        return response()->json(['message' => 'No website found'], 201);
     }
 
     public function store(StoreCategoryRequest $request)
     {
-        DB::beginTransaction();
+        $data = $request->all();
         try {
-            $category = Category::create($request->except('countries'));
-            $category->countries()->attach($request->countries);
-            DB::commit();
-            return response()->json(['message' => 'Categories Stored Successfully'], 200);
+            if ($request->hasFile('image')) {
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
+            $category = Category::create($data);
+            $category->websites()->attach($data['websites']);
+
+            return response()->json(['message' => 'Category Stored Successfully'], 200);
         } catch (\Throwable $th) {
-            DB::rollBack();
             return response()->json($th->getMessage(), 201);
         }
     }
@@ -75,17 +87,22 @@ class CategoryService implements CategoryInterface
 
     public function update(UpdateCategoryRequest $request, int $id)
     {
-        $categories = Category::find($id);
-        if ($categories) {
+        $category = Category::find($id);
+        if ($category) {
             $data = [
                 'title' => $request->title,
                 'slug' => $request->slug,
-                'image' => $request->image,
                 'order' => $request->order,
             ];
-            $categories->update($data);
-            $categories->countries()->sync($request->countries);
-            return  response()->json(['message' => 'Categories updated successfully.'], 200);
+            if ($request->hasFile('image')) {
+                if (Storage::exists($category->image)) {
+                    Storage::delete($category->image);
+                }
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
+            $category->update($data);
+            $category->websites()->sync($request->websites);
+            return  response()->json(['message' => 'Category updated successfully.'], 200);
         } else {
             return response()->json(['message' => 'Category not found'], 201);
         }
@@ -93,16 +110,16 @@ class CategoryService implements CategoryInterface
 
     public function destroy(int $id)
     {
-        $categories = Category::with('countries')->whereId($id)->first();
-        if ($categories) {
-            $is_category_attached_with_country = CategoryCountry::where('category_id', $id)->first();
-            if ($is_category_attached_with_country)
-                return  response()->json(['message' => 'Category attached with country, can not delete.'], 201);
+        $category = Category::with('websites')->whereId($id)->first();
+        if ($category) {
+            $is_category_attached_with_website = CategoryWebsite::where('website_id', $id)->first();
+            if ($is_category_attached_with_website)
+                return  response()->json(['message' => 'Category attached with website, can not delete.'], 201);
 
-            $categories->delete();
+            $category->delete();
             return  response()->json(['message' => 'Category deleted successfully.'], 200);
         } else {
-            return response()->json(['message' => 'Categories not found'], 201);
+            return response()->json(['message' => 'Category not found'], 201);
         }
     }
 }

@@ -24,7 +24,9 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'title' => 'required|unique:categories,title,' . $this->id,
             'slug' => 'required|unique:categories,slug,' . $this->id,
-            'countries' => 'required|array'
+            'websites' => 'required|array',
+            'order' => 'required|numeric',
+            'image' => 'nullable|image|max:500',
 
         ];
     }

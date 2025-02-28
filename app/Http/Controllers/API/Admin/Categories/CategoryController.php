@@ -29,6 +29,12 @@ class CategoryController extends Controller
         return $this->categoryService->getAllCountries();
     }
 
+    public function getAllWebsites()
+    {
+        $this->authorize('category_create');
+        return $this->categoryService->getAllWebsites();
+    }
+
     public function store(StoreCategoryRequest $request)
     {
         $this->authorize('category_create');

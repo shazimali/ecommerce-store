@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    {{-- Feature product section start --}}
-
     <div class="mt-16 text-center">
         <h1 class="font-bold text-4xl dark:text-secondary">Featured Arrived</h1>
     </div>

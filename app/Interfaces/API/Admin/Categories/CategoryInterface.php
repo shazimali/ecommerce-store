@@ -10,9 +10,9 @@ interface CategoryInterface
 {
     public function getAll(Request $request);
     public function getAllCountries();
+    public function getAllWebsites();
     public function store(StoreCategoryRequest $request);
     public function edit(int $id);
     public function update(UpdateCategoryRequest $request, int $id);
     public function destroy(int $id);
-
 }

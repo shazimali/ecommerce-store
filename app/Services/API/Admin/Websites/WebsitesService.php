@@ -9,14 +9,20 @@ use App\Http\Resources\API\Admin\Websites\WebsiteListResource;
 use App\Interfaces\API\Admin\Websites\WebsitesInterface;
 use App\Models\Website;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WebsitesService implements WebsitesInterface
 {
 
     public function getAll(Request $request)
     {
-        $itemsPerPage = $request->get('item_per_page', 10);
-        $websites = Website::paginate($itemsPerPage);
+        $websites = Website::where('title', 'like', "%{$request->search}%")
+            ->orWhere('domain', 'like', "%{$request->search}%")
+            ->orWhere('phone', 'like', "%{$request->search}%")
+            ->orWhere('email', 'like', "%{$request->search}%")
+            ->orWhere('order', 'like', "%{$request->search}%")
+            ->orWhere('status', 'like', "%{$request->search}%")
+            ->paginate($request->item_per_page);
         if ($websites) {
             return  WebsiteListResource::collection($websites);
         } else {
@@ -26,8 +32,12 @@ class WebsitesService implements WebsitesInterface
 
     public function store(StoreWebsiteRequest $request)
     {
-        $websites = Website::create($request->all());
-        if ($websites) {
+        $data = $request->all();
+        if ($request->hasFile('logo')) {
+            $data['logo'] = Storage::disk('public')->put('/', $request->file('logo'));
+        }
+        $website = Website::create($data);
+        if ($website) {
             return response()->json(['message' => 'Website Stored Successfully'], 200);
         } else {
             return response()->json(['message' => 'Website Not found'], 201);
@@ -44,27 +54,32 @@ class WebsitesService implements WebsitesInterface
     }
     public function update(UpdateWebsiteRequest $request, int $id)
     {
-        $websites = Website::find($id);
-        if ($websites) {
+        $website = Website::find($id);
+        if ($website) {
             $data = [
                 'title' => $request->title,
                 'domain' => $request->domain,
                 'phone' => $request->phone,
                 'phone1' => $request->phone1,
                 'address' => $request->address,
-                'logo' => $request->logo,
                 'news' => $request->news,
                 'email' => $request->email,
                 'status' => $request->status,
                 'order' => $request->order,
                 'wel_msg' => $request->wel_msg,
                 'about' => $request->about,
-
             ];
-            $websites->update($data);
-            return response()->json(['message', 'Data Updated Successfully'], 200);
+            if ($request->hasFile('logo')) {
+                if (Storage::exists($website->logo)) {
+                    Storage::delete($website->logo);
+                }
+                $data['logo'] = Storage::disk('public')->put('/', $request->file('logo'));
+            }
+            $website->update($data);
+
+            return response()->json(['message' => 'Website Updated Successfully'], 200);
         } else {
-            return response()->json(['message', 'Data Not Updated'], 201);
+            return response()->json(['message' => 'Website Not Updated'], 201);
         }
     }
     public function destroy(int $id)

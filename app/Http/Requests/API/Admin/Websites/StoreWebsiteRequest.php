@@ -31,14 +31,18 @@ class StoreWebsiteRequest extends JsonFormRequest
                 'required',
                 'unique:websites,domain'
             ],
+            'email' => [
+                'nullable',
+                'email',
+            ],
             'logo'    => [
                 'nullable',
                 'image',
-                'size:512',
+                'max:100',
 
             ],
             'phone' => [
-                'required',
+                'required'
             ],
             'status' => [
                 'required',

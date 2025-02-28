@@ -1,5 +1,5 @@
 <div>
-    <div x-data="{ menu: true, sideBarOpen: false, newArOpen: false }" x-cloak class="lg:block md:block sm:hidden xs:hidden">
+    <div x-data="{menu: true, sideBarOpen: false, newArOpen: false}" class="lg:block md:block sm:hidden xs:hidden">
         <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8">
             <div class="w-full">
                 <ul>
