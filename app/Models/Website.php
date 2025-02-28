@@ -15,6 +15,11 @@ class Website extends Model
         return $this->belongsToMany(Category::class, 'category_website', 'category_id', 'website_id');
     }
 
+    public function banners(): BelongsToMany
+    {
+        return $this->belongsToMany(Banner::class, 'banner_website', 'banner_id', 'website_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'ACTIVE');
