@@ -46,4 +46,9 @@ class ProductController extends Controller
         $this->authorize('product_delete');
         return $this->productService->destroy($id);
     }
+
+    public function getAllSubCategories()
+    {
+        return $this->productService->getAllSubCategories();
+    }
 }

@@ -24,28 +24,26 @@ class UpdateProductRequest extends FormRequest
         return [
             'title' => [
                 'required',
-                'unique:product_heads,title'
+                'unique:product_heads,title,' . $this->id,
             ],
             'slug' => [
                 'required',
-                'unique:product_heads,slug'
+                'unique:product_heads,slug,' . $this->id,
             ],
             'code' => [
                 'required',
+                'unique:product_heads,code,' . $this->id,
             ],
             'sku' => [
                 'required',
-                'unique:product_heads,sku'
+                'unique:product_heads,sku,' . $this->id,
             ],
-            'order' => 'required',
+            'order' => 'required|numeric',
             'short_desc' => 'required',
-            'discount' => 'required',
             'description' => 'required',
-            'youtube_link' => 'required',
-            'seo_title' => 'required',
-            'seo_desc' => 'required',
             'status' => 'required',
-            'image' => 'required',
+            'image' => 'nullable|image|max:500',
+
 
         ];
     }

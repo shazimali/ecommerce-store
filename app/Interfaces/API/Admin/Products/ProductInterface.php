@@ -13,4 +13,5 @@ interface ProductInterface
     public function edit(int $id);
     public function update(UpdateProductRequest $request, int $id);
     public function destroy(int $id);
+    public function getAllSubCategories();
 }
