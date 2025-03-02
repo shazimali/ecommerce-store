@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
+use App\Http\Controllers\API\Admin\ProductColors\ProductColorController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
@@ -113,6 +114,15 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [BannersController::class, 'update']);
             Route::delete('/delete/{id}', [BannersController::class, 'destroy']);
             Route::get('/get-all-websites', [BannersController::class, 'getAllWebsites']);
+        });
+
+        //ProductColors
+        Route::prefix('/productColors')->group(function () {
+            Route::get('/', [ProductColorController::class, 'index']);
+            Route::post('/store', [ProductColorController::class, 'store']);
+            Route::get('/edit/{id}', [ProductColorController::class, 'edit']);
+            Route::put('/update/{id}', [ProductColorController::class, 'update']);
+            Route::delete('/delete/{id}', [ProductColorController::class, 'destroy']);
         });
     });
 });
