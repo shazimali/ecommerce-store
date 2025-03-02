@@ -32,7 +32,7 @@ class StoreProductPriceRequest extends JsonFormRequest
     {
         return [
             'product_head_id.required' => 'Product field is required.',
-            'country_id.required' => 'Product field is required.',
+            'country_id.required' => 'Country field is required.',
         ];
     }
 }
