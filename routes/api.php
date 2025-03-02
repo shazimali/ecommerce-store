@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AuthController;
+use App\Http\controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
@@ -102,6 +103,16 @@ Route::prefix('admin')->group(function () {
                 Route::post('/update/{id}', [ProductController::class, 'storePrice']);
                 Route::delete('/delete/{id}', [ProductController::class, 'deletePrice']);
             });
+        });
+
+        //Banners
+        Route::prefix('/banners')->group(function () {
+            Route::get('/', [BannersController::class, 'index']);
+            Route::post('/store', [BannersController::class, 'store']);
+            Route::get('/edit/{id}', [BannersController::class, 'edit']);
+            Route::put('/update/{id}', [BannersController::class, 'update']);
+            Route::delete('/delete/{id}', [BannersController::class, 'destroy']);
+            Route::get('/get-all-websites', [BannersController::class, 'getAllWebsites']);
         });
     });
 });
