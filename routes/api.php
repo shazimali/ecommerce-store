@@ -93,6 +93,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [ProductController::class, 'edit']);
             Route::put('/update/{id}', [ProductController::class, 'update']);
             Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
+            Route::get('/get-all-sub-categories', [ProductController::class, 'getAllSubCategories']);
+
+            //Product Prices
+            Route::prefix('/prices')->group(function () {
+                Route::get('/{id}', [ProductController::class, 'getPrices']);
+                Route::post('/store', [ProductController::class, 'storePrice']);
+                Route::post('/edit/{id}', [ProductController::class, 'editPrice']);
+                Route::post('/update/{id}', [ProductController::class, 'storePrice']);
+                Route::post('/delete/{id}', [ProductController::class, 'deletePrice']);
+            });
         });
 
         //Banners

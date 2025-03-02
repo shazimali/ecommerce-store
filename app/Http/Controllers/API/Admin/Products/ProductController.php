@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API\Admin\Products;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Admin\Products\StoreProductPriceRequest;
 use App\Http\Requests\API\Admin\Products\StoreProductRequest;
+use App\Http\Requests\API\Admin\Products\UpdateProductPriceRequest;
 use App\Http\Requests\API\Admin\Products\UpdateProductRequest;
 use App\Services\API\Admin\Products\ProductService;
 use Illuminate\Http\Request;
@@ -45,5 +47,40 @@ class ProductController extends Controller
     {
         $this->authorize('product_delete');
         return $this->productService->destroy($id);
+    }
+
+    public function getAllSubCategories()
+    {
+        return $this->productService->getAllSubCategories();
+    }
+
+    public function getPrices(int $id)
+    {
+        $this->authorize('product_price_access');
+        return $this->productService->getPricesByProductID($id); // return all prices
+    }
+
+    public function storePrice(StoreProductPriceRequest $request)
+    {
+        $this->authorize('product_price_create');
+        return $this->productService->storePrice($request);
+    }
+
+    public function editPrice(int $id)
+    {
+        $this->authorize('product_price_update');
+        return $this->productService->editPrice($id);
+    }
+
+    public function updatePrice(UpdateProductPriceRequest $request, int $id)
+    {
+        $this->authorize('product_price_update');
+        return $this->productService->updatePrice($request, $id);
+    }
+
+    public function deletePrice(int $id)
+    {
+        $this->authorize('product_price_delete');
+        return $this->productService->deletePrice($id);
     }
 }

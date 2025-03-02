@@ -2,13 +2,23 @@
 
 namespace App\Services\API\Admin\Products;
 
+use App\Http\Requests\API\Admin\Products\StoreProductPriceRequest;
 use App\Http\Requests\API\Admin\Products\StoreProductRequest;
+use App\Http\Requests\API\Admin\Products\UpdateProductPriceRequest;
 use App\Http\Requests\API\Admin\Products\UpdateProductRequest;
+use App\Http\Resources\API\Admin\Countries\CountryListResource;
 use App\Http\Resources\API\Admin\Products\ProductEditResource;
 use App\Http\Resources\API\Admin\Products\ProductListResource;
+use App\Http\Resources\API\Admin\Products\ProductPricesEditResource;
+use App\Http\Resources\API\Admin\Products\ProductPricesListResource;
+use App\Http\Resources\API\Admin\SubCategories\SubCategoryListResource;
 use App\Interfaces\API\Admin\Products\ProductInterface;
+use App\Models\Country;
 use App\Models\ProductHead;
+use App\Models\ProductHeadPrice;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService implements ProductInterface
 {
@@ -25,7 +35,15 @@ class ProductService implements ProductInterface
 
     public function store(StoreProductRequest $request)
     {
-        $product = ProductHead::create($request->all());
+        $data = $request->except(['sub_categories']);
+        $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
+        $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
+        $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
+        if ($request->hasFile('image')) {
+            $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+        }
+        $product = ProductHead::create($data);
+        $product->sub_categories()->attach($request->sub_categories);
         if ($product) {
             return response()->json(['message' => 'Product Stored Successfully '], 200);
         } else {
@@ -46,31 +64,24 @@ class ProductService implements ProductInterface
     public function update(UpdateProductRequest $request, int $id)
     {
         $product = ProductHead::find($id);
+
+        $data = $request->except(['sub_categories']);
+        $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
+        $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
+        $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
+        if ($request->hasFile('image')) {
+            if (Storage::exists($product->image)) {
+                Storage::delete($product->image);
+            }
+            $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+        }
+
         if ($product) {
-            $data = [
-                'title' => $request->title,
-                'slug' => $request->slug,
-                'code' => $request->code,
-                'sku' => $request->sku,
-                'order' => $request->order,
-                'short_desc' => $request->short_desc,
-                'discount' => $request->discount,
-                'description' => $request->description,
-                'youtube_link' => $request->youtube_link,
-                'seo_title' => $request->seo_title,
-                'seo_desc' => $request->seo_desc,
-                'status' => $request->status,
-                // 'is_new' => $request->is_new,
-                // 'is_featured' => $request->is_featured,
-                // 'coming_soon' => $request->coming_soon,
-                // 'nav_image' => $request->nav_image,
-                // 'mobile_image' => $request->mobile_image,
-                'image' => $request->image,
-            ];
             $product->update($data);
-            return response()->json(['message', 'Product Updated Successfully'], 200);
+            $product->sub_categories()->sync($request->sub_categories);
+            return response()->json(['message' => 'Product Updated Successfully'], 200);
         } else {
-            return response()->json(['message', 'Product Not Updated'], 201);
+            return response()->json(['message' =>  'Product Not Updated'], 201);
         }
     }
 
@@ -78,10 +89,62 @@ class ProductService implements ProductInterface
     {
         $product = ProductHead::find($id);
         if ($product) {
+            if (Storage::exists($product->image)) {
+                Storage::delete($product->image);
+            }
             $product->delete();
-            return response()->json(['message', 'Product Deleted Successfully'], 200);
+            return response()->json(['message' => 'Product Deleted Successfully'], 200);
         } else {
-            return response()->json(['message', 'Product not found'], 201);
+            return response()->json(['message' => 'Product not found'], 201);
+        }
+    }
+
+    public function getAllSubCategories()
+    {
+        return SubCategoryListResource::collection(SubCategory::all());
+    }
+
+    public function getPricesByProductID(int $id)
+    {
+        return response()->json([
+            'prices' => ProductPricesListResource::collection(ProductHeadPrice::where('product_head_id', $id)->with('product_head', 'country')->get()),
+            'countries' => CountryListResource::collection(Country::all())
+        ]);
+    }
+
+    public function storePrice(StoreProductPriceRequest $request)
+    {
+        ProductHeadPrice::create($request->all());
+        return response()->json(['message' => 'Product price saved successfully.'], 200);
+    }
+
+    public function editPrice(int $id)
+    {
+        $price = ProductHeadPrice::find($id);
+        if ($price) {
+            return new ProductPricesEditResource($price);
+        } else {
+            return response()->json(['message' => 'Product price notfound.'], 201);
+        }
+    }
+
+    public function updatePrice(UpdateProductPriceRequest $request, int $id)
+    {
+        $price = ProductHeadPrice::whereId($id)->first();
+        if ($price) {
+            $price->update($request->all());
+        }
+        return response()->json(['message' => 'Product price updated successfully.'], 200);
+    }
+
+    public function deletePrice(int $id)
+    {
+        $price = ProductHeadPrice::whereId($id)->first();
+        if ($price) {
+            $price->delete();
+            return response()->json(['message' => 'Product price deleted successfully.'], 200);
+        } else {
+            return response()->json(['message' => 'Product price can not delete.'], 201);
         }
     }
 }

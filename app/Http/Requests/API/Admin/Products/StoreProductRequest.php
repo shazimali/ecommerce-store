@@ -33,20 +33,21 @@ class StoreProductRequest extends JsonFormRequest
             ],
             'code' => [
                 'required',
+                'unique:product_heads,code'
             ],
             'sku' => [
                 'required',
                 'unique:product_heads,sku'
             ],
-            'order' => 'required',
+            'order' => 'required|numeric',
             'short_desc' => 'required',
-            'discount' => 'required',
+            // 'discount' => 'required',
             'description' => 'required',
-            'youtube_link' => 'required',
-            'seo_title' => 'required',
-            'seo_desc' => 'required',
+            // 'youtube_link' => 'required',
+            // 'seo_title' => 'required',
+            // 'seo_desc' => 'required',
             'status' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|max:500',
 
         ];
     }
