@@ -12,12 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('category_sub_category', function (Blueprint $table) {
-
-            $table->unsignedBigInteger('category_id')->index();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->unsignedBigInteger('sub_category_id')->index();
-            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
-            $table->primary(['category_id', 'sub_category_id']);
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('sub_category_id');
         });
     }
 
