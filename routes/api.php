@@ -71,7 +71,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/get-all-countries', [CategoryController::class, 'getAllCountries']);
             Route::post('/store', [CategoryController::class, 'store']);
             Route::get('/edit/{id}', [CategoryController::class, 'edit']);
-            Route::put('/update/{id}', [CategoryController::class, 'update']);
+            Route::post('/update/{id}', [CategoryController::class, 'update']);
             Route::delete('/delete/{id}', [CategoryController::class, 'destroy']);
             Route::get('/get-all-websites', [CategoryController::class, 'getAllWebsites']);
         });
@@ -82,7 +82,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/get-all-categories', [subCategoryController::class, 'getAllCategories']);
             Route::post('/store', [subCategoryController::class, 'store']);
             Route::get('/edit/{id}', [subCategoryController::class, 'edit']);
-            Route::put('/update/{id}', [subCategoryController::class, 'update']);
+            Route::post('/update/{id}', [subCategoryController::class, 'update']);
             Route::delete('/delete/{id}', [subCategoryController::class, 'destroy']);
         });
 
@@ -91,7 +91,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [ProductController::class, 'index']);
             Route::post('/store', [ProductController::class, 'store']);
             Route::get('/edit/{id}', [ProductController::class, 'edit']);
-            Route::put('/update/{id}', [ProductController::class, 'update']);
+            Route::post('/update/{id}', [ProductController::class, 'update']);
             Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
             Route::get('/get-all-sub-categories', [ProductController::class, 'getAllSubCategories']);
 
@@ -100,7 +100,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/{id}', [ProductController::class, 'getPrices']);
                 Route::post('/store', [ProductController::class, 'storePrice']);
                 Route::post('/edit/{id}', [ProductController::class, 'editPrice']);
-                Route::post('/update/{id}', [ProductController::class, 'storePrice']);
+                Route::put('/update/{id}', [ProductController::class, 'storePrice']);
                 Route::delete('/delete/{id}', [ProductController::class, 'deletePrice']);
             });
         });
@@ -110,7 +110,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [BannersController::class, 'index']);
             Route::post('/store', [BannersController::class, 'store']);
             Route::get('/edit/{id}', [BannersController::class, 'edit']);
-            Route::put('/update/{id}', [BannersController::class, 'update']);
+            Route::post('/update/{id}', [BannersController::class, 'update']);
             Route::delete('/delete/{id}', [BannersController::class, 'destroy']);
             Route::get('/get-all-websites', [BannersController::class, 'getAllWebsites']);
         });

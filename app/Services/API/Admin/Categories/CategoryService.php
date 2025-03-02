@@ -116,6 +116,9 @@ class CategoryService implements CategoryInterface
             if ($is_category_attached_with_website)
                 return  response()->json(['message' => 'Category attached with website, can not delete.'], 201);
 
+            if (Storage::exists($category->image)) {
+                Storage::delete($category->image);
+            }
             $category->delete();
             return  response()->json(['message' => 'Category deleted successfully.'], 200);
         } else {
