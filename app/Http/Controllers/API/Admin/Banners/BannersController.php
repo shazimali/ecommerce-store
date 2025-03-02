@@ -19,6 +19,7 @@ class BannersController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('banner_access');
         return $this->bannerService->getAll($request);
     }
 
@@ -29,21 +30,25 @@ class BannersController extends Controller
 
     public function store(StoreBannerRequest $request)
     {
+        $this->authorize('banner_create');
         return $this->bannerService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('banner_update');
         return $this->bannerService->edit($id);
     }
 
     public function update(UpdateBannerRequest $request, int $id)
     {
+        $this->authorize('banner_update');
         return $this->bannerService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('banner_delete');
         return $this->bannerService->destroy($id);
     }
 }
