@@ -12,6 +12,7 @@ use App\Models\Banner;
 use App\Models\BannerWebsite;
 use App\Models\Website;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BannersService implements BannerInterface
 {
@@ -47,15 +48,15 @@ class BannersService implements BannerInterface
 
     public function store(StoreBannerRequest $request)
     {
-        $data = $request->all();
+        $data = $request->except('websites');
         try {
-            // if ($request->hasFile('image')) {
-            //     $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
-            // }
+            if ($request->hasFile('image')) {
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
             $banners = Banner::create($data);
-            $banners->websites()->attach($data['websites']);
+            $banners->websites()->attach($request->websites);
 
-            return response()->json(['message' => 'Banners Stored Successfully'], 200);
+            return response()->json(['message' => 'Banner Stored Successfully'], 200);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 201);
         }
@@ -63,9 +64,9 @@ class BannersService implements BannerInterface
 
     public function edit(int $id)
     {
-        $banners = Banner::with('websites')->find($id);
-        if ($banners) {
-            return new BannerEditResource(Banner::with('websites')->whereId($id)->first());
+        $banner = Banner::with('websites')->find($id);
+        if ($banner) {
+            return new BannerEditResource($banner);
         } else {
             return response()->json(['message' => 'Banners not found'], 201);
         }
@@ -73,35 +74,42 @@ class BannersService implements BannerInterface
 
     public function update(UpdateBannerRequest $request, int $id)
     {
-        $banners = Banner::find($id);
-        if ($banners) {
+        $banner = Banner::find($id);
+        if ($banner) {
             $data = [
                 'title' => $request->title,
                 'heading' => $request->heading,
                 'sub_heading' => $request->sub_heading,
                 'btn_text' => $request->btn_text,
                 'btn_link' => $request->btn_link,
-                'image' => $request->image,
-                'mob_image' => $request->mob_image,
                 'order' => $request->order,
             ];
-            $banners->update($data);
-            $banners->websites()->sync($request->websites);
-            return  response()->json(['message' => 'Banners updated successfully.'], 200);
+            if ($request->hasFile('image')) {
+                if (Storage::exists($banner->image)) {
+                    Storage::delete($banner->image);
+                }
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
+            $banner->update($data);
+            $banner->websites()->sync($request->websites);
+            return  response()->json(['message' => 'Banner updated successfully.'], 200);
         } else {
-            return response()->json(['message' => 'Banners not found'], 201);
+            return response()->json(['message' => 'Banner not found'], 201);
         }
     }
 
     public function destroy(int $id)
     {
-        $banners = Banner::with('websites')->whereId($id)->first();
-        if ($banners) {
+        $banner = Banner::with('websites')->whereId($id)->first();
+        if ($banner) {
             $is_banner_attached_with_website = BannerWebsite::where('website_id', $id)->first();
             if ($is_banner_attached_with_website)
                 return  response()->json(['message' => 'Banners attached with website, can not delete.'], 201);
 
-            $banners->delete();
+            if (Storage::exists($banner->image)) {
+                Storage::delete($banner->image);
+            }
+            $banner->delete();
             return  response()->json(['message' => 'Banners deleted successfully.'], 200);
         } else {
             return response()->json(['message' => 'Banners not found'], 201);
