@@ -100,7 +100,7 @@ Route::prefix('admin')->group(function () {
                 Route::post('/store', [ProductController::class, 'storePrice']);
                 Route::post('/edit/{id}', [ProductController::class, 'editPrice']);
                 Route::post('/update/{id}', [ProductController::class, 'storePrice']);
-                Route::post('/delete/{id}', [ProductController::class, 'deletePrice']);
+                Route::delete('/delete/{id}', [ProductController::class, 'deletePrice']);
             });
         });
     });
