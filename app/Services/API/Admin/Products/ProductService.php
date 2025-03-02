@@ -16,6 +16,7 @@ use App\Interfaces\API\Admin\Products\ProductInterface;
 use App\Models\Country;
 use App\Models\ProductHead;
 use App\Models\ProductHeadPrice;
+use App\Models\ProductHeadSubCategory;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -89,11 +90,15 @@ class ProductService implements ProductInterface
     {
         $product = ProductHead::find($id);
         if ($product) {
+            $is_sub_category_attached = ProductHeadSubCategory::where('product_head_id', $id)->first();
+            if ($is_sub_category_attached)
+                return  response()->json(['message' => 'Product attached with sub category, can not delete.'], 201);
+
             if (Storage::exists($product->image)) {
                 Storage::delete($product->image);
             }
             $product->delete();
-            return response()->json(['message' => 'Product Deleted Successfully'], 200);
+            return response()->json(['message' => 'Product deleted successfully'], 200);
         } else {
             return response()->json(['message' => 'Product not found'], 201);
         }
