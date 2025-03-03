@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\controllers\API\Admin\Banners;
+namespace App\Http\Controllers\API\Admin\Banners;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Admin\Banners\StoreBannerRequest;
