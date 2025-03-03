@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\AuthController;
-use App\Http\controllers\API\Admin\Banners\BannersController;
+use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
