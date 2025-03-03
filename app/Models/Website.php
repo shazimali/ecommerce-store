@@ -24,4 +24,9 @@ class Website extends Model
     {
         return $query->where('status', 'ACTIVE');
     }
+
+    function websites(): BelongsToMany
+    {
+        return $this->belongsToMany(SocialMedia::class, 'social_media_website', 'social_media_id', 'website_id');
+    }
 }
