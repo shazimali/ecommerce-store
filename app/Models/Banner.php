@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Banner extends Model
 {
-    protected $fillable = ['title', 'heading', 'sub_heading', 'btn_text', 'btn_link', 'image', 'mob_image', 'email', 'status', 'order', 'created_at', 'updated_at'];
+    protected $fillable = ['title', 'heading', 'sub_heading', 'btn_text', 'btn_link', 'image', 'mob_image', 'order', 'websites', 'created_at', 'updated_at'];
 
     public function websites(): BelongsToMany
     {

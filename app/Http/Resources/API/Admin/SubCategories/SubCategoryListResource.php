@@ -22,7 +22,7 @@ class SubCategoryListResource extends JsonResource
             'image' => Env('APP_URL') . Storage::url($this->image),
             'order' => $this->order,
             'created_at' => $this->created_at->toDateString(),
-            'categories' =>  $this->categories->pluck('id')
+            'categories' =>  $this->categories->pluck('title')
         ];
     }
 }

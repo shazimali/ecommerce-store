@@ -78,11 +78,16 @@ class subCategoryService implements subCategoryInterface
             $data = [
                 'title' => $request->title,
                 'slug' => $request->slug,
-                'image' => $request->image,
                 'order' => $request->order,
             ];
+            if ($request->hasFile('image')) {
+                if (Storage::exists($subCategory->image)) {
+                    Storage::delete($subCategory->image);
+                }
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
             $subCategory->update($data);
-            $subCategory->categories()->sync($request->countries);
+            $subCategory->categories()->sync($request->categories);
             return response()->json(['message' => 'SubCategory Updated Successfully'], 200);
         } else {
             return response()->json(['message' => 'SubCategory not updated'], 201);
@@ -94,6 +99,10 @@ class subCategoryService implements subCategoryInterface
         $subCategory = SubCategory::where('id', $id)->first();
 
         if ($subCategory) {
+
+            if (Storage::exists($subCategory->image)) {
+                Storage::delete($subCategory->image);
+            }
             $subCategory->delete();
             return response()->json(['message' => 'SubCategory deleted successfully'], 200);
         } else {

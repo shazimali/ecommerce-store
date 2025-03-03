@@ -24,7 +24,6 @@ class UpdateSubCategoryRequest extends FormRequest
         return [
             'title' => 'required|unique:sub_categories,title,' . $this->id,
             'slug' => 'required|unique:sub_categories,slug,' . $this->id,
-            'categories' => 'required|array',
             'image' => 'nullable|image|max:500',
             'order' => 'required|numeric'
 

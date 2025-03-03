@@ -26,7 +26,6 @@ class StoreCategoryRequest extends  JsonFormRequest
             'title' => 'required|unique:categories,title',
             'slug' => 'required|unique:categories,slug',
             'image' => 'required|image|max:500',
-            'websites' => 'required|array'
         ];
     }
 }
