@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\ProductColors\ProductColorController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
+use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Controllers\API\Admin\Websites\WebsitesController;
@@ -123,6 +124,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [ProductColorController::class, 'edit']);
             Route::put('/update/{id}', [ProductColorController::class, 'update']);
             Route::delete('/delete/{id}', [ProductColorController::class, 'destroy']);
+        });
+
+        //SocialMedias
+        Route::prefix('/socialMedias')->group(function () {
+            Route::get('/', [SocialMediasController::class, 'index']);
+            Route::post('/store', [SocialMediasController::class, 'store']);
+            Route::get('/edit/{id}', [SocialMediasController::class,  'edit']);
+            Route::put('/update/{id}', [SocialMediasController::class, 'update']);
+            Route::delete('/delete/{id}', [SocialMediasController::class, 'destroy']);
         });
     });
 });
