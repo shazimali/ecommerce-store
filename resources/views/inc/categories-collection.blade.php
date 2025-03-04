@@ -13,7 +13,7 @@
         @class(['z-50'])
         >
         <ul>
-            @foreach ($categories as $category)
+            @foreach (website()->categories as $category)
             <li
             x-data="{sideBarOpen:false}"
             x-on:mouseenter="sideBarOpen = true;"

@@ -64,6 +64,19 @@ const swiper = new Swiper('.swiper-container', {
   },
 
 });
+
+const swiperSlider = new Swiper(".mySwiper", {
+  modules: [Navigation, Pagination, Autoplay],
+  loop: true,
+  autoplay: {
+    delay: 2500,
+    disableOnInteraction: false,
+  },
+  pagination: {
+    el: ".swiper-pagination",
+  },
+});
+
 Alpine.plugin(persist)
 
 Alpine.start()

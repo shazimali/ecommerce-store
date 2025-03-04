@@ -17,3 +17,5 @@ function website()
         ->where('id', 1)
         ->first();
 }
+
+function new_products() {}

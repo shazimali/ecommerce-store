@@ -17,7 +17,7 @@ class Website extends Model
 
     public function banners(): BelongsToMany
     {
-        return $this->belongsToMany(Banner::class, 'banner_website', 'banner_id', 'website_id');
+        return $this->belongsToMany(Banner::class, 'banner_website', 'website_id', 'banner_id');
     }
 
     public function scopeActive($query)

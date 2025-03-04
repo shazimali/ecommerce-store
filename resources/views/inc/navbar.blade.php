@@ -1,9 +1,9 @@
 <div>
     <div x-data="{menu: true, sideBarOpen: false, newArOpen: false}"
 class="lg:block md:block sm:hidden xs:hidden">
-        <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8">
+        <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-5 px-8">
             <div class="w-full">
-                <x-categories-menu/>
+                @include('inc.categories-collection')
             </div>
             <div  class="col-span-3 grid grid-cols-2 py-5 dark:bg-black relative">
                 <ul class="flex">
@@ -32,7 +32,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                     <li class="mr-6">
                         <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Contact</a>
                     </li>
-                    </ul>
+                </ul>
                 <ul class="flex justify-end">
                     <li class="mr-6">
                         <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Login</a>
@@ -80,7 +80,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                     @endforeach   
                 </div> --}}
                 @if (request()->routeIs('home'))
-                    <x-banners/>
+                @include('inc.banners')
                 @endif
             </div>
         </div>
