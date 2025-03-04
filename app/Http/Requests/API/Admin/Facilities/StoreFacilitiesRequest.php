@@ -25,7 +25,7 @@ class StoreFacilitiesRequest extends JsonFormRequest
         return [
             'title' => 'required',
             'class' => 'required',
-            'country' => 'required|array'
+            'countries' => 'required|array',
         ];
     }
 }

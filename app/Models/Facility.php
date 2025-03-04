@@ -11,6 +11,6 @@ class Facility extends Model
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'facility_country');
+        return $this->belongsToMany(Country::class, 'facility_country', 'country_id', 'facility_id');
     }
 }

@@ -16,14 +16,14 @@ class FacilitiesService implements FacilitiesInterface
 {
     public function getAll(Request $request)
     {
-        $facilities = Facility::paginate($request->item_per_page);
+        $facility  = Facility::paginate($request->item_per_page);
         if ($request->search) {
-            $facilities = Facility::where('name', 'like', "%{$request->search}%")
-                ->orWhere('id', 'like', "%{$request->search}%")
+            $facility  = Facility::where('id', 'like', "%{$request->search}%")
+                ->orWhere('name', 'like', "%{$request->search}%")
                 ->paginate($request->item_per_page);
         }
-        if ($facilities) {
-            return FacilitiesListResource::collection($facilities);
+        if ($facility) {
+            return FacilitiesListResource::collection($facility);
         }
         return response()->json(['message' => 'No permissions found'], 200);
     }
@@ -40,19 +40,20 @@ class FacilitiesService implements FacilitiesInterface
     public function store(StoreFacilitiesRequest $request)
     {
         $data = $request->all();
-        $facilities = Facility::create($data);
-        if ($facilities) {
+        try {
+            $facility = Facility::create($data);
+            $facility->countries()->attach($data['countries']);
             return response()->json(['message' => 'Facilities Stored Successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Facilities Not Stored'], 201);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 201);
         }
     }
 
     public function edit(int $id)
     {
-        $facilities = Facility::find($id);
-        if ($facilities) {
-            return new FacilitiesEditResource($facilities);
+        $facility  = Facility::find($id);
+        if ($facility) {
+            return new FacilitiesEditResource($facility);
         } else {
             return response()->json(['message' => 'Facilities not exists'], 201);
         }
@@ -60,13 +61,13 @@ class FacilitiesService implements FacilitiesInterface
 
     public function update(UpdateFacilitiesRequest $request, int $id)
     {
-        $facilities = Facility::find($id);
-        if ($facilities) {
+        $facility  = Facility::find($id);
+        if ($facility) {
             $data = [
                 'title' => $request->title,
                 'class' => $request->class,
             ];
-            $facilities->update($data);
+            $facility->update($data);
             return response()->json(['message' => 'Facilities updated successfully.'], 200);
         } else {
             return response()->json(['message' => 'Facilities not found.'], 201);
@@ -75,9 +76,9 @@ class FacilitiesService implements FacilitiesInterface
 
     public function destroy(int $id)
     {
-        $facilities = Facility::find($id);
-        if ($facilities) {
-            $facilities->delete();
+        $facility  = Facility::find($id);
+        if ($facility) {
+            $facility->delete();
             return response()->json(['message' => 'Facilities Deleted Successfully'], 200);
         } else {
             return response()->json(['message' => 'Facilities not found.'], 201);
