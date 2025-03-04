@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('facility_country', function (Blueprint $table) {
-            $table->unsignedBigInteger('facility_id')->index();
-            $table->unsignedBigInteger('country_id')->index();
+            $table->unsignedBigInteger('facility_id');
+            $table->unsignedBigInteger('country_id');
         });
     }
 
