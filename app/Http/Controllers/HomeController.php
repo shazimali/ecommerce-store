@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\ProductHead;
 
 class HomeController extends Controller
 {
     function index()
     {
-        return view('home');
+        return view('home', [
+            'new_products' => ProductHead::active()->new()->orderBy('order')->get(),
+            'featured_products' => ProductHead::active()->featured()->orderBy('order')->get(),
+        ]);
     }
 }
