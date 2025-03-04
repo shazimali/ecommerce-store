@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('facility_country', function (Blueprint $table) {
             $table->unsignedBigInteger('facility_id')->index();
-            $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->index();
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-            $table->primary(['facility_id', 'country_id']);
         });
     }
 
