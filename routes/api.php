@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
+use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\ProductColors\ProductColorController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
@@ -133,6 +134,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [SocialMediasController::class,  'edit']);
             Route::put('/update/{id}', [SocialMediasController::class, 'update']);
             Route::delete('/delete/{id}', [SocialMediasController::class, 'destroy']);
+        });
+
+        //Facilities
+        Route::prefix('/facilities')->group(function () {
+            Route::get('/', [FacilitiesController::class, 'index']);
+            Route::post('/store', [FacilitiesController::class, 'store']);
+            Route::get('/edit/{id}', [FacilitiesController::class, 'edit']);
+            Route::put('/update/{id}', [FacilitiesController::class, 'update']);
+            Route::delete('/delete/{id}', [FacilitiesController::class, 'destroy']);
+            Route::get('/get-all-countries', [FacilitiesController::class, 'getAllCountries']);
         });
     });
 });
