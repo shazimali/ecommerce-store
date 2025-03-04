@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SocialMedia extends Model
 {
+    protected $table = 'social_medias';
     protected $fillable = ['title', 'class', 'url', 'websites', 'created_at', 'updated_at'];
 
     function websites(): BelongsToMany
