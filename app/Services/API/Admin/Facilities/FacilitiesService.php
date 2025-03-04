@@ -10,6 +10,7 @@ use App\Http\Resources\API\Admin\Facilities\FacilitiesListResource;
 use App\Interfaces\API\Admin\Facilities\FacilitiesInterface;
 use App\Models\Country;
 use App\Models\Facility;
+use App\Models\FacilityCountry;
 use Illuminate\Http\Request;
 
 class FacilitiesService implements FacilitiesInterface
@@ -18,8 +19,8 @@ class FacilitiesService implements FacilitiesInterface
     {
         $facility  = Facility::paginate($request->item_per_page);
         if ($request->search) {
-            $facility  = Facility::where('id', 'like', "%{$request->search}%")
-                ->orWhere('name', 'like', "%{$request->search}%")
+            $facility  = Facility::where('name', 'like', "%{$request->search}%")
+                ->orWhere('id', 'like', "%{$request->search}%")
                 ->paginate($request->item_per_page);
         }
         if ($facility) {
@@ -78,6 +79,11 @@ class FacilitiesService implements FacilitiesInterface
     {
         $facility  = Facility::find($id);
         if ($facility) {
+            $facility->countries()->detach();
+            // $is_facility_attached_with_country = FacilityCountry::where('country_id', $id)->first();
+            // if ($is_facility_attached_with_country)
+            //     return  response()->json(['message' => 'Facility attached with country, can not delete.'], 201);
+
             $facility->delete();
             return response()->json(['message' => 'Facilities Deleted Successfully'], 200);
         } else {
