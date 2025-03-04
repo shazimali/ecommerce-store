@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center justify-center">
     <marquee class="bg-primary">
         <small>
-            news news 
+            {{ website()->news }}
         </small>
     </marquee>
 </div>
