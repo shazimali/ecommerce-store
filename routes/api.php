@@ -10,6 +10,7 @@ use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
+use App\Http\Controllers\API\Admin\Suppliers\SupplierController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Controllers\API\Admin\Websites\WebsitesController;
 use App\Http\Middleware\ApiJsonResponseMiddleware;
@@ -144,6 +145,15 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [FacilitiesController::class, 'update']);
             Route::delete('/delete/{id}', [FacilitiesController::class, 'destroy']);
             Route::get('/get-all-countries', [FacilitiesController::class, 'getAllCountries']);
+        });
+
+        //Suppliers
+        Route::prefix('/suppliers')->group(function () {
+            Route::get('/', [SupplierController::class, 'index']);
+            Route::post('/store', [SupplierController::class, 'store']);
+            Route::get('/edit/{id}', [SupplierController::class, 'edit']);
+            Route::put('/update/{id}', [SupplierController::class, 'update']);
+            Route::delete('/delete/{id}', [SupplierController::class, 'destroy']);
         });
     });
 });
