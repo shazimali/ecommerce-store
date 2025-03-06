@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\API\Admin\ProductColors;
+namespace App\Http\Resources\API\Admin\Products\ProductColors;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductColorListResource extends JsonResource
+class ProductColorsListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

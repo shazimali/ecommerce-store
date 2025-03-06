@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Services\API\Admin\ProductColors;
+namespace App\Services\API\Admin\Products\ProductColors;
 
-use App\Http\Requests\API\Admin\ProductColors\StoreProductColorRequest;
-use App\Http\Requests\API\Admin\ProductColors\UpdateProductColorRequest;
-use App\Http\Resources\API\Admin\ProductColors\ProductColorEditResource;
-use App\Http\Resources\API\Admin\ProductColors\ProductColorListResource;
-use App\Interfaces\API\Admin\ProductColors\ProductColorInterface;
+use App\Http\Requests\API\Admin\Products\ProductColors\StoreProductColorsRequest;
+use App\Http\Requests\API\Admin\Products\ProductColors\UpdateProductColorsRequest;
+use App\Http\Resources\API\Admin\Products\ProductColors\ProductColorsEditResource;
+use App\Http\Resources\API\Admin\Products\ProductColors\ProductColorsListResource;
+use App\Interfaces\API\Admin\Products\ProductColors\ProductColorsInterface;
 use App\Models\ProductColor;
 use Illuminate\Http\Request;
 
-class ProductColorsService implements ProductColorInterface
+class ProductColorsService implements ProductColorsInterface
 {
-
     public function getAll(Request $request)
     {
         $itemsPerPage = $request->get('items_per_page', 10);
         $productColor = ProductColor::paginate($itemsPerPage);
         if ($productColor) {
-            return ProductColorListResource::collection($productColor);
+            return ProductColorsListResource::collection($productColor);
         } else {
             return response()->json(['message', 'Product Color Not exist'], 201);
         }
     }
 
-    public function store(StoreProductColorRequest $request)
+    public function store(StoreProductColorsRequest $request)
     {
         $productColor = ProductColor::create($request->all());
         if ($productColor) {
@@ -38,13 +37,13 @@ class ProductColorsService implements ProductColorInterface
     {
         $productColor = ProductColor::find($id);
         if ($productColor) {
-            return new ProductColorEditResource($productColor);
+            return new ProductColorsEditResource($productColor);
         } else {
             return response()->json(['message' => 'Product Color not exist'], 201);
         }
     }
 
-    public function update(UpdateProductColorRequest $request, int $id)
+    public function update(UpdateProductColorsRequest $request, int $id)
     {
         $productColor = ProductColor::find($id);
         if ($productColor) {

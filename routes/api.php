@@ -5,7 +5,7 @@ use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
-use App\Http\Controllers\API\Admin\ProductColors\ProductColorController;
+use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
@@ -121,11 +121,11 @@ Route::prefix('admin')->group(function () {
 
         //ProductColors
         Route::prefix('/productColors')->group(function () {
-            Route::get('/', [ProductColorController::class, 'index']);
-            Route::post('/store', [ProductColorController::class, 'store']);
-            Route::get('/edit/{id}', [ProductColorController::class, 'edit']);
-            Route::put('/update/{id}', [ProductColorController::class, 'update']);
-            Route::delete('/delete/{id}', [ProductColorController::class, 'destroy']);
+            Route::get('/', [ProductColorsController::class, 'index']);
+            Route::post('/store', [ProductColorsController::class, 'store']);
+            Route::get('/edit/{id}', [ProductColorsController::class, 'edit']);
+            Route::put('/update/{id}', [ProductColorsController::class, 'update']);
+            Route::delete('/delete/{id}', [ProductColorsController::class, 'destroy']);
         });
 
         //SocialMedias

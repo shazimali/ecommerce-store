@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\API\Admin\ProductColors;
+namespace App\Http\Requests\API\Admin\Products\ProductColors;
 
 use App\Http\Requests\JsonFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductColorRequest extends JsonFormRequest
+class StoreProductColorsRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

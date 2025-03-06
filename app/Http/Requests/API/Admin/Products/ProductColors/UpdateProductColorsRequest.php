@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\API\Admin\ProductColors;
+namespace App\Http\Requests\API\Admin\Products\ProductColors;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProductColorRequest extends FormRequest
+class UpdateProductColorsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
