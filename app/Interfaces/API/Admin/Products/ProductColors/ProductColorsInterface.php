@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 interface ProductColorsInterface
 {
-    public function getAll(Request $request);
+    public function getAll(Request $request, int $id);
     public function store(StoreProductColorsRequest $request);
     public function edit(int $id);
     public function update(UpdateProductColorsRequest $request, int $id);

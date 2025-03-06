@@ -12,10 +12,9 @@ use Illuminate\Http\Request;
 
 class ProductColorsService implements ProductColorsInterface
 {
-    public function getAll(Request $request)
+    public function getAll(Request $request, int $id)
     {
-        $itemsPerPage = $request->get('items_per_page', 10);
-        $productColor = ProductColor::paginate($itemsPerPage);
+        $productColor = ProductColor::where('product_head_id', $id)->paginate($request->items_per_page);
         if ($productColor) {
             return ProductColorsListResource::collection($productColor);
         } else {

@@ -3,7 +3,6 @@
 namespace App\Http\Requests\API\Admin\Products\ProductColors;
 
 use App\Http\Requests\JsonFormRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductColorsRequest extends JsonFormRequest
 {

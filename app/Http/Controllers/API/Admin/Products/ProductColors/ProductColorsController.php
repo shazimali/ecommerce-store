@@ -17,9 +17,9 @@ class ProductColorsController extends Controller
         $this->productColorsService = $productColorsService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, int $id)
     {
-        return $this->productColorsService->getAll($request);
+        return $this->productColorsService->getAll($request, $id);
     }
 
     public function store(StoreProductColorsRequest $request)

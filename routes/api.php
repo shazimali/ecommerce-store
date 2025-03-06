@@ -90,7 +90,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [subCategoryController::class, 'destroy']);
         });
 
-        //Products
+        //Products 
         Route::prefix('/products')->group(function () {
             Route::get('/', [ProductController::class, 'index']);
             Route::post('/store', [ProductController::class, 'store']);
@@ -107,6 +107,15 @@ Route::prefix('admin')->group(function () {
                 Route::put('/update/{id}', [ProductController::class, 'storePrice']);
                 Route::delete('/delete/{id}', [ProductController::class, 'deletePrice']);
             });
+
+            //ProductColors
+            Route::prefix('/colors')->group(function () {
+                Route::get('/{id}', [ProductColorsController::class, 'index']);
+                Route::post('/store', [ProductColorsController::class, 'store']);
+                Route::get('/edit/{id}', [ProductColorsController::class, 'edit']);
+                Route::put('/update/{id}', [ProductColorsController::class, 'update']);
+                Route::delete('/delete/{id}', [ProductColorsController::class, 'destroy']);
+            });
         });
 
         //Banners
@@ -119,14 +128,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/get-all-websites', [BannersController::class, 'getAllWebsites']);
         });
 
-        //ProductColors
-        Route::prefix('/productColors')->group(function () {
-            Route::get('/', [ProductColorsController::class, 'index']);
-            Route::post('/store', [ProductColorsController::class, 'store']);
-            Route::get('/edit/{id}', [ProductColorsController::class, 'edit']);
-            Route::put('/update/{id}', [ProductColorsController::class, 'update']);
-            Route::delete('/delete/{id}', [ProductColorsController::class, 'destroy']);
-        });
+
 
         //SocialMedias
         Route::prefix('/socialMedias')->group(function () {
