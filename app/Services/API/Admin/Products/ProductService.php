@@ -14,6 +14,7 @@ use App\Http\Resources\API\Admin\Products\ProductPricesListResource;
 use App\Http\Resources\API\Admin\SubCategories\SubCategoryListResource;
 use App\Interfaces\API\Admin\Products\ProductInterface;
 use App\Models\Country;
+use App\Models\ProductColor;
 use App\Models\ProductHead;
 use App\Models\ProductHeadPrice;
 use App\Models\ProductHeadSubCategory;
@@ -97,6 +98,38 @@ class ProductService implements ProductInterface
             if (Storage::exists($product->image)) {
                 Storage::delete($product->image);
             }
+            //Deleting related product colors
+            $productColors = ProductColor::where('product_head_id', $id)->get();
+            if (count($productColors)) {
+                foreach ($productColors  as $key => $product_color) {
+                    if (Storage::exists($product_color->color_image)) {
+                        Storage::delete($product_color->color_image);
+                    }
+                    if (Storage::exists($product_color->image1)) {
+                        Storage::delete($product_color->image1);
+                    }
+                    if (Storage::exists($product_color->image2)) {
+                        Storage::delete($product_color->image2);
+                    }
+                    if (Storage::exists($product_color->image3)) {
+                        Storage::delete($product_color->image3);
+                    }
+                    if (Storage::exists($product_color->image4)) {
+                        Storage::delete($product_color->image4);
+                    }
+                    if (Storage::exists($product_color->image5)) {
+                        Storage::delete($product_color->image5);
+                    }
+                }
+            }
+            //Deleting related product prices
+            $productPrices = ProductHeadPrice::where('product_head_id', $id)->get();
+            if ($productPrices) {
+                foreach ($productPrices as $key => $product_price) {
+                    $product_price->delete();
+                }
+            }
+            //Deleting product
             $product->delete();
             return response()->json(['message' => 'Product deleted successfully'], 200);
         } else {

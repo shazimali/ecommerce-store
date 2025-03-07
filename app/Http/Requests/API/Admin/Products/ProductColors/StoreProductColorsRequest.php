@@ -24,8 +24,12 @@ class StoreProductColorsRequest extends JsonFormRequest
         return [
             'product_head_id' => 'required',
             'color_name' => 'required',
-            'color_image' => 'required',
-            'image1' => 'required',
+            'color_image' => 'required|image|max:500',
+            'image1' => 'required|image|max:500',
+            'image2' => 'nullable|image|max:500',
+            'image3' => 'nullable|image|max:500',
+            'image4' => 'nullable|image|max:500',
+            'image5' => 'nullable|image|max:500',
         ];
     }
 
