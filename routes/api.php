@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
+use App\Http\Controllers\API\Admin\Purchases\PurchasesController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
@@ -90,7 +91,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [subCategoryController::class, 'destroy']);
         });
 
-        //Products 
+        //Products
         Route::prefix('/products')->group(function () {
             Route::get('/', [ProductController::class, 'index']);
             Route::post('/store', [ProductController::class, 'store']);
@@ -156,6 +157,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [SupplierController::class, 'edit']);
             Route::put('/update/{id}', [SupplierController::class, 'update']);
             Route::delete('/delete/{id}', [SupplierController::class, 'destroy']);
+        });
+
+        //Purchases
+        Route::prefix('/purchases')->group(function () {
+            Route::get('/', [PurchasesController::class, 'index']);
+            Route::post('/store', [PurchasesController::class, 'store']);
+            Route::get('/edit/{id}', [PurchasesController::class, 'edit']);
+            Route::put('/update/{id}', [PurchasesController::class, 'update']);
+            Route::delete('/delete/{id}', [PurchasesController::class, 'destroy']);
         });
     });
 });
