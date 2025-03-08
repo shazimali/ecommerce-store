@@ -48,6 +48,10 @@ swiper-slide {
   object-fit: cover;
 }
 
+.swiper-pagination-bullet-active{
+  background-color: #D19C97 !important;
+}
+
 .trix-editor {
   width: 100%;
 }

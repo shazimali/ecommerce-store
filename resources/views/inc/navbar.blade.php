@@ -1,6 +1,13 @@
 <div>
-    <div x-data="{menu: true, sideBarOpen: false, newArOpen: false}"
+    @if(request()->routeIs('home'))
+    <div 
+    x-data="{menu: true, sideBarOpen: false, newArOpen: false}"
 class="lg:block md:block sm:hidden xs:hidden">
+@else
+<div 
+x-data="{menu: false, sideBarOpen: false, newArOpen: false}"
+class="lg:block md:block sm:hidden xs:hidden">
+@endif
         <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-5 px-8">
             <div class="w-full">
                 @include('inc.categories-collection')

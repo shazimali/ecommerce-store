@@ -38,4 +38,9 @@ class ProductHead extends Model
     {
         return $query->where('is_new', 1);
     }
+
+    public function colors()
+    {
+        return $this->hasMany(ProductColor::class, 'product_head_id', 'id');
+    }
 }

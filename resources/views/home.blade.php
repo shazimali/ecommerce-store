@@ -25,7 +25,7 @@
     </div>
         <div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 px-8 gap-5">
             @foreach (website()->categories as $category)
-                <a href="" class="border border-secondary dark:border-slate-800">
+                <a href="{{ route('categories',['slug' => $category->slug]) }}" class="border border-secondary dark:border-slate-800">
                     {{-- <div class="text-gray-500 text-end">{{ $category->subCategories->count() }}  Sub Categories</div> --}}
                     <div class="w-full relative overflow-hidden bg-cover bg-no-repeat">
                         <img
@@ -39,52 +39,17 @@
             
         </div>
     @endif
-    <x-sub-categories-slider/>
+    <div class="mt-16 text-center">
+        <h1 class="font-bold lg:text-4xl md:text-4xl xs:text-3xl dark:text-secondary">Sub Catgories Collection</h1>
+    </div>
+    @include('inc.SubCategoriesSlider')
 @if(count($featured_products))
 <div class="mt-16 text-center">
     <h1 class="font-bold text-4xl dark:text-secondary">Featured Products</h1>
 </div>
 <div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-5 px-8">
     @foreach ($featured_products as $featured_product)
-        <div class="border border-secondary dark:border-slate-800">
-
-            <div class="w-full relative overflow-hidden bg-cover bg-no-repeat border-b border-secondary">
-                @if ($featured_product->price_detail && $featured_product->price_detail->discount > 0 &&  ($featured_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $featured_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                <div
-                    class="absolute right-0 top-0 w-auto px-2  py-2 bg-green-600 text-white text-center text-1xl font-extrabold">
-                    - {{ $featured_product->price_detail->discount }}%
-                </div>
-                @endif
-                <img src="{{ asset('storage/'. $featured_product->image) }}"
-                    class="transition duration-300 ease-in-out hover:scale-110" alt="title" />
-            </div>
-            <div class="border-b border-secondary dark:border-slate-800 py-5 text-center dark:text-secondary">
-                <h1>
-                    <a href="">{{ $featured_product->title }}</a>
-                </h1>
-                @if ( $featured_product->price_detail)
-                
-                <h2><b>{{ 
-                $featured_product->price_detail->discount > 0 &&  ($featured_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $featured_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()) 
-                ?
-                 number_format($featured_product->price_detail->price - ($featured_product->price_detail->price/100*$featured_product->price_detail->discount),2) 
-                 : number_format($featured_product->price_detail->price,2) }}</b>
-                    @if ($featured_product->price_detail->discount > 0 &&  ($featured_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $featured_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                    <del class="text-gray-500">
-                        {{ number_format($featured_product->price_detail->price,2) }}
-                    </del>
-                    @endif
-                    
-                </h2>
-                    
-                @endif
-                @if($featured_product->coming_soon)
-                <h2><b>Coming Soon</b></h2>
-                @endif
-
-            </div>
-
-        </div>
+       @include('inc.product_box', ['product' => $featured_product])
     @endforeach
     </div>
 <div class="flex text-center justify-center pt-5">
@@ -114,45 +79,7 @@
 </div>
 <div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-5 px-8">
     @foreach ($new_products as $new_product)
-    <div class="border border-secondary dark:border-slate-800">
-
-        <div class="w-full relative overflow-hidden bg-cover bg-no-repeat border-b border-secondary">
-            @if ($new_product->price_detail && $new_product->price_detail->discount > 0 &&  ($new_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-            <div
-                class="absolute right-0 top-0 w-auto px-2  py-2 bg-green-600 text-white text-center text-1xl font-extrabold">
-                - {{ $new_product->price_detail->discount }}%
-            </div>
-            @endif
-            <img src="{{ asset('storage/'. $new_product->image) }}"
-                class="transition duration-300 ease-in-out hover:scale-110" alt="title" />
-        </div>
-        <div class="border-b border-secondary dark:border-slate-800 py-5 text-center dark:text-secondary">
-            <h1>
-                <a href="">{{ $new_product->title }}</a>
-            </h1>
-            @if ( $new_product->price_detail)
-            
-            <h2><b>{{ 
-            $new_product->price_detail->discount > 0 &&  ($new_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()) 
-            ?
-             number_format($new_product->price_detail->price - ($new_product->price_detail->price/100*$new_product->price_detail->discount),2) 
-             : number_format($new_product->price_detail->price,2) }}</b>
-                @if ($new_product->price_detail->discount > 0 &&  ($new_product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                <del class="text-gray-500">
-                    {{ number_format($new_product->price_detail->price,2) }}
-                </del>
-                @endif
-                
-            </h2>
-                
-            @endif
-            @if($new_product->coming_soon)
-            <h2><b>Coming Soon</b></h2>
-            @endif
-
-        </div>
-
-    </div>
+    @include('inc.product_box', ['product' => $new_product])
     @endforeach
     </div>
 <div class="flex text-center justify-center pt-5">
