@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
+use App\Models\Facility;
 use App\Models\ProductHead;
 
 class HomeController extends Controller

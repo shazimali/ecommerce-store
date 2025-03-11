@@ -23,7 +23,9 @@ class StoreSupplierRequest extends JsonFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|unique:suppliers,name',
+            'email' => 'nullable|email|unique:suppliers,email',
+            'phone' => 'nullable|numeric'
         ];
     }
 }

@@ -22,7 +22,9 @@ class UpdateSupplierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|unique:suppliers,name,' . $this->id,
+            'email' => 'nullable|email|unique:suppliers,email,' . $this->id,
+            'phone' => 'nullable|numeric'
         ];
     }
 }

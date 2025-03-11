@@ -2,22 +2,12 @@
 @section('content')
 <section>
     <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
-                <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
-                <span><i class="fa-solid fa-check text-primary text-5xl"></i></span>
-                <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">Quality Products</h1>
-            </div>
-                        <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
-                <span><i class="fa-solid fa-truck text-primary text-5xl"></i></span>
-                <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">Free Delivery</h1>
-            </div>
-                        <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
-                <span><i class="fa-solid fa-arrow-right-arrow-left text-primary text-5xl"></i></span>
-                <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">7 Days Return</h1>
-            </div>
-                        <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
-                <span><i class="fa-solid fa-phone text-primary text-5xl"></i></span>
-                <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">24/7 Support</h1>
-            </div>
+        @foreach (facilities() as $facility)
+        <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
+            <span><i class="{{ $facility->class }} text-primary text-5xl"></i></span>
+            <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">{{ $facility->title }}</h1>
+        </div>
+        @endforeach    
     </div>
     @if(count(website()->categories)) 
     <div class="mt-16 text-center">
