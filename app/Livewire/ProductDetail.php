@@ -23,7 +23,7 @@ class ProductDetail extends Component
         $this->product = ProductHead::where('slug', $this->slug)->first();
         $this->activeImage = env('APP_URL') . 'storage/' . $this->product->image;
         $this->colors = $this->product->colors;
-        $this->current_color = $this->color->first()->color_name;
+        $this->current_color = $this->colors->first()->color_name;
         $this->images = [
             $this->colors->first()->image1 ? env('APP_URL') . 'storage/' . $this->colors->first()->image1  : '',
             $this->colors->first()->image2 ? env('APP_URL') . 'storage/' . $this->colors->first()->image2  : '',

@@ -44,7 +44,7 @@ class FacilitiesService implements FacilitiesInterface
         try {
             $facility = Facility::create($data);
             $facility->countries()->attach($data['countries']);
-            return response()->json(['message' => 'Facilities Stored Successfully'], 200);
+            return response()->json(['message' => 'Facility Stored Successfully'], 200);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 201);
         }
@@ -56,7 +56,7 @@ class FacilitiesService implements FacilitiesInterface
         if ($facility) {
             return new FacilitiesEditResource($facility);
         } else {
-            return response()->json(['message' => 'Facilities not exists'], 201);
+            return response()->json(['message' => 'Facility not exists'], 201);
         }
     }
 
@@ -69,9 +69,10 @@ class FacilitiesService implements FacilitiesInterface
                 'class' => $request->class,
             ];
             $facility->update($data);
-            return response()->json(['message' => 'Facilities updated successfully.'], 200);
+            $facility->countries()->sync($request->countries);
+            return response()->json(['message' => 'Facility updated successfully.'], 200);
         } else {
-            return response()->json(['message' => 'Facilities not found.'], 201);
+            return response()->json(['message' => 'Facility not found.'], 201);
         }
     }
 
@@ -85,9 +86,9 @@ class FacilitiesService implements FacilitiesInterface
             //     return  response()->json(['message' => 'Facility attached with country, can not delete.'], 201);
 
             $facility->delete();
-            return response()->json(['message' => 'Facilities Deleted Successfully'], 200);
+            return response()->json(['message' => 'Facility Deleted Successfully'], 200);
         } else {
-            return response()->json(['message' => 'Facilities not found.'], 201);
+            return response()->json(['message' => 'Facility not found.'], 201);
         }
     }
 }

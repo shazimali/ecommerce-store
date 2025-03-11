@@ -9,7 +9,7 @@ class ProductsController extends Controller
 {
     public function detail($slug)
     {
-        $product = ProductHead::whereSlug($slug)->with('colors', 'price_detail')->first();
+        $product = ProductHead::whereSlug($slug)->first();
         if ($product) {
             return view('products.detail', compact('product'));
         }

@@ -13,7 +13,7 @@
             </div>
        </div>
        <div>
-            <h2 class="text-2xl font-semibold py-2 dark:text-white">{{ $product['title'] }}</h2>
+            <h2 class="text-2xl font-semibold py-2 dark:text-white">{{ $product->title }}</h2>
             <div class="inline-flex text-sm py-2 dark:text-white">
                     @for ($i = 0; $i < $max_rating;  $i++)    
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -35,24 +35,23 @@
                     @endif
                     <small>(5 Reviews)</small>
             </div>
-            <div class="py-2 dark:text-white">{{ $product['short_desc'] }}</div>
-            @if ($product['coming_soon'])
+            <div class="py-2 dark:text-white">{{ $product->short_desc }}</div>
+            @if ($product->coming_soon)
             <div class="text-2xl font-semibold text-primary py-2 uppercase">
                 Coming Soon...
             </div>
             @else
             <div class="text-2xl font-semibold text-primary py-2">
-                @if ($product['discount_from'] >= Carbon\Carbon::today()->toDateString() || $product['discount_to'] >= Carbon\Carbon::today()->toDateString())
-                
+                @if ($product->price_detail->current_price->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->current_price->discount_to >= Carbon\Carbon::today()->toDateString())
 
-                <b>{{ $product['currency'] }}</b>{{ number_format($product['price'] - ($product['price']/100*$product['discount']),2) }}
+                <b>{{ $product->price_detail->currency  }}</b>{{ number_format($product->price_detail->current_price->price - ($product->price_detail->current_price->price/100*$product->price_detail->current_price->discount),2) }}
                                     <del class="text-gray-500 text-xs">
-                                        {{ number_format($product['price'],2) }}
+                                        {{ number_format($product->price_detail->current_price->price,2) }}
                                     </del>
 
-                <sup class="uppercase">-{{ $product['discount'] }}% off</sup>
+                <sup class="uppercase">-{{ $product->price_detail->current_price->discount }}% off</sup>
                 @else
-                <b>{{ $product['currency'] }}</b>{{ number_format($product['price'],2)  }} 
+                <b>{{ $product->price_detail->currency }}</b>{{ number_format($product->price_detail->current_price->price,2)  }} 
                     
                 @endif
             </div>
@@ -80,8 +79,8 @@
                     @endforeach
                 </div>
             </div>
-            @endif
-            @if (!$product['coming_soon'])
+            @endif 
+            @if (!$product->coming_soon)
             <div class="grid grid-cols-[25%_75%] py-2">
                 <div class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1">
                     <div @dblclick.prevent class="flex items-center">
@@ -114,9 +113,9 @@
             
             <div class="py-2 dark:text-white"> 
                 <b>Share on:</b>
-                {{-- @foreach (website()->socialMedia as $social)
+                @foreach (website()->socialMedia as $social)
                 <a class="mr-3 hover:text-primary" target="_blank"  href="{{ $social->url }}"><i class="{{ $social->class }}"></i></a>
-                @endforeach --}}
+                @endforeach
             </div>
        </div>
     </div>
@@ -127,7 +126,7 @@
             <button class="px-4 py-2 w-full hover:text-primary focus:text-primary" x-on:click.prevent="tab = 1">Reviews</button>
         </div>
         <div class="dark:text-white trix-editor" x-show="tab === 0">
-            {!! $product['description'] !!}
+            {!! $product->description !!}
         </div>
         <div x-show="tab === 1">
             @foreach ($reviews as $review)

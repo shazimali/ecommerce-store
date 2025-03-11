@@ -144,7 +144,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [FacilitiesController::class, 'index']);
             Route::post('/store', [FacilitiesController::class, 'store']);
             Route::get('/edit/{id}', [FacilitiesController::class, 'edit']);
-            Route::put('/update/{id}', [FacilitiesController::class, 'update']);
+            Route::post('/update/{id}', [FacilitiesController::class, 'update']);
             Route::delete('/delete/{id}', [FacilitiesController::class, 'destroy']);
             Route::get('/get-all-countries', [FacilitiesController::class, 'getAllCountries']);
         });

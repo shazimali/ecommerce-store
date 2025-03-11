@@ -10,7 +10,28 @@ use Stevebauman\Location\Facades\Location;
 
 class ProductHead extends Model
 {
-    protected $fillable = ['title', 'slug', 'code', 'sku', 'order', 'short_desc', 'discount', 'description', 'youtube_link', 'seo_title', 'seo_desc', 'status', 'is_new', 'is_featured', 'coming_soon', 'nav_image', 'mobile_image', 'image', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'title',
+        'slug',
+        'code',
+        'sku',
+        'order',
+        'short_desc',
+        'discount',
+        'description',
+        'youtube_link',
+        'seo_title',
+        'seo_desc',
+        'status',
+        'is_new',
+        'is_featured',
+        'coming_soon',
+        'nav_image',
+        'mobile_image',
+        'image',
+        'created_at',
+        'updated_at'
+    ];
 
     public function sub_categories(): BelongsToMany
     {
@@ -21,7 +42,7 @@ class ProductHead extends Model
     {
         $loc = Location::get('154.192.161.138');
         $country = Country::where('iso', $loc->countryCode)->first();
-        return $this->hasOne(ProductHeadPrice::class, 'product_head_id', 'id')->where('country_id', $country->id);
+        return  $this->hasOne(ProductHeadPrice::class, 'product_head_id', 'id')->where('country_id', $country->id);
     }
 
     public function scopeActive($query)
