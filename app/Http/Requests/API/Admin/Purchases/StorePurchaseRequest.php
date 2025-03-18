@@ -28,6 +28,14 @@ class StorePurchaseRequest extends JsonFormRequest
             'supplier_id' => 'required',
             'total_qty' => 'required',
             'total_price' => 'required',
+            'purchase_detail' => 'required|array'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'supplier_id.required' => 'Supplier field is required.'
         ];
     }
 }

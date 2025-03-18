@@ -5,7 +5,7 @@ namespace App\Http\Resources\API\Admin\Purchases;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PurchasesListResource extends JsonResource
+class PurchaseProductColorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,7 @@ class PurchasesListResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'invoice_id' => $this->invoice_id,
-            'invoice_date' => $this->invoice_date,
-            'supplier' => $this->supplier->name,
-            'total_qty' => $this->total_qty,
-            'total_price' => $this->total_price,
-            'created_at' => $this->created_at->toDateString()
+            'name' => $this->color_name,
         ];
     }
 }

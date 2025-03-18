@@ -29,6 +29,11 @@ class ProductHead extends Model
         'nav_image',
         'mobile_image',
         'image',
+        'image1',
+        'image2',
+        'image3',
+        'image4',
+        'image5',
         'created_at',
         'updated_at'
     ];

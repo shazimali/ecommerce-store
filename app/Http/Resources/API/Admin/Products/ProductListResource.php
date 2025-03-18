@@ -27,6 +27,8 @@ class ProductListResource extends JsonResource
             'description' => $this->description,
             'youtube_link' => $this->youtube_link,
             'seo_title' => $this->seo_title,
+            'colors' => $this->colors->pluck('id', 'color_name'),
+            // 'prices' => $this->price_detail,
             'sub_categories' => $this->sub_categories->pluck('title'),
             'seo_desc' => $this->seo_desc,
             'status' => $this->status,

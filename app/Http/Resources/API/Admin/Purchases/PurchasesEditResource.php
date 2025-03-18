@@ -21,6 +21,7 @@ class PurchasesEditResource extends JsonResource
             'supplier_id' => $this->supplier_id,
             'total_qty' => $this->total_qty,
             'total_price' => $this->total_price,
+            'purchase_detail' => PurchaseDetailsResource::collection($this->purchaseDetails)
         ];
     }
 }

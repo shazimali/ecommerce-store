@@ -22,6 +22,11 @@ class PurchasesController extends Controller
         return $this->purchasesService->getAll($request);
     }
 
+    public function getAllSuppliers()
+    {
+        return $this->purchasesService->getAllSuppliers();
+    }
+
     public function store(StorePurchaseRequest $request)
     {
         return $this->purchasesService->store($request);

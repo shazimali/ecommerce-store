@@ -44,6 +44,21 @@ class ProductService implements ProductInterface
         if ($request->hasFile('image')) {
             $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
         }
+        if ($request->hasFile('image1')) {
+            $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
+        }
+        if ($request->hasFile('image2')) {
+            $data['image2'] = Storage::disk('public')->put('/', $request->file('image2'));
+        }
+        if ($request->hasFile('image3')) {
+            $data['image3'] = Storage::disk('public')->put('/', $request->file('image3'));
+        }
+        if ($request->hasFile('image4')) {
+            $data['image4'] = Storage::disk('public')->put('/', $request->file('image4'));
+        }
+        if ($request->hasFile('image5')) {
+            $data['image5'] = Storage::disk('public')->put('/', $request->file('image5'));
+        }
         $product = ProductHead::create($data);
         $product->sub_categories()->attach($request->sub_categories);
         if ($product) {
@@ -71,11 +86,42 @@ class ProductService implements ProductInterface
         $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
         $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
         $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
+
         if ($request->hasFile('image')) {
-            if (Storage::exists($product->image)) {
+            if (!is_null($product->image)) {
                 Storage::delete($product->image);
             }
             $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+        }
+        if ($request->hasFile('image1')) {
+            if (!is_null($product->image1)) {
+                Storage::delete($product->image1);
+            }
+            $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
+        }
+        if ($request->hasFile('image2')) {
+            if (!is_null($product->image2)) {
+                Storage::delete($product->image2);
+            }
+            $data['image2'] = Storage::disk('public')->put('/', $request->file('image2'));
+        }
+        if ($request->hasFile('image3')) {
+            if (!is_null($product->image3)) {
+                Storage::delete($product->image3);
+            }
+            $data['image3'] = Storage::disk('public')->put('/', $request->file('image3'));
+        }
+        if ($request->hasFile('image4')) {
+            if (!is_null($product->image4)) {
+                Storage::delete($product->image4);
+            }
+            $data['image4'] = Storage::disk('public')->put('/', $request->file('image4'));
+        }
+        if ($request->hasFile('image5')) {
+            if (!is_null($product->image5)) {
+                Storage::delete($product->image5);
+            }
+            $data['image5'] = Storage::disk('public')->put('/', $request->file('image5'));
         }
 
         if ($product) {
@@ -95,29 +141,44 @@ class ProductService implements ProductInterface
             if ($is_sub_category_attached)
                 return  response()->json(['message' => 'Product attached with sub category, can not delete.'], 201);
 
-            if (Storage::exists($product->image)) {
+            if (!is_null($product->image)) {
                 Storage::delete($product->image);
+            }
+            if (!is_null($product->image1)) {
+                Storage::delete($product->image1);
+            }
+            if (!is_null($product->image2)) {
+                Storage::delete($product->image2);
+            }
+            if (!is_null($product->image3)) {
+                Storage::delete($product->image3);
+            }
+            if (!is_null($product->image4)) {
+                Storage::delete($product->image4);
+            }
+            if (!is_null($product->image5)) {
+                Storage::delete($product->image5);
             }
             //Deleting related product colors
             $productColors = ProductColor::where('product_head_id', $id)->get();
             if (count($productColors)) {
                 foreach ($productColors  as $key => $product_color) {
-                    if (Storage::exists($product_color->color_image)) {
+                    if (!is_null($product_color->color_image)) {
                         Storage::delete($product_color->color_image);
                     }
-                    if (Storage::exists($product_color->image1)) {
+                    if (!is_null($product_color->image1)) {
                         Storage::delete($product_color->image1);
                     }
-                    if (Storage::exists($product_color->image2)) {
+                    if (!is_null($product_color->image2)) {
                         Storage::delete($product_color->image2);
                     }
-                    if (Storage::exists($product_color->image3)) {
+                    if (!is_null($product_color->image3)) {
                         Storage::delete($product_color->image3);
                     }
-                    if (Storage::exists($product_color->image4)) {
+                    if (!is_null($product_color->image4)) {
                         Storage::delete($product_color->image4);
                     }
-                    if (Storage::exists($product_color->image5)) {
+                    if (!is_null($product_color->image5)) {
                         Storage::delete($product_color->image5);
                     }
                 }

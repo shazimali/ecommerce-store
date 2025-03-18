@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('purchase_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_head_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_color_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('purchase_id');
+            $table->unsignedBigInteger('product_head_id');
+            $table->unsignedBigInteger('product_color_id');
             $table->integer('qty');
             $table->decimal('net_price', 8, 2);
             $table->timestamps();

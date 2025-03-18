@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Purchase extends Model
 {
@@ -12,6 +13,16 @@ class Purchase extends Model
 
     public function purchaseDetails(): HasMany
     {
-        return $this->hasMany(PurchaseDetail::class);
+        return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
+    }
+
+    /**
+     * Get the user associated with the Purchase
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function supplier(): HasOne
+    {
+        return $this->hasOne(Supplier::class, 'id', 'supplier_id');
     }
 }

@@ -37,6 +37,11 @@ class ProductEditResource extends JsonResource
             'nav_image' => $this->nav_image,
             'mobile_image' => $this->mobile_image,
             'image_src' => $this->image ? Env('APP_URL') . Storage::url($this->image) : '',
+            'image_src1' => $this->image1 ? Env('APP_URL') . Storage::url($this->image1) : '',
+            'image_src2' => $this->image2 ? Env('APP_URL') . Storage::url($this->image2) : '',
+            'image_src3' => $this->image3 ? Env('APP_URL') . Storage::url($this->image3) : '',
+            'image_src4' => $this->image4 ? Env('APP_URL') . Storage::url($this->image4) : '',
+            'image_src5' => $this->image5 ? Env('APP_URL') . Storage::url($this->image5) : '',
             'created_at' => $this->created_at->toDateString()
         ];
     }

@@ -27,6 +27,7 @@ class UpdatePurchaseRequest extends FormRequest
             'supplier_id' => 'required',
             'total_qty' => 'required',
             'total_price' => 'required',
+            'purchase_detail' => 'required|array'
         ];
     }
 }

@@ -166,6 +166,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [PurchasesController::class, 'edit']);
             Route::put('/update/{id}', [PurchasesController::class, 'update']);
             Route::delete('/delete/{id}', [PurchasesController::class, 'destroy']);
+            Route::get('get-all-suppliers', [PurchasesController::class, 'getAllSuppliers']);
         });
     });
 });

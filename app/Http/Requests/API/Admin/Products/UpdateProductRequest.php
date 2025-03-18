@@ -43,6 +43,11 @@ class UpdateProductRequest extends FormRequest
             'description' => 'required',
             'status' => 'required',
             'image' => 'nullable|image|max:500',
+            'image1' => 'nullable|image|max:500',
+            'image2' => 'nullable|image|max:500',
+            'image3' => 'nullable|image|max:500',
+            'image4' => 'nullable|image|max:500',
+            'image5' => 'nullable|image|max:500',
 
 
         ];
