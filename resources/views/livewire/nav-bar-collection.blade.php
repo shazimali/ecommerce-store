@@ -7,6 +7,7 @@
             <i class="fa-solid fa-caret-down"></i>
         </div>
     </li>
+    
     <li 
         x-show="menu"
         x-transition.duration.300ms

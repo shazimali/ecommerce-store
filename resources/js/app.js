@@ -74,10 +74,3 @@ const swiperSlider = new Swiper(".mySwiper", {
     el: ".swiper-pagination",
   },
 });
-
-// Alpine.plugin(persist)
-
-// Alpine.start()
-
-// If you want Alpine's instance to be available globally
-// window.Alpine = Alpine
