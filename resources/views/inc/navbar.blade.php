@@ -10,7 +10,7 @@ class="lg:block md:block sm:hidden xs:hidden">
 @endif
         <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-5 px-8">
             <div class="w-full">
-                @include('inc.categories-collection')
+               @livewire('nav-bar-collection')
             </div>
             <div  class="col-span-3 grid grid-cols-2 py-5 dark:bg-black relative">
                 <ul class="flex">
@@ -52,13 +52,13 @@ class="lg:block md:block sm:hidden xs:hidden">
                 x-show="newArOpen"
                 style="top: 60px"
                 class="bg-white dark:bg-black z-50 min-h-64 w-full absolute flex justify-between py-10 px-10">
-                    @foreach ($global_new_products as $new_pr)
+                    @foreach (newArrivals() as $new_pr)
                         <div class="text-center relative dark:text-secondary">
                             @if ($new_pr->countries->where('id',getLocation()->id)->first()->pivot->disc_from >= Carbon\Carbon::today()->toDateString() || $new_pr->countries->where('id',getLocation()->id)->first()->pivot->disc_to >= Carbon\Carbon::today()->toDateString())
                             <div class="absolute right-1 rounded-full  top-1 w-auto px-3 py-2 bg-green-600 text-white text-[8px] text-center">{{ $new_pr->countries->where('id',getLocation()->id)->first()->pivot->discount }} %</br> off</div>
                             @endif
                                 <img
-                                    src="{{ asset('storage/'.$new_pr->nav_image) }}"
+                                    src="{{ asset('storage/'.$new_pr->image) }}"
                                     class=" max-h-52"
                                     alt="{{ $new_pr->title }}" />
                                 <div class="pt-2 overflow-hidden max-w-36 text-xs truncate">                {{$new_pr->title }}     

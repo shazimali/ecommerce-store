@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Country;
+use App\Models\ProductHead;
 use App\Models\Website;
 use Stevebauman\Location\Facades\Location;
 
@@ -20,6 +21,10 @@ function website()
         ->first();
 }
 
+function newArrivals()
+{
+    return ProductHead::new()->active()->limit(5);
+}
 
 function facilities()
 {
