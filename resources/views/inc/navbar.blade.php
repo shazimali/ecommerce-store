@@ -10,7 +10,7 @@ class="lg:block md:block sm:hidden xs:hidden">
 @endif
         <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-5 px-8">
             <div class="w-full">
-               @livewire('nav-bar-collection')
+                <livewire:nav-bar-collection/>
             </div>
             <div  class="col-span-3 grid grid-cols-2 py-5 dark:bg-black relative">
                 <ul class="flex">
