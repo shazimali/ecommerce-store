@@ -1,5 +1,3 @@
-import persist from '@alpinejs/persist';
-import Alpine from 'alpinejs';
 import Swiper from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -77,9 +75,9 @@ const swiperSlider = new Swiper(".mySwiper", {
   },
 });
 
-Alpine.plugin(persist)
+// Alpine.plugin(persist)
 
-Alpine.start()
+// Alpine.start()
 
 // If you want Alpine's instance to be available globally
-window.Alpine = Alpine
+// window.Alpine = Alpine

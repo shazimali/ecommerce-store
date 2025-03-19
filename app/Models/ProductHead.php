@@ -69,4 +69,9 @@ class ProductHead extends Model
     {
         return $this->hasMany(ProductColor::class, 'product_head_id', 'id');
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(PurchaseDetail::class, 'product_head_id', 'id');
+    }
 }

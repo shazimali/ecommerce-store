@@ -36,28 +36,30 @@
                     <small>(5 Reviews)</small>
             </div>
             <div class="py-2 dark:text-white">{{ $product->short_desc }}</div>
+            @if(count($product->stocks) == 0)
+            <div class="text-3xl font-semibold text-primary py-2 uppercase">
+                Out Of Stock
+            </div>
+            @endif
             @if ($product->coming_soon)
             <div class="text-2xl font-semibold text-primary py-2 uppercase">
                 Coming Soon...
             </div>
             @else
             <div class="text-2xl font-semibold text-primary py-2">
-                @if ($product->price_detail->current_price->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->current_price->discount_to >= Carbon\Carbon::today()->toDateString())
+                @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
 
-                <b>{{ $product->price_detail->currency  }}</b>{{ number_format($product->price_detail->current_price->price - ($product->price_detail->current_price->price/100*$product->price_detail->current_price->discount),2) }}
-                                    <del class="text-gray-500 text-xs">
-                                        {{ number_format($product->price_detail->current_price->price,2) }}
-                                    </del>
+                <b>{{ $product->price_detail->country->currency }}</b>{{ number_format($product->price_detail->price - ($product->price_detail->price/100*$product->price_detail->discount),2) }}
+                <del class="text-gray-500 text-xs">
+                    {{ number_format($product->price_detail->price,2) }}
+                </del>
 
-                <sup class="uppercase">-{{ $product->price_detail->current_price->discount }}% off</sup>
+                <sup class="uppercase">-{{ $product->price_detail->discount }}% off</sup>
                 @else
-                <b>{{ $product->price_detail->currency }}</b>{{ number_format($product->price_detail->current_price->price,2)  }} 
-                    
+                <b>{{ $product->price_detail->country->currency }}</b>{{ number_format($product->price_detail->price,2)  }}     
                 @endif
             </div>
             @endif
-            
-            
             @if (count($colors))
             <div>
                 <b class="float-left mr-1 dark:text-white">Colors:</b>
@@ -68,19 +70,19 @@
                     x-on:mouseover="tooltip = true" 
                     x-on:mouseleave="tooltip = false">
                         <div 
-                        wire:click="fetchColorWiseImages('{{ $clr->id}}','{{ $clr->color_name }}')" 
-                        @class(['rounded-full h-6 w-6 text-center hover:border-gray-800 hover:border-2','border-gray-800 border-2' => $clr->title == $current_color ? true : false]) 
-                        :style="`background-image: url({{env('APP_URL').'storage/'.$clr->color_image}})`">
+                        wire:click="fetchColorWiseImages('{{ $clr['id']}}','{{ $clr['color_name'] }}')" 
+                        @class(['rounded-full h-6 w-6 text-center hover:border-gray-800 hover:border-2','border-gray-800 border-2' => $clr['color_name'] == $current_color ? true : false]) 
+                        :style="`background-image: url({{env('APP_URL').'/storage/'.$clr['color_image'] }})`">
                         </div>
                         <small x-show="tooltip" class="absolute bg-black px-2 py-1 text-white rounded mt-1 text-xs">
-                           {{ $clr->title }}
+                           {{ $clr['color_name'] }}
                          </small>
                     </span>
                     @endforeach
                 </div>
             </div>
             @endif 
-            @if (!$product->coming_soon)
+            @if (!$product->coming_soon && $product->stocks->count() > 0)
             <div class="grid grid-cols-[25%_75%] py-2">
                 <div class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1">
                     <div @dblclick.prevent class="flex items-center">
@@ -113,9 +115,11 @@
             
             <div class="py-2 dark:text-white"> 
                 <b>Share on:</b>
+                @isset(website()->socialMedia)
                 @foreach (website()->socialMedia as $social)
                 <a class="mr-3 hover:text-primary" target="_blank"  href="{{ $social->url }}"><i class="{{ $social->class }}"></i></a>
                 @endforeach
+                @endisset
             </div>
        </div>
     </div>
@@ -129,37 +133,39 @@
             {!! $product->description !!}
         </div>
         <div x-show="tab === 1">
-            @foreach ($reviews as $review)
-                <div class="border-b py-2 border-secondary dark:text-white">
-                    <div class="inline-flex text-sm">
-                        @for ($i = 0; $i < $review->rating;  $i++)    
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            fill="currentColor" class="w-4 h-4 text-primary cursor-pointer">
-                            <path fill-rule="evenodd"
-                            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                            clip-rule="evenodd"></path>
-                            </svg>
-                        @endfor
-                        @if ($review->rating < 5)
-                            @for ($i = 0; $i < 5 - $review->rating;  $i++)    
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-4 h-4 cursor-pointer text-blue-gray-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z">
-                            </path>
-                            </svg>
+            @if (count($reviews))
+                @foreach ($reviews as $review)
+                    <div class="border-b py-2 border-secondary dark:text-white">
+                        <div class="inline-flex text-sm">
+                            @for ($i = 0; $i < 5;  $i++)    
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="currentColor" class="w-4 h-4 text-primary cursor-pointer">
+                                <path fill-rule="evenodd"
+                                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                                clip-rule="evenodd"></path>
+                                </svg>
                             @endfor
-                        @endif
+                            @if ($review->rating < 5)
+                                @for ($i = 0; $i < 5 - $review->rating;  $i++)    
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-4 h-4 cursor-pointer text-blue-gray-500">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z">
+                                </path>
+                                </svg>
+                                @endfor
+                            @endif
+                        </div>
+                        <div class="text-xs text-gray-500">{{ $review->name }}</div>
+                        <div>{{ $review->comment }}</div>
+                        <div class="flex mt-1">
+                            @foreach ($review->getMedia('images') as $media)
+                            <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$media->id.'/'.$media->file_name) }}" alt="{{ $review->name }}"/>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="text-xs text-gray-500">{{ $review->name }}</div>
-                    <div>{{ $review->comment }}</div>
-                    <div class="flex mt-1">
-                        @foreach ($review->getMedia('images') as $media)
-                        <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$media->id.'/'.$media->file_name) }}" alt="{{ $review->name }}"/>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
     

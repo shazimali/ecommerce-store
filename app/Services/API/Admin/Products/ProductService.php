@@ -83,9 +83,9 @@ class ProductService implements ProductInterface
         $product = ProductHead::find($id);
 
         $data = $request->except(['sub_categories']);
-        $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
-        $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
-        $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
+        $data['is_new'] = $request->is_new ? 1 : 0;
+        $data['is_featured'] = $request->is_featured ? 1 : 0;
+        $data['coming_soon'] = $request->coming_soon ? 1 : 0;
 
         if ($request->hasFile('image')) {
             if (!is_null($product->image)) {
