@@ -63,6 +63,8 @@ const swiper = new Swiper('.swiper-container', {
 
 });
 
+
+
 const swiperSlider = new Swiper(".mySwiper", {
   modules: [Navigation, Pagination, Autoplay],
   loop: true,
