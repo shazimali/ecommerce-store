@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
+use App\Http\Controllers\API\Admin\Products\ProductPrices\ProductPricesController;
 use App\Http\Controllers\API\Admin\Purchases\PurchasesController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
@@ -102,11 +103,11 @@ Route::prefix('admin')->group(function () {
 
             //Product Prices
             Route::prefix('/prices')->group(function () {
-                Route::get('/{id}', [ProductController::class, 'getPrices']);
-                Route::post('/store', [ProductController::class, 'storePrice']);
-                Route::post('/edit/{id}', [ProductController::class, 'editPrice']);
-                Route::put('/update/{id}', [ProductController::class, 'storePrice']);
-                Route::delete('/delete/{id}', [ProductController::class, 'deletePrice']);
+                Route::get('/{id}', [ProductPricesController::class, 'getPrices']);
+                Route::post('/store', [ProductPricesController::class, 'store']);
+                Route::post('/edit/{id}', [ProductPricesController::class, 'edit']);
+                Route::put('/update/{id}', [ProductPricesController::class, 'update']);
+                Route::delete('/delete/{id}', [ProductPricesController::class, 'destroy']);
             });
 
             //ProductColors

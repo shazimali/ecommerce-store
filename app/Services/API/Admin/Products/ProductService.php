@@ -203,47 +203,5 @@ class ProductService implements ProductInterface
         return SubCategoryListResource::collection(SubCategory::all());
     }
 
-    public function getPricesByProductID(int $id)
-    {
-        return response()->json([
-            'prices' => ProductPricesListResource::collection(ProductHeadPrice::where('product_head_id', $id)->with('product_head', 'country')->get()),
-            'countries' => CountryListResource::collection(Country::all())
-        ]);
-    }
-
-    public function storePrice(StoreProductPriceRequest $request)
-    {
-        ProductHeadPrice::create($request->all());
-        return response()->json(['message' => 'Product price saved successfully.'], 200);
-    }
-
-    public function editPrice(int $id)
-    {
-        $price = ProductHeadPrice::find($id);
-        if ($price) {
-            return new ProductPricesEditResource($price);
-        } else {
-            return response()->json(['message' => 'Product price notfound.'], 201);
-        }
-    }
-
-    public function updatePrice(UpdateProductPriceRequest $request, int $id)
-    {
-        $price = ProductHeadPrice::whereId($id)->first();
-        if ($price) {
-            $price->update($request->all());
-        }
-        return response()->json(['message' => 'Product price updated successfully.'], 200);
-    }
-
-    public function deletePrice(int $id)
-    {
-        $price = ProductHeadPrice::whereId($id)->first();
-        if ($price) {
-            $price->delete();
-            return response()->json(['message' => 'Product price deleted successfully.'], 200);
-        } else {
-            return response()->json(['message' => 'Product price can not delete.'], 201);
-        }
-    }
+   
 }

@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_head_prices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_head_id')->index();
-            $table->foreign('product_head_id')->references('id')->on('product_heads')->onDelete('cascade');
+            $table->unsignedBigInteger('product_head_id');
             $table->unsignedBigInteger('country_id')->index();
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->decimal('price', 8, 2);
             $table->integer('discount')->default(0);
             $table->date('discount_from')->nullable();

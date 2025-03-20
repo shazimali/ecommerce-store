@@ -15,9 +15,5 @@ interface ProductInterface
     public function edit(int $id);
     public function update(UpdateProductRequest $request, int $id);
     public function destroy(int $id);
-    public function getPricesByProductID(int $id);
-    public function storePrice(StoreProductPriceRequest $request);
-    public function updatePrice(UpdateProductPriceRequest $request, int $id);
-    public function deletePrice(int $id);
     public function getAllSubCategories();
 }

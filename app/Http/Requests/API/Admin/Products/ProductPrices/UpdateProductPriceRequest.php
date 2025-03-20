@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\API\Admin\Products;
+namespace App\Http\Requests\API\Admin\Products\ProductPrices;
 
-use App\Http\Requests\JsonFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProductPriceRequest extends JsonFormRequest
+class UpdateProductPriceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests\API\Admin\Products;
+namespace App\Http\Requests\API\Admin\Products\ProductPrices;
 
 use App\Http\Requests\JsonFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductPriceRequest extends JsonFormRequest
 {
