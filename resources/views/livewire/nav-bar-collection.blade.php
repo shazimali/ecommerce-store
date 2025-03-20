@@ -40,7 +40,7 @@
                                     x-on:mouseover="selectedImage = `{{ asset('storage/'.$sub_cat->image) }}`"
                                     x-on:mouseout="selectedImage = `{{ asset('storage/'.$category->image) }}`"
                                     class="hover:text-primary" >
-                                        <a href="">{{ $sub_cat->title }}</a>
+                                        <a href="{{ route('sub-categories',[$sub_cat->slug]) }}">{{ $sub_cat->title }}</a>
                                     </li>
                                 @endforeach
                             </ul>
