@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
-    public function SubCategoriesByCategorySlug(string $slug)
+    public function subCategoriesByCategorySlug(string $slug)
     {
         $category = Category::where('slug', $slug)->first();
         if ($category) {

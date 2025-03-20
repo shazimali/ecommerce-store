@@ -71,7 +71,7 @@
     @foreach ($new_products as $new_product)
     @include('inc.product_box', ['product' => $new_product])
     @endforeach
-    </div>
+</div>
 <div class="flex text-center justify-center pt-5">
     <a class="bg-primary text-white py-2 px-4" href="">Show More</a>
 </div>
