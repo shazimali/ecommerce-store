@@ -21,8 +21,27 @@ class PurchasesService implements PurchasesInterface
 {
     public function getAll(Request $request)
     {
-        $purchase = Purchase::paginate($request->itemPerPage);
-        return PurchasesListResource::collection($purchase);
+        
+        $search = $request->search;
+        $supplierId = $request->supplier_id;
+        $invoiceId = $request->invoice_id;
+
+        $query = Purchase::query()->with('supplier');
+
+        $query->when($search, function ($q) use ($search) {
+            return $q->where('name', 'like', "%{$search}%")
+                ->orWhere('id', 'like', "%{$search}%");
+        });
+
+        $query->when($supplierId, function ($q) use ($supplierId) {
+            return $q->where('supplier_id', $supplierId);
+        });
+
+        $query->when($invoiceId, function ($q) use ($invoiceId) {
+            return $q->where('invoice_id', $invoiceId);
+        });
+
+        return PurchasesListResource::collection($query->paginate($request->item_per_page));
     }
 
     public function getAllSuppliers()
