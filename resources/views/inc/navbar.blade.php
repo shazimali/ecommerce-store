@@ -54,17 +54,27 @@ class="lg:block md:block sm:hidden xs:hidden">
                 class="bg-white dark:bg-black z-50 min-h-64 w-full absolute flex justify-between py-10 px-10">
                     @foreach (newArrivals() as $new_pr)
                         <div class="text-center relative dark:text-secondary">
-                            @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                            <div class="absolute right-0 top-0 w-auto px-1  py-1 bg-green-600 text-white text-center text-xs font-semibold">{{ $new_pr->price_detail->discount}} %</br> off</div>
-                            @endif
-                                <img
-                                    src="{{ asset('storage/'.$new_pr->nav_image) }}"
-                                    {{-- class=" max-h-52" --}}
-                                    alt="{{ $new_pr->title }}" />
-                                <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">       
-                                    {{$new_pr->title }}     
-                                </div>
-                            @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                <div class="absolute right-0 top-0 w-auto px-1  py-1 bg-green-600 text-white text-center text-xs font-semibold">{{ $new_pr->price_detail->discount}} %</br> off</div>
+                                @endif
+                                    <img
+                                        src="{{ asset('storage/'.$new_pr->nav_image) }}"
+                                        {{-- class=" max-h-52" --}}
+                                        alt="{{ $new_pr->title }}" />
+                                    <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">       
+                                        {{$new_pr->title }}     
+                                    </div>
+                                @if ($new_pr->coming_soon || count($new_pr->stocks) == 0)
+                                    @if ($new_pr->coming_soon)
+                                        <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>    
+                                    @else
+                                        @if (count($new_pr->stocks) == 0)
+                                        <p class="text-primary text-xs text-left"><b>Out Of Stock</b></p>    
+                                        @endif
+                                    @endif
+                                    
+                                @else    
+                                    @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
                                     <div class="text-xs text-left">
                                         <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount),2)  }}
                                         <del class="text-gray-500">
@@ -86,6 +96,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                                             Add to Cart
                                         </a>
                                     </div>
+                                @endif
                         </div>
                     @endforeach   
                 </div>
