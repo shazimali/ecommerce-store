@@ -23,7 +23,7 @@ function website()
 
 function newArrivals()
 {
-    return ProductHead::new()->active()->with('price_detail')->get()->take(5);
+    return ProductHead::new()->active()->with('price_detail')->get()->take(4);
 }
 
 function facilities()

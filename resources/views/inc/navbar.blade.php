@@ -8,8 +8,8 @@ class="lg:block md:block sm:hidden xs:hidden">
 x-data="{menu: false, sideBarOpen: false, newArOpen: false}"
 class="lg:block md:block sm:hidden xs:hidden">
 @endif
-        <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-5 px-8">
-            <div class="w-full">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8">
+            <div class="">
                 <livewire:nav-bar-collection/>
             </div>
             <div  class="col-span-3 grid grid-cols-2 py-5 dark:bg-black relative">
@@ -55,34 +55,37 @@ class="lg:block md:block sm:hidden xs:hidden">
                     @foreach (newArrivals() as $new_pr)
                         <div class="text-center relative dark:text-secondary">
                             @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                            <div class="absolute right-0 top-0 w-auto px-2  py-2 bg-green-600 text-white text-center text-xs font-semibold">{{ $new_pr->price_detail->discount}} %</br> off</div>
+                            <div class="absolute right-0 top-0 w-auto px-1  py-1 bg-green-600 text-white text-center text-xs font-semibold">{{ $new_pr->price_detail->discount}} %</br> off</div>
                             @endif
                                 <img
-                                    src="{{ asset('storage/'.$new_pr->image) }}"
-                                    class=" max-h-52"
+                                    src="{{ asset('storage/'.$new_pr->nav_image) }}"
+                                    {{-- class=" max-h-52" --}}
                                     alt="{{ $new_pr->title }}" />
-                                <div class="pt-2 overflow-hidden max-w-36 text-xs truncate">                {{$new_pr->title }}     
+                                <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">       
+                                    {{$new_pr->title }}     
                                 </div>
                             @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                                    <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-center">
+                                    <div class="text-xs text-left">
                                         <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount),2)  }}
-                                        <del class="text-gray-500 text-xs">
+                                        <del class="text-gray-500">
                                             {{ $new_pr->price_detail->country->currency }} {{  number_format($new_pr->price_detail->price,2)  }}
                                         </del>
                                     </div>
                                     @else
-                                    <div class="text-xs text-center">
+                                    <div class="text-xs text-left">
                                         <b>{{ $new_pr->price_detail->country->currency }}</b>  {{  number_format($new_pr->price_detail->price,2)  }}
                                     </div>
                                     @endif
-                                <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2" href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
-                                    <i class="fa-regular fa-eye text-primary"></i>
-                                    View Detail
-                                </a>
-                                <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary" href="">
-                                    <i class="fa-solid fa-cart-shopping text-primary"></i>
-                                    Add to Cart
-                                </a>
+                                    <div class="flex justify-between">
+                                        <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2" href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
+                                            <i class="fa-regular fa-eye text-primary"></i>
+                                            View Detail
+                                        </a>
+                                        <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary  my-2" href="">
+                                            <i class="fa-solid fa-cart-shopping text-primary"></i>
+                                            Add to Cart
+                                        </a>
+                                    </div>
                         </div>
                     @endforeach   
                 </div>
