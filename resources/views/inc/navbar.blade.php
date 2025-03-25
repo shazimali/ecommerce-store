@@ -64,15 +64,8 @@ class="lg:block md:block sm:hidden xs:hidden">
                                     <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">       
                                         {{$new_pr->title }}     
                                     </div>
-                                @if ($new_pr->coming_soon || count($new_pr->stocks) == 0)
-                                    @if ($new_pr->coming_soon)
-                                        <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>    
-                                    @else
-                                        @if (count($new_pr->stocks) == 0)
-                                        <p class="text-primary text-xs text-left"><b>Out Of Stock</b></p>    
-                                        @endif
-                                    @endif
-                                    
+                                @if ($new_pr->coming_soon)
+                                <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>    
                                 @else    
                                     @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
                                     <div class="text-xs text-left">
