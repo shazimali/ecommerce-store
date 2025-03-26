@@ -16,28 +16,7 @@
             <i class="-ml-7 mt-4 text-primary fas fa-search"></i>
         </div>
         <div class="text-end">
-            {{-- <livewire:partials.cart-button /> --}}
-            <div class="drawer drawer-end">
-                <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-                <div class="drawer-content mt-3 cursor-pointer">
-                    <label for="my-drawer-4"
-                        class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-3 px-6">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="text-gray-500 text-sm font-semibold">0</span>
-                    </label>
-                </div>
-
-                <div class="drawer-side">
-                    <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
-                    <div class="menu  bg-white dark:bg-black min-h-full w-96 p-4 text-start">
-                        <div class="flex justify-between border-b border-b-secondary dark:border-b-slate-800">
-                            <h1 class="uppercase text-1xl dark:text-white font-semibold pb-1">your Cart (0)</h1>
-                        </div>
-                        <h3 class=" dark:text-white">Your cart is currently empty.</h3>
-                    </div>
-                </div>
-            </div>
-
+          <livewire:cart-side-bar/>
         </div>
     </div>
 </div>

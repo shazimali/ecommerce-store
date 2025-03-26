@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ProductHead;
+use App\Services\CartManagementService;
 use Livewire\Component;
 
 class ProductDetail extends Component
@@ -66,10 +67,10 @@ class ProductDetail extends Component
     public function addToCart($slug)
     {
         // if ($this->add_to_cart_active) {
-        //     CartManagement::addCartItemsFromProductDetailPage($slug, $this->current_color_id, $this->qty);
-        //     $data = ['type' => 'success', 'message' => 'Item added successfully.'];
-        //     $this->dispatch('update-cart', data: $data);
-        //     $this->dispatch('cart-refresh');
+        CartManagementService::addCartItemsFromProductDetailPage($slug, $this->current_color, $this->qty);
+        $data = ['type' => 'success', 'message' => 'Item added successfully.'];
+        $this->dispatch('update-cart', data: $data);
+        $this->dispatch('cart-refresh');
         // } else {
         //     $this->dispatch(
         //         'alert',
@@ -78,9 +79,25 @@ class ProductDetail extends Component
         //     );
         // }
     }
+    public function incrementQty($val)
+    {
+        if ($val >  1) {
+            $this->qty = $val;
+        }
+    }
+    public function decrementQty($val)
+    {
+        if ($val >  1) {
+            $this->qty = $val;
+        }
+    }
 
     public function render()
     {
-        return view('livewire.product-detail');
+        if ($this->product) {
+            return view('livewire.product-detail');
+        } else {
+            return abort('404');
+        }
     }
 }

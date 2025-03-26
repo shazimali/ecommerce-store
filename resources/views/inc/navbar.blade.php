@@ -69,7 +69,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                                 @else    
                                     @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
                                     <div class="text-xs text-left">
-                                        <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount),2)  }}
+                                        <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount)),2 ) }}
                                         <del class="text-gray-500">
                                             {{ $new_pr->price_detail->country->currency }} {{  number_format($new_pr->price_detail->price,2)  }}
                                         </del>

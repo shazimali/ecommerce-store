@@ -14,25 +14,25 @@
         <h1>
             <a href="{{ route('product.detail',['slug' => $product->slug]) }}">{{ $product->title }}</a>
         </h1>
-        @if ( $product->price_detail)
-        <h2><b>
-            @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-            {{ $product->price_detail->country->currency }} {{ number_format($product->price_detail->price - ($product->price_detail->price/100*$product->price_detail->discount),2)  }}
-            @else
-            {{ $product->price_detail->country->currency }} {{  number_format($product->price_detail->price,2)  }}
-            @endif
-            </b>
-            @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-            <del class="text-gray-500">
-                {{ $product->price_detail->country->currency }} {{ number_format($product->price_detail->price,2) }}
-            </del>
-            @endif
-            
-        </h2>
-            
-        @endif
         @if($product->coming_soon)
         <h2 class="text-primary"><b>Coming Soon</b></h2>
+        @else
+            @if ( $product->price_detail)
+            <h2><b>
+                @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                {{ $product->price_detail->country->currency }} {{ number_format(round($product->price_detail->price - ($product->price_detail->price/100*$product->price_detail->discount)),2)  }}
+                @else
+                {{ $product->price_detail->country->currency }} {{  number_format($product->price_detail->price,2)  }}
+                @endif
+                </b>
+                @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                <del class="text-gray-500">
+                    {{ $product->price_detail->country->currency }} {{ number_format($product->price_detail->price,2) }}
+                </del>
+                @endif
+                
+            </h2>  
+            @endif
         @endif
 
     </div>
