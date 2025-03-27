@@ -22,7 +22,7 @@ class ProductsController extends Controller
     {
         $products = ProductHead::orderBy('order', 'ASC')->paginate(4);
         $categories = Category::all();
-        $colors = ProductColor::all();
+        $colors = ProductColor::distinct()->select('color_name')->get();
         return view('shop', [
             'products' => $products,
             'categories' => $categories,
