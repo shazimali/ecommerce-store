@@ -21,13 +21,13 @@
             <div @class([
                 'mt-2 text-end' => true,
                 'hidden' => $cart_count == 0])>
-                <div class="text-1xl font-semibold dark:text-white">Subtotal {{ number_format($sub_total,2)  }} </div>  
+                <div class="text-1xl font-semibold dark:text-white">Subtotal {{ getLocation()->currency }} {{ number_format($sub_total,2)  }} </div>  
                     <div class="text-xs dark:text-white">Taxes and shipping calculated at checkout</div>
                     <div class="uppercase text-xs font-semibold bg-primary text-white mt-1 w-full py-2 text-center">
                         <a href="">check out</a>
                     </div>
                     <div class="uppercase text-xs font-semibold bg-secondary w-full py-2 my-2 text-center">
-                        <a href="">View Cart</a>
+                        <a href="{{ route('cart') }}">View Cart</a>
                     </div>
                     
             </div>

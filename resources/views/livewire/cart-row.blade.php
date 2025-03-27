@@ -8,10 +8,12 @@
                             <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
                             <div>
                                     <div class="py-1 text-sm"><b>{{ $crt['title'] }}</b></div> 
-                                    <div class="py-1 text-sm"> {{ number_format($crt['unit_amount'],2)  }}</div> 
+                                    <div class="py-1 text-sm">{{ $crt['currency'] }} {{ number_format(round($crt['unit_amount']),2)  }}</div> 
+                                    @if($crt['color'])
                                     <div class="py-1 flex text-sm">
                                             Color: {{ $color_title }}
                                     </div>
+                                    @endif
                                     <div class="py-1 flex">
                                             <button wire:click="decreaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-3">-</button>
                                             <input type="text" value="{{ $crt['quantity'] }}" class="bg-secondary text-black text-xs border-none text-center w-10" readonly>
@@ -25,7 +27,7 @@
                             </div>
                     </div>
                     <div class="text-end text-sm mt-1">
-                             {{ number_format($crt['total_amount'],2) }}
+                        {{ $crt['currency'] }} {{ number_format(round($crt['total_amount']),2) }}
                     </div>    
             </div>      
     </div>
@@ -36,12 +38,12 @@
                     </div>
                     <div>
                             <div class="py-1 text-xs"><b>{{ $crt['title'] }}</b></div> 
-                            <div class="py-1 text-xs"> {{ number_format($crt['unit_amount'],2)  }}</div> 
+                            <div class="py-1 text-xs"> {{ number_format(round($crt['unit_amount']),2)  }}</div> 
                             <div class="flex text-xs">
                                     Color: {{ $color_title }}
                             </div>
                             <div class="flex text-xs">
-                                    <b>Total:  {{ number_format($crt['total_amount'],2) }}</b>
+                                    <b>Total:  {{ number_format(round($crt['total_amount']),2) }}</b>
                             </div>
                             <div>
                                    <span wire:click="removeItem('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="text-primary cursor-pointer px-2 py-1">

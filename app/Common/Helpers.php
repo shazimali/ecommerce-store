@@ -26,6 +26,12 @@ function newArrivals()
     return ProductHead::new()->active()->with('price_detail', 'stocks')->orderBy('order', 'ASC')->get()->take(4);
 }
 
+function getLocation()
+{
+    $loc = Location::get('154.192.161.138');
+    return Country::where('iso', $loc->countryCode)->first();
+}
+
 function facilities()
 {
     $loc = Location::get('154.192.161.138');

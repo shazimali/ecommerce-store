@@ -28,7 +28,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                         </li>
                     @endif
                     <li class="mr-6">
-                        <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="">Shop</a>
+                        <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="{{ route('shop') }}">Shop</a>
                     </li>
                     <li class="mr-6">
                         <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('blogs') || Route::is('blogs.detail') ])  href="">Blogs</a>
@@ -79,15 +79,15 @@ class="lg:block md:block sm:hidden xs:hidden">
                                         <b>{{ $new_pr->price_detail->country->currency }}</b>  {{  number_format($new_pr->price_detail->price,2)  }}
                                     </div>
                                     @endif
-                                    <div class="flex justify-between">
+                                    <div class="w-full">
                                         <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2" href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
                                             <i class="fa-regular fa-eye text-primary"></i>
                                             View Detail
                                         </a>
-                                        <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary  my-2" href="">
+                                        {{-- <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary  my-2" href="">
                                             <i class="fa-solid fa-cart-shopping text-primary"></i>
                                             Add to Cart
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 @endif
                         </div>
