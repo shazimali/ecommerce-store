@@ -20,6 +20,11 @@ class Website extends Model
         return $this->belongsToMany(Banner::class, 'banner_website', 'website_id', 'banner_id');
     }
 
+    public function social_medias(): BelongsToMany
+    {
+        return $this->belongsToMany(SocialMedia::class, 'social_media_website', 'website_id', 'social_media_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'ACTIVE');

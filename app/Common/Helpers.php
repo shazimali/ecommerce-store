@@ -12,7 +12,7 @@ function website()
 
     if ($domain) {
         return  Website::active()->where('domain', $domain)
-            ->with('categories', 'banners')
+            ->with('categories', 'banners', 'social_medias')
             ->first();
     }
 
