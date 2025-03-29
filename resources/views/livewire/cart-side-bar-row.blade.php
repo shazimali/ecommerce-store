@@ -17,7 +17,6 @@
                             <button wire:click="decreaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-3">-</button>
                             <input type="text" value="{{ $crt['quantity'] }}" class="bg-secondary text-black text-xs border-none text-center w-10" readonly>
                             <button wire:click="increaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-3">+</button>
-
                     </div>
                     <span class="text-sm text-end py-3">{{ $crt['currency'] }} {{ number_format(round($crt['total_amount']),2) }}</span>
                 </div>
