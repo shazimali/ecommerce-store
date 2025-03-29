@@ -19,6 +19,7 @@ class SocialMediasListResource extends JsonResource
             'title' => $this->title,
             'class' => $this->class,
             'url' => $this->url,
+            'websites' => $this->websites->pluck('title'),
             'created_at' => $this->created_at->toDateString(),
 
         ];

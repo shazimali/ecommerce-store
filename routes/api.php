@@ -132,12 +132,13 @@ Route::prefix('admin')->group(function () {
 
 
         //SocialMedias
-        Route::prefix('/socialMedias')->group(function () {
+        Route::prefix('/social-medias')->group(function () {
             Route::get('/', [SocialMediasController::class, 'index']);
             Route::post('/store', [SocialMediasController::class, 'store']);
             Route::get('/edit/{id}', [SocialMediasController::class,  'edit']);
-            Route::put('/update/{id}', [SocialMediasController::class, 'update']);
+            Route::post('/update/{id}', [SocialMediasController::class, 'update']);
             Route::delete('/delete/{id}', [SocialMediasController::class, 'destroy']);
+            Route::get('/get-all-websites', [SocialMediasController::class, 'getAllWebsites']);
         });
 
         //Facilities

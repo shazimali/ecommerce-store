@@ -19,6 +19,7 @@ class SocialMediasEditResource extends JsonResource
             'title' => $this->title,
             'class' => $this->class,
             'url' => $this->url,
+            'websites' => $this->websites
 
         ];
     }
