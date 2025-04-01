@@ -35,7 +35,7 @@
                                     <a href="{{ route('cart') }}">shopping cart</a>
                                     </div>
                                     <div class="uppercase text-sm font-semibold bg-primary text-white w-full py-2 text-center">
-                                    <a href="">check out</a>
+                                    <a href="{{ route('checkout') }}">check out</a>
                                     </div>
                             </div>
                     </div>  
