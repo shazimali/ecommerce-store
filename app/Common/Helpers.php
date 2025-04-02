@@ -2,6 +2,7 @@
 
 use App\Models\Country;
 use App\Models\ProductHead;
+use App\Models\Setting;
 use App\Models\Website;
 use Stevebauman\Location\Facades\Location;
 
@@ -37,6 +38,12 @@ function facilities()
     $loc = Location::get('154.192.161.138');
     $country = Country::where('iso', $loc->countryCode)->first();
     return $country->facilities()->get();
+}
+
+function getSettingVal($key)
+{
+
+    return Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
 }
 
 function new_products() {}
