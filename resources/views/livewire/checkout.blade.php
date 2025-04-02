@@ -42,7 +42,12 @@
                    <label class="block mb-2 dark:bg-black" for="first-name">
                      City
                    </label>
-                   <input class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city" id="city" type="text">
+                   <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city" id="city">
+                    <option value="">Select City</option>
+                    @foreach ($cities as $get_city)
+                        <option value="{{ $get_city['id'] }}">{{ $get_city['name'] }}</option>
+                    @endforeach
+                   </select>
                    @error('city')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                  </div>
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
