@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Validate;
 
 class Checkout extends Component
@@ -18,6 +19,7 @@ class Checkout extends Component
     public $last_name = '';
     public $address = '';
     public $city = '';
+    public $cities = [];
     public $country = 0;
     public $phone = '';
     public $postal_code = '';
@@ -39,6 +41,13 @@ class Checkout extends Component
 
     public function mount()
     {
+        $response = Http::get(env('COD_API') . 'getAllCities/format/json/', [
+            'api_key' => '',
+            'api_password' => ''
+        ]);
+
+        $res_data = $response->json();
+        $this->cities = $res_data['city_list'];
         $this->cartItems = CartManagementService::getCartItemsFromCookies();
         $this->sub_total = CartManagementService::calculateGrandTotal($this->cartItems);
         $this->shipping_charges = getSettingVal('shipping_charges');
@@ -63,6 +72,16 @@ class Checkout extends Component
     public function completeOrder()
     {
         $this->validate($this->completeOrderRules);
+
+        // $response = Http::get('https://merchantapistaging.leopardscourier.com/api/bookPacket/format/json/', [
+        //     'api_key' => '',
+        //     'api_password' => '',
+        //     'booked_packet_weight' => '2000',
+        //     'booked_packet_no_piece' => 
+
+        // ]);
+
+        // $res_data = $response->json();
     }
 
     public function render()
