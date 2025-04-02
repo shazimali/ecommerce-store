@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Setting extends Model
@@ -14,8 +15,8 @@ class Setting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function Country(): HasOne
+    public function Country(): BelongsTo
     {
-        return $this->hasOne(Country::class, 'country_id', 'id');
+        return $this->belongsTo(Country::class, 'country_id', 'id');
     }
 }
