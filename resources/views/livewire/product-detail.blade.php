@@ -49,7 +49,7 @@
             <div class="text-2xl font-semibold text-primary py-2">
                 @if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
 
-                <b>{{ $product->price_detail->country->currency }}</b>{{ number_format($product->price_detail->price - ($product->price_detail->price/100*$product->price_detail->discount),2) }}
+                <b>{{ $product->price_detail->country->currency }}</b>{{ number_format(round($product->price_detail->price - ($product->price_detail->price/100*$product->price_detail->discount)),2) }}
                 <del class="text-gray-500 text-xs">
                     {{ number_format($product->price_detail->price,2) }}
                 </del>

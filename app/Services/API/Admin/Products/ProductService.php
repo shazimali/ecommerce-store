@@ -21,6 +21,10 @@ use App\Models\ProductHeadSubCategory;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Laravel\Facades\Image;
+
 
 class ProductService implements ProductInterface
 {
@@ -42,7 +46,16 @@ class ProductService implements ProductInterface
         $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
         $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            //nav image
+            $imgManager = new ImageManager(new Driver());
+            $image_data = file_get_contents(env('APP_URL') . '/storage/' . $data['image']);
+            $nav_image_data = $imgManager->read($image_data);
+            $nav_image_data->resize(208, 208);
+            $nav_image_data->save(storage_path('app/public/' . $imageName));
+            $data['nav_image'] = $imageName;
         }
         if ($request->hasFile('image1')) {
             $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
@@ -81,17 +94,29 @@ class ProductService implements ProductInterface
     public function update(UpdateProductRequest $request, int $id)
     {
         $product = ProductHead::find($id);
-
         $data = $request->except(['sub_categories']);
-        $data['is_new'] = $request->is_new ? 1 : 0;
-        $data['is_featured'] = $request->is_featured ? 1 : 0;
-        $data['coming_soon'] = $request->coming_soon ? 1 : 0;
+
+        $data['is_new'] = $request->is_new == 'true' ? 1 : 0;
+        $data['is_featured'] = $request->is_featured == 'true' ? 1 : 0;
+        $data['coming_soon'] = $request->coming_soon == 'true' ? 1 : 0;
 
         if ($request->hasFile('image')) {
             if (!is_null($product->image)) {
                 Storage::delete($product->image);
             }
+            if (!is_null($product->nav_image)) {
+                Storage::delete($product->nav_image);
+            }
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            //nav image
+            $imgManager = new ImageManager(new Driver());
+            $image_data = file_get_contents(env('APP_URL') . '/storage/' . $data['image']);
+            $nav_image_data = $imgManager->read($image_data);
+            $nav_image_data->resize(208, 208);
+            $nav_image_data->save(storage_path('app/public/' . $imageName));
+            $data['nav_image'] = $imageName;
         }
         if ($request->hasFile('image1')) {
             if (!is_null($product->image1)) {

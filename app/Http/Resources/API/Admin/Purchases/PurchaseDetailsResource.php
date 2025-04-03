@@ -18,7 +18,7 @@ class PurchaseDetailsResource extends JsonResource
             'product_head_id' => $this->product_head_id,
             'title' => $this->product->title,
             'code' => $this->product->code,
-            'color_name' => $this->color->color_name,
+            'color_name' => $this->color ? $this->color->color_name : 'N/A',
             'color_id' => $this->product_color_id,
             'qty' => $this->qty,
             'net_price' => $this->net_price,

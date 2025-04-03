@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title','Home')
 @section('content')
 <section>
     <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">

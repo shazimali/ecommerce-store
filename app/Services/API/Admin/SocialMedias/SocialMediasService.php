@@ -6,30 +6,42 @@ use App\Http\Requests\API\Admin\SocialMedias\StoreSocialMediasRequest;
 use App\Http\Requests\API\Admin\SocialMedias\UpdateSocialMediasRequest;
 use App\Http\Resources\API\Admin\SocialMedias\SocialMediasEditResource;
 use App\Http\Resources\API\Admin\SocialMedias\SocialMediasListResource;
+use App\Http\Resources\API\Admin\Websites\WebsiteListResource;
 use App\Interfaces\API\Admin\SocialMedias\SocialMediasInterface;
 use App\Models\SocialMedia;
+use App\Models\Website;
 use Illuminate\Http\Request;
 
 class SocialMediasService implements SocialMediasInterface
 {
     public function getAll(Request $request)
     {
-        $itemPerPage = $request->get('item_per_page', 10);
-        $socialMedias = SocialMedia::paginate($itemPerPage);
+        $socialMedias = SocialMedia::paginate($request->itemPerPage);
         if ($socialMedias) {
             return SocialMediasListResource::collection($socialMedias);
         } else {
-            return response()->json(['message', 'Social Medias Not exist'], 201);
+            return response()->json(['message', 'Social Media Not exist'], 201);
         }
+    }
+
+    public function getAllWebsites()
+    {
+        $websites = Website::active()->get();
+        if ($websites) {
+            return WebsiteListResource::collection($websites);
+        }
+        return response()->json(['message' => 'No website found'], 201);
     }
 
     public function store(StoreSocialMediasRequest $request)
     {
-        $socialMedias = SocialMedia::create($request->all());
-        if ($socialMedias) {
-            return response()->json(['message' => 'Social Medias Stored Successfully'], 200);
+        $data = $request->except('websites');
+        $socialMedia = SocialMedia::create($data);
+        if ($socialMedia) {
+            $socialMedia->websites()->attach($request->websites);
+            return response()->json(['message' => 'Social Media Stored Successfully'], 200);
         } else {
-            return response()->json(['message' => 'Social Medias Not Stored'], 201);
+            return response()->json(['message' => 'Social Media Not Stored'], 201);
         }
     }
 
@@ -39,34 +51,36 @@ class SocialMediasService implements SocialMediasInterface
         if ($socialMedias) {
             return new SocialMediasEditResource($socialMedias);
         } else {
-            return response()->json(['message' => 'Social Medias not exist'], 201);
+            return response()->json(['message' => 'Social Media not exist'], 201);
         }
     }
 
     public function update(UpdateSocialMediasRequest $request, int $id)
     {
-        $socialMedias = SocialMedia::find($id);
-        if ($socialMedias) {
+        $socialMedia = SocialMedia::find($id);
+        if ($socialMedia) {
             $data = [
                 'title' => $request->title,
                 'class' => $request->class,
                 'url' => $request->url
             ];
-            $socialMedias->update($data);
-            return  response()->json(['message' => 'Social Medias updated successfully.'], 200);
+            $socialMedia->update($data);
+            $socialMedia->websites()->sync($request->websites);
+            return  response()->json(['message' => 'Social Media updated successfully.'], 200);
         } else {
-            return response()->json(['message' => 'Social Medias not found'], 201);
+            return response()->json(['message' => 'Social Media not found'], 201);
         }
     }
 
     public function destroy(int $id)
     {
-        $socialMedias = SocialMedia::find($id);
-        if ($socialMedias) {
-            $socialMedias->delete();
-            return response()->json(['message' => 'Social Medias Deleted Successfully'], 200);
+        $socialMedia = SocialMedia::find($id);
+        if ($socialMedia) {
+            $socialMedia->websites()->detach();
+            $socialMedia->delete();
+            return response()->json(['message' => 'Social Media Deleted Successfully'], 200);
         } else {
-            return response()->json(['message' => 'Social Medias not found'], 201);
+            return response()->json(['message' => 'Social Media not found'], 201);
         }
     }
 }

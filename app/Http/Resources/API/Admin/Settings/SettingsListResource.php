@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources\API\Admin\SocialMedias;
+namespace App\Http\Resources\API\Admin\Settings;
 
+use App\Http\Resources\API\Admin\Countries\CountryListResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SocialMediasListResource extends JsonResource
+class SettingsListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +18,12 @@ class SocialMediasListResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'class' => $this->class,
-            'url' => $this->url,
-            'websites' => $this->websites->pluck('title'),
+            'key' => $this->key,
+            'value' => $this->value,
+            'country_id' => $this->country_id,
+            'country' => new CountryListResource($this->country),
             'created_at' => $this->created_at->toDateString(),
+
 
         ];
     }

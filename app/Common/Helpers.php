@@ -2,6 +2,7 @@
 
 use App\Models\Country;
 use App\Models\ProductHead;
+use App\Models\Setting;
 use App\Models\Website;
 use Stevebauman\Location\Facades\Location;
 
@@ -12,7 +13,7 @@ function website()
 
     if ($domain) {
         return  Website::active()->where('domain', $domain)
-            ->with('categories', 'banners')
+            ->with('categories', 'banners', 'social_medias')
             ->first();
     }
 
@@ -23,7 +24,13 @@ function website()
 
 function newArrivals()
 {
-    return ProductHead::new()->active()->limit(5);
+    return ProductHead::new()->active()->with('price_detail', 'stocks')->orderBy('order', 'ASC')->get()->take(4);
+}
+
+function getLocation()
+{
+    $loc = Location::get('154.192.161.138');
+    return Country::where('iso', $loc->countryCode)->first();
 }
 
 function facilities()
@@ -31,6 +38,12 @@ function facilities()
     $loc = Location::get('154.192.161.138');
     $country = Country::where('iso', $loc->countryCode)->first();
     return $country->facilities()->get();
+}
+
+function getSettingVal($key)
+{
+
+    return Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
 }
 
 function new_products() {}

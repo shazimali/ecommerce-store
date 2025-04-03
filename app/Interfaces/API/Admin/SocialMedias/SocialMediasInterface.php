@@ -13,4 +13,5 @@ interface SocialMediasInterface
     public function edit(int $id);
     public function update(UpdateSocialMediasRequest $request, int $id);
     public function destroy(int $id);
+    public function getAllWebsites();
 }

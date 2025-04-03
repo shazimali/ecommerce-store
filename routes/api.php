@@ -10,6 +10,7 @@ use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Products\ProductPrices\ProductPricesController;
 use App\Http\Controllers\API\Admin\Purchases\PurchasesController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
+use App\Http\Controllers\API\Admin\Settings\SettingsController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
 use App\Http\Controllers\API\Admin\Suppliers\SupplierController;
@@ -133,12 +134,13 @@ Route::prefix('admin')->group(function () {
 
 
         //SocialMedias
-        Route::prefix('/socialMedias')->group(function () {
+        Route::prefix('/social-medias')->group(function () {
             Route::get('/', [SocialMediasController::class, 'index']);
             Route::post('/store', [SocialMediasController::class, 'store']);
             Route::get('/edit/{id}', [SocialMediasController::class,  'edit']);
-            Route::put('/update/{id}', [SocialMediasController::class, 'update']);
+            Route::post('/update/{id}', [SocialMediasController::class, 'update']);
             Route::delete('/delete/{id}', [SocialMediasController::class, 'destroy']);
+            Route::get('/get-all-websites', [SocialMediasController::class, 'getAllWebsites']);
         });
 
         //Facilities
@@ -168,6 +170,15 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [PurchasesController::class, 'update']);
             Route::delete('/delete/{id}', [PurchasesController::class, 'destroy']);
             Route::get('get-all-suppliers', [PurchasesController::class, 'getAllSuppliers']);
+        });
+
+        //Settings
+        Route::prefix('/settings')->group(function () {
+            Route::get('/', [SettingsController::class, 'index']);
+            Route::post('/store', [SettingsController::class, 'store']);
+            Route::get('/edit/{id}', [SettingsController::class, 'edit']);
+            Route::put('/update/{id}', [SettingsController::class, 'update']);
+            Route::delete('/delete/{id}', [SettingsController::class, 'destroy']);
         });
     });
 });
