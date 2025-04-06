@@ -4,9 +4,11 @@ namespace App\Services\API\Admin\Settings;
 
 use App\Http\Requests\API\Admin\Settings\StoreSettingRequest;
 use App\Http\Requests\API\Admin\Settings\UpdateSettingRequest;
+use App\Http\Resources\API\Admin\Countries\CountryListResource;
 use App\Http\Resources\API\Admin\Settings\SettingsEditResource;
 use App\Http\Resources\API\Admin\Settings\SettingsListResource;
 use App\Interfaces\API\Admin\Settings\SettingsInterface;
+use App\Models\Country;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -15,12 +17,22 @@ class SettingsService  implements SettingsInterface
 
     public function getAll(Request $request)
     {
-        $setting = Setting::with('country')->get();
+        $perPage = $request->itemPerPage;
+        $setting = Setting::with('country')->paginate($perPage);
         if ($setting) {
             return SettingsListResource::collection($setting);
         } else {
             return response()->json(['message' => 'Setting Not found'], 200);
         }
+    }
+
+    public function getAllCountries()
+    {
+        $countries = Country::all();
+        if ($countries) {
+            return CountryListResource::collection($countries);
+        }
+        return response()->json(['message' => 'No country found'], 201);
     }
 
     public function store(StoreSettingRequest $request)

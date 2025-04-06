@@ -29,4 +29,12 @@ class StoreSettingRequest extends JsonFormRequest
             'country_id' => 'required',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'country_id.required' => 'country name is required.',
+
+        ];
+    }
 }

@@ -21,7 +21,7 @@ class SettingsListResource extends JsonResource
             'key' => $this->key,
             'value' => $this->value,
             'country_id' => $this->country_id,
-            'country' => new CountryListResource($this->country),
+            'country' => $this->country->name,
             'created_at' => $this->created_at->toDateString(),
 
 

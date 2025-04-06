@@ -15,8 +15,8 @@ class Setting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function Country(): BelongsTo
+    public function Country(): HasOne
     {
-        return $this->belongsTo(Country::class, 'country_id', 'id');
+        return $this->hasOne(Country::class, 'id', 'country_id');
     }
 }

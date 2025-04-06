@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 interface SettingsInterface
 {
     public function getAll(Request $request);
+    public function getAllCountries();
     public function store(StoreSettingRequest $request);
     public function edit(int $id);
     public function update(UpdateSettingRequest $request, int $id);
