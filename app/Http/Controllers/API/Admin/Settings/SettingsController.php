@@ -19,26 +19,36 @@ class SettingsController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('setting_access');
         return $this->settingsService->getAll($request);
+    }
+
+    public function getAllCountries()
+    {
+        return $this->settingsService->getAllCountries();
     }
 
     public function store(StoreSettingRequest $request)
     {
+        $this->authorize('setting_create');
         return $this->settingsService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('setting_edit');
         return $this->settingsService->edit($id);
     }
 
     public function update(UpdateSettingRequest $request, int $id)
     {
+        $this->authorize('setting_edit');
         return $this->settingsService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('setting_delete');
         return $this->settingsService->destroy($id);
     }
 }

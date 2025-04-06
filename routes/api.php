@@ -178,6 +178,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [SettingsController::class, 'edit']);
             Route::put('/update/{id}', [SettingsController::class, 'update']);
             Route::delete('/delete/{id}', [SettingsController::class, 'destroy']);
+            Route::get('/get-all-countries', [SettingsController::class, 'getAllCountries']);
         });
     });
 });
