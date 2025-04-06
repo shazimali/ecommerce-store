@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
+use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
@@ -179,6 +180,16 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [SettingsController::class, 'update']);
             Route::delete('/delete/{id}', [SettingsController::class, 'destroy']);
             Route::get('/get-all-countries', [SettingsController::class, 'getAllCountries']);
+        });
+
+        //Coupons
+        Route::prefix('/coupons')->group(function () {
+            Route::get('/', [CouponsController::class, 'index']);
+            Route::post('/store', [CouponsController::class, 'store']);
+            Route::get('/edit/{id}', [CouponsController::class, 'edit']);
+            Route::put('/update/{id}', [CouponsController::class, 'update']);
+            Route::delete('/delete/{id}', [CouponsController::class, 'destroy']);
+            Route::get('/get-all-countries', [CouponsController::class, 'getAllCountries']);
         });
     });
 });
