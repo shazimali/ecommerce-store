@@ -31,9 +31,8 @@ class Shop extends Component
 
         $this->categories = Category::get();
         $this->colors = ProductColor::distinct()->select('color_name')->get();
-        $this->price_from = 10; //getSettingVal('shop_filter_price_from');
-        $this->price_to = 100000; //getSettingVal('shop_filter_price_to');
-
+        $this->price_from = getSettingVal('shop_filter_price_from');
+        $this->price_to = getSettingVal('shop_filter_price_to');
     }
 
 

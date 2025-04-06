@@ -51,8 +51,12 @@ function facilities()
 
 function getSettingVal($key)
 {
-
-    return Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
+    $setting = Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
+    if ($setting) {
+        return $setting;
+    } else {
+        return 0;
+    }
 }
 
 function new_products() {}
