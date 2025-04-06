@@ -45,8 +45,11 @@ class ProductHead extends Model
 
     public function price_detail(): HasOne
     {
-        $loc = Location::get('154.192.161.138');
-        $country = Country::where('iso', $loc->countryCode)->first();
+        $loc = Location::get(request()->ip());
+        $country = Country::whereId(167)->first(); // default country
+        if ($loc) {
+            $country = Country::where('iso', $loc->countryCode)->first();
+        }
         return  $this->hasOne(ProductHeadPrice::class, 'product_head_id', 'id')->where('country_id', $country->id);
     }
 
