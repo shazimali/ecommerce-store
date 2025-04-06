@@ -29,14 +29,20 @@ function newArrivals()
 
 function getLocation()
 {
-    $loc = Location::get('154.192.161.138');
-    return Country::where('iso', $loc->countryCode)->first();
+    $loc = Location::get(request()->ip());
+    if ($loc)
+        return Country::where('iso', $loc->countryCode)->first();
+
+    return Country::whereId(167)->first(); // default country
 }
 
 function facilities()
 {
-    $loc = Location::get('154.192.161.138');
-    $country = Country::where('iso', $loc->countryCode)->first();
+    $loc = Location::get(request()->ip());
+    if ($loc)
+        $country = Country::where('iso', $loc->countryCode)->first();
+
+    $country = Country::whereId(167)->first(); // default country
     return $country->facilities()->get();
 }
 
