@@ -42,8 +42,8 @@ class Checkout extends Component
     public function mount()
     {
         $response = Http::get(env('COD_API') . 'getAllCities/format/json/', [
-            'api_key' => '',
-            'api_password' => ''
+            'api_key' => env('COD_API_KEY'),
+            'api_password' => env('COD_API_PASSWORD')
         ]);
 
         $res_data = $response->json();
