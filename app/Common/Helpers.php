@@ -30,18 +30,18 @@ function newArrivals()
 function getLocation()
 {
     $loc = Location::get(request()->ip());
-    if ($loc)
+    if ($loc) {
         return Country::where('iso', $loc->countryCode)->first();
-
+    }
     return Country::whereId(167)->first(); // default country
 }
 
 function facilities()
 {
     $loc = Location::get(request()->ip());
-    if ($loc)
+    if ($loc) {
         $country = Country::where('iso', $loc->countryCode)->first();
-
+    }
     $country = Country::whereId(167)->first(); // default country
     return $country->facilities()->get();
 }
