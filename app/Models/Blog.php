@@ -13,4 +13,9 @@ class Blog extends Model
     {
         return $this->belongsToMany(Country::class, 'blog_country', 'country_id', 'blog_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'ACTIVE');
+    }
 }
