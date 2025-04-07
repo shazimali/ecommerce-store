@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Banners\BannersController;
+use App\Http\Controllers\API\Admin\Blogs\BlogsController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
@@ -179,6 +180,12 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [SettingsController::class, 'update']);
             Route::delete('/delete/{id}', [SettingsController::class, 'destroy']);
             Route::get('/get-all-countries', [SettingsController::class, 'getAllCountries']);
+        });
+
+        //Blogs
+        Route::prefix('/blogs')->group(function () {
+            Route::get('/', [BlogsController::class, 'index']);
+            Route::post('/store', [BlogsController::class, 'store']);
         });
     });
 });

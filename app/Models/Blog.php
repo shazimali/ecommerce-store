@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Blog extends Model
 {
-    protected $fillable = ['title', 'slug', 'image', 'description', 'seo_title', 'seo_desc', 'status', 'countries', 'created_at', 'updated_at'];
+    protected $fillable = ['title', 'slug', 'image', 'description', 'seo_title', 'seo_desc', 'status',  'created_at', 'updated_at'];
 
     public function countries(): BelongsToMany
     {
