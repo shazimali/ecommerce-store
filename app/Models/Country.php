@@ -18,4 +18,9 @@ class Country extends Model
     {
         return $this->belongsToMany(Facility::class, 'facility_country', 'facility_id', 'country_id');
     }
+
+    public function blogs(): BelongsToMany
+    {
+        return $this->belongsToMany(Blog::class, 'blog_country', 'blog_id', 'country_id');
+    }
 }

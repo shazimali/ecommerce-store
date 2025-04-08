@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Banners\BannersController;
+use App\Http\Controllers\API\Admin\Blogs\BlogsController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
@@ -190,6 +191,14 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [CouponsController::class, 'update']);
             Route::delete('/delete/{id}', [CouponsController::class, 'destroy']);
             Route::get('/get-all-countries', [CouponsController::class, 'getAllCountries']);
+        //Blogs
+        Route::prefix('/blogs')->group(function () {
+            Route::get('/', [BlogsController::class, 'index']);
+            Route::post('/store', [BlogsController::class, 'store']);
+            Route::get('/edit/{id}', [BlogsController::class, 'edit']);
+            Route::put('/update/{id}', [BlogsController::class, 'update']);
+            Route::delete('/delete/{id}', [BlogsController::class, 'destroy']);
+            Route::get('/get-all-countries', [BlogsController::class, 'getAllCountries']);
         });
     });
 });
