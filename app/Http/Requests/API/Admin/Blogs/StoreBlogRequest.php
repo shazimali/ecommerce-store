@@ -24,10 +24,12 @@ class StoreBlogRequest extends JsonFormRequest
     {
         return [
             'title' => [
-                'required'
+                'required',
+                'unique:blogs,title'
             ],
             'slug' => [
-                'required'
+                'required',
+                'unique:blogs,slug'
             ],
             'image' => [
                 'required'
@@ -38,7 +40,7 @@ class StoreBlogRequest extends JsonFormRequest
             'seo_title' => 'required',
             'seo_desc' => 'required',
             'status' => 'required',
-            'countries' => 'required|array'
+            // 'countries' => 'required|array'
         ];
     }
 }

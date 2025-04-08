@@ -14,6 +14,17 @@ class BlogsEditResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'image' => $this->image,
+            'description' => $this->description,
+            'seo_title' => $this->seo_title,
+            'seo_desc' => $this->seo_desc,
+            'status' => $this->status,
+            'countries' => $this->countries,
+
+        ];
     }
 }
