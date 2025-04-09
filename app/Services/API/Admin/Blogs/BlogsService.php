@@ -11,6 +11,7 @@ use App\Interfaces\API\Admin\Blogs\BlogsInterface;
 use App\Models\Blog;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BlogsService implements BlogsInterface
 {
@@ -38,8 +39,12 @@ class BlogsService implements BlogsInterface
 
     public function store(StoreBlogRequest $request)
     {
+
         $data = $request->all();
         try {
+            if ($request->hasFile('image')) {
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
             $blog = Blog::create($data);
             $blog->countries()->attach($data['countries']);
             return response()->json(['message' => 'Blog Stored Successfully'], 200);
@@ -65,12 +70,17 @@ class BlogsService implements BlogsInterface
             $data = [
                 'title' => $request->title,
                 'slug' => $request->slug,
-                'image' => $request->image,
                 'description' => $request->description,
                 'seo_title' => $request->seo_title,
                 'seo_desc' => $request->seo_desc,
                 'status' => $request->status,
             ];
+            if ($request->hasFile('image')) {
+                if (Storage::exists($blog->image)) {
+                    Storage::delete($blog->image);
+                }
+                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            }
             $blog->update($data);
             $blog->countries()->sync($request->countries);
             return response()->json(['message' => 'Blog updated successfully.'], 200);

@@ -22,24 +22,14 @@ class UpdateBlogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => [
-                'required',
-                'unique:blogs,title'
-            ],
-            'slug' => [
-                'required',
-                'unique:blogs,slug'
-            ],
-            'image' => [
-                'required'
-            ],
-            'description' => [
-                'required'
-            ],
+            'title' => 'required|unique:blogs,title',
+            'slug' => 'required|unique:blogs,slug',
+            'description' => 'required',
+            'image' => 'nullable|image|max:500',
             'seo_title' => 'required',
             'seo_desc' => 'required',
             'status' => 'required',
-           
+
         ];
     }
 }

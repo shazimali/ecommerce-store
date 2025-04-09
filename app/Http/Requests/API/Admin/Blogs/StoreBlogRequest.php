@@ -27,16 +27,17 @@ class StoreBlogRequest extends JsonFormRequest
                 'required',
                 'unique:blogs,title'
             ],
+
             'slug' => [
                 'required',
                 'unique:blogs,slug'
             ],
-            'image' => [
-                'required'
-            ],
+
             'description' => [
                 'required'
             ],
+
+            'image' => 'required|image|max:500',
             'seo_title' => 'required',
             'seo_desc' => 'required',
             'status' => 'required',
