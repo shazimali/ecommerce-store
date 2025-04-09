@@ -191,6 +191,8 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [CouponsController::class, 'update']);
             Route::delete('/delete/{id}', [CouponsController::class, 'destroy']);
             Route::get('/get-all-countries', [CouponsController::class, 'getAllCountries']);
+        });
+
         //Blogs
         Route::prefix('/blogs')->group(function () {
             Route::get('/', [BlogsController::class, 'index']);
