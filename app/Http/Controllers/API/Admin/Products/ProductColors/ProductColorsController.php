@@ -19,26 +19,31 @@ class ProductColorsController extends Controller
 
     public function index(int $id)
     {
+        $this->authorize('product_color_access');
         return $this->productColorsService->getAll($id);
     }
 
     public function store(StoreProductColorsRequest $request)
     {
+        $this->authorize('product_color_create');
         return $this->productColorsService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('product_color_update');
         return $this->productColorsService->edit($id);
     }
 
     public function update(UpdateProductColorsRequest $request, int $id)
     {
+        $this->authorize('product_color_update');
         return $this->productColorsService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('product_color_delete');
         return $this->productColorsService->destroy($id);
     }
 }

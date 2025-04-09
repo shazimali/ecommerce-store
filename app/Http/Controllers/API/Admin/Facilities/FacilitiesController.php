@@ -19,6 +19,7 @@ class FacilitiesController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('facility_access');
         return $this->facilitiesService->getAll($request);
     }
 
@@ -29,21 +30,25 @@ class FacilitiesController extends Controller
 
     public function store(StoreFacilitiesRequest $request)
     {
+        $this->authorize('facility_create');
         return $this->facilitiesService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('facility_edit');
         return $this->facilitiesService->edit($id);
     }
 
     public function update(UpdateFacilitiesRequest $request, int $id)
     {
+        $this->authorize('facility_edit');
         return $this->facilitiesService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('facility_delete');
         return $this->facilitiesService->destroy($id);
     }
 }
