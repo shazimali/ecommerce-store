@@ -19,26 +19,31 @@ class SupplierController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('supplier_access');
         return $this->suppliersService->getAll($request);
     }
 
     public function store(StoreSupplierRequest $request)
     {
+        $this->authorize('supplier_create');
         return $this->suppliersService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('supplier_edit');
         return $this->suppliersService->edit($id);
     }
 
     public function update(UpdateSupplierRequest $request, int $id)
     {
+        $this->authorize('supplier_edit');
         return $this->suppliersService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('supplier_delete');
         return $this->suppliersService->destroy($id);
     }
 }

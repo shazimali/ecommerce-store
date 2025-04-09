@@ -19,6 +19,7 @@ class PurchasesController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('purchase_access');
         return $this->purchasesService->getAll($request);
     }
 
@@ -29,21 +30,25 @@ class PurchasesController extends Controller
 
     public function store(StorePurchaseRequest $request)
     {
+        $this->authorize('purchase_create');
         return $this->purchasesService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('purchase_edit');
         return $this->purchasesService->edit($id);
     }
 
     public function update(UpdatePurchaseRequest $request, int $id)
     {
+        $this->authorize('purchase_edit');
         return $this->purchasesService->update($request, $id);
     }
 
     public function destroy(int $id)
     {
+        $this->authorize('purchase_delete');
         return $this->purchasesService->destroy($id);
     }
 }
