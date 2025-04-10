@@ -31,7 +31,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                         <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="{{ route('shop') }}">Shop</a>
                     </li>
                     <li class="mr-6">
-                        <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('blogs') || Route::is('blogs.detail') ])  href="">Blogs</a>
+                        <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('blogs.*') || Route::is('blogs.index') ])  href="">Blogs</a>
                     </li>
                     <li class="mr-6">
                         <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('about')])  href="">About</a>

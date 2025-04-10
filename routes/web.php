@@ -16,5 +16,6 @@ Route::get('sub-categories/{slug}', [SubCategoriesController::class, 'productsBy
 Route::get('products/{slug}', [ProductsController::class, 'detail'])->name('product.detail');
 Route::get('shop', [ProductsController::class, 'shop'])->name('shop');
 Route::get('blogs', [BlogsController::class, 'index'])->name('blogs.index');
+Route::get('blogs/{slug}', [BlogsController::class, 'detail'])->name('blogs.detail');
 Route::get('cart', [CartController::class, 'index'])->name('cart');
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');

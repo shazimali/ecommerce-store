@@ -11,7 +11,7 @@ class Blog extends Model
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'blog_country', 'country_id', 'blog_id');
+        return $this->belongsToMany(Country::class, 'blog_country', 'blog_id', 'country_id');
     }
 
     public function scopeActive($query)
