@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\API\Admin\Blogs;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\JsonFormRequest;
 
-class UpdateBlogRequest extends FormRequest
+class UpdateBlogRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

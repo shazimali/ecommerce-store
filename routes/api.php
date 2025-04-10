@@ -198,7 +198,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [BlogsController::class, 'index']);
             Route::post('/store', [BlogsController::class, 'store']);
             Route::get('/edit/{id}', [BlogsController::class, 'edit']);
-            Route::put('/update/{id}', [BlogsController::class, 'update']);
+            Route::post('/update/{id}', [BlogsController::class, 'update']);
             Route::delete('/delete/{id}', [BlogsController::class, 'destroy']);
             Route::get('/get-all-countries', [BlogsController::class, 'getAllCountries']);
         });
