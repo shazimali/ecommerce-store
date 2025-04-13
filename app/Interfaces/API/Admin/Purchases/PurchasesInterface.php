@@ -11,6 +11,7 @@ interface PurchasesInterface
 {
     public function getAll(Request $request);
     public function getAllSuppliers();
+    public function getPurchaseInvoiceForPrint(Request $request, int $id);
     public function store(StorePurchaseRequest $request);
     public function edit(int $id);
     public function update(UpdatePurchaseRequest $request, int $id);
