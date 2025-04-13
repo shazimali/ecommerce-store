@@ -5,6 +5,7 @@ namespace App\Services\API\Admin\Purchases;
 use App\Http\Requests\API\Admin\Purchases\StorePurchaseRequest;
 use App\Http\Requests\API\Admin\Purchases\UpdatePurchaseRequest;
 use App\Http\Resources\API\Admin\Products\ProductListResource;
+use App\Http\Resources\API\Admin\Purchases\PurchaseInvoicePrintResource;
 use App\Http\Resources\API\Admin\Purchases\PurchaseProductsListResource;
 use App\Http\Resources\API\Admin\Purchases\PurchasesEditResource;
 use App\Http\Resources\API\Admin\Purchases\PurchasesListResource;
@@ -66,6 +67,11 @@ class PurchasesService implements PurchasesInterface
         return response()->json(['message' => 'Suppliers Not Found.'], 201);
     }
 
+    public function getPurchaseInvoiceForPrint(Request $request, int $id)
+    {
+        $purchase = Purchase::with('supplier', 'purchaseDetails', 'purchase')->find($id);
+        return new PurchaseInvoicePrintResource($purchase);
+    }
 
     public function store(StorePurchaseRequest $request)
     {
