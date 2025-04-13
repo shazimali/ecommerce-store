@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\AuthController;
 use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Blogs\BlogsController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
+use App\Http\Controllers\API\Admin\COD\CODController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
@@ -202,6 +203,16 @@ Route::prefix('admin')->group(function () {
             Route::post('/update/{id}', [BlogsController::class, 'update']);
             Route::delete('/delete/{id}', [BlogsController::class, 'destroy']);
             Route::get('/get-all-countries', [BlogsController::class, 'getAllCountries']);
+        });
+
+        //COD
+        Route::prefix('/cod')->group(function () {
+            Route::get('/', [CODController::class, 'index']);
+            Route::post('/store', [CODController::class, 'store']);
+            Route::get('/edit/{id}', [CODController::class, 'edit']);
+            Route::put('/update/{id}', [CODController::class, 'update']);
+            Route::delete('/delete/{id}', [CODController::class, 'destroy']);
+            Route::get('/get-all-countries', [CODController::class, 'getAllCountries']);
         });
     });
 });
