@@ -69,7 +69,7 @@ class PurchasesService implements PurchasesInterface
 
     public function getPurchaseInvoiceForPrint(Request $request, int $id)
     {
-        $purchase = Purchase::with('supplier', 'purchaseDetails', 'purchase')->find($id);
+        $purchase = Purchase::with('supplier', 'purchaseDetails')->find($id);
         return new PurchaseInvoicePrintResource($purchase);
     }
 

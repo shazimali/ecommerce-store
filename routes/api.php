@@ -171,7 +171,7 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [PurchasesController::class, 'update']);
             Route::delete('/delete/{id}', [PurchasesController::class, 'destroy']);
             Route::get('get-all-suppliers', [PurchasesController::class, 'getAllSuppliers']);
-            Route::get('/fetch-purchase-invoice-for-print/{id}', [PurchasesController::class, 'getPurchaseInvoicePrint']);
+            Route::get('/fetch-invoice/{id}', [PurchasesController::class, 'getInvoice']);
         });
 
         //Settings

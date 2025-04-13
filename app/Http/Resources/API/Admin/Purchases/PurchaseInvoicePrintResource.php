@@ -25,7 +25,6 @@ class PurchaseInvoicePrintResource extends JsonResource
             'products' => ProductInvoicePrintResource::collection($this->purchaseDetails),
             'total_qty' => $this->total_qty,
             'total_price' => $this->total_price,
-
         ];
     }
 }

@@ -28,7 +28,7 @@ class PurchasesController extends Controller
         return $this->purchasesService->getAllSuppliers();
     }
 
-    public function getPurchaseInvoicePrint(Request $request, int $id)
+    public function getInvoice(Request $request, int $id)
     {
         return $this->purchasesService->getPurchaseInvoiceForPrint($request, $id);
     }
