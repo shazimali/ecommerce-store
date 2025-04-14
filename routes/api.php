@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\COD\CODController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
+use App\Http\Controllers\API\Admin\Pages\PagesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
@@ -213,6 +214,14 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [CODController::class, 'update']);
             Route::delete('/delete/{id}', [CODController::class, 'destroy']);
             Route::get('/get-all-countries', [CODController::class, 'getAllCountries']);
+        //Pages
+        Route::prefix('/pages')->group(function () {
+            Route::get('/', [PagesController::class, 'index']);
+            Route::post('/store', [PagesController::class, 'store']);
+            Route::get('/edit/{id}', [PagesController::class, 'edit']);
+            Route::put('/update/{id}', [PagesController::class, 'update']);
+            Route::delete('/delete/{id}', [PagesController::class, 'destroy']);
+            Route::get('/get-all-countries', [PagesController::class, 'getAllCountries']);
         });
     });
 });
