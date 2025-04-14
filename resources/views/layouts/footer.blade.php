@@ -4,7 +4,7 @@
             <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1  gap-10 px-8">
                 <div>
                     <a class="block px-10" href="#">
-                        <img src="{{ asset('images/logo.jpeg') }}" alt="" class="border rounded-xl">
+                        <img src="{{ asset('storage/'.website()->logo) }}" alt="" class="border rounded-xl">
                     </a>
                     <a class="block" href="">
                         <h1 class="text-2xl font-semibold text-center my-2"><span
