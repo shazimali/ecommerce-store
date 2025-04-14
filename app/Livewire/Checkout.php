@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\CashOnDelivery;
+use App\Models\Coupon;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -67,21 +68,24 @@ class Checkout extends Component
     public function applyCouponDiscount()
     {
 
-        // $this->validateOnly($this->coupon);
+        $this->validateOnly($this->coupon);
 
-        // $coupon_detail = Coupon::where('value', $this->coupon)->whereDate('end_date', '>=', Carbon::today()->toDateString())->first();
-        // if ($coupon_detail) {
-        //     $this->coupon_discount = $coupon_detail->discount;
-        //     session()->flash('success', 'Congratulations you got ' . $this->coupon_discount . '% discount.');
-        // } else {
-        //     session()->flash('error', 'coupon not found!');
-        // }
+        $coupon_detail = Coupon::where('code', $this->coupon)
+            ->where('country_id', getLocation()->id)
+            ->whereDate('date_to', '>=', Carbon::today()->toDateString())
+            ->first();
+        if ($coupon_detail) {
+            $this->coupon_discount = $coupon_detail->discount;
+            session()->flash('success', 'Congratulations you got ' . $this->coupon_discount . '% discount.');
+        } else {
+            session()->flash('error', 'coupon not found!');
+        }
     }
 
     public function completeOrder()
     {
         $this->validate($this->completeOrderRules);
-
+        dd('order_completed');
         // $response = Http::get('https://merchantapistaging.leopardscourier.com/api/bookPacket/format/json/', [
         //     'api_key' => '',
         //     'api_password' => '',
