@@ -45,7 +45,7 @@
                    <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city" id="city">
                     <option value="">Select City</option>
                     @foreach ($cities as $get_city)
-                        <option value="{{ $get_city['id'] }}">{{ $get_city['name'] }}</option>
+                        <option value="{{ $get_city['name'] }}">{{ $get_city['name'] }}</option>
                     @endforeach
                    </select>
                    @error('city')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
@@ -78,7 +78,8 @@
                  <input type="checkbox" class="border-secondary dark:bg-black dark:border-slate-800" id="name" name="name" placeholder="Name"/>
                  <span class="text-xs px-1">save this information for next time</span>
              </div>  
-             <h3 class="text-2xl font-semibold py-2">Shipping method</h3>  
+             <h3 class="text-2xl font-semibold py-2">Shipping method</h3> 
+              
              <div class="p-2 border-secondary border mb-2 dark:bg-black dark:border-slate-800">
                  <input type="radio" checked class="border-secondary dark:bg-black dark:border-slate-800" id="name" name="shipping_method">
                  <span class="px-1 font-semibold text-sm">Cash on Delivery (COD)</span>
@@ -110,7 +111,7 @@
                             <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
                             <div>
                                     <div class="text-xs"><b>{{ $crt['title'] }}</b></div> 
-                                    <div class="text-xs">{{ getLocation()->currency }} {{ number_format($crt['unit_amount'],2)  }}</div> 
+                                    <div class="text-xs">{{ getLocation()->currency }} {{ number_format(round($crt['unit_amount'],2))  }}</div> 
                                     
                                     <div class="flex text-xs">
                                             Color: {{ $crt['color'] ? $crt['color'] : 'N/A' }}
@@ -121,7 +122,7 @@
                             </div>
                     </div>
                     <div class="text-end text-xs mt-1 dark:text-black">
-                            {{ getLocation()->currency }} {{ number_format($crt['total_amount'],2) }}
+                            {{ getLocation()->currency }} {{ number_format(round($crt['total_amount'],2)) }}
                     </div>    
             </div>      
         </div>
@@ -151,12 +152,12 @@
          @endif
          <div class="flex justify-between">
              <span class="">SubTotal</span>
-             <span class="">{{ getLocation()->currency }} {{ number_format($sub_total,2)  }}</span>
+             <span class="">{{ getLocation()->currency }} {{ number_format(round($sub_total,2))  }}</span>
          </div>
          @if($coupon_discount > 0)
              <div class="flex justify-between">
                  <span class="">Coupon Discount</span>
-                 <span class="">{{ getLocation()->currency }} {{ number_format(($sub_total/100)*$coupon_discount,2)  }}</span>
+                 <span class="">{{ getLocation()->currency }} {{ number_format(round(($sub_total/100)*$coupon_discount,2))  }}</span>
              </div> 
          @endif
          <div class="flex justify-between">
@@ -171,9 +172,9 @@
          <div class="flex justify-between">
              <span class="font-semibold">Total</span>
              @if ($is_shipping_free)
-             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format($sub_total - ($sub_total/100)*$coupon_discount, 2) }}</span>
+             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format(round($sub_total - ($sub_total/100)*$coupon_discount, 2)) }}</span>
              @else
-             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format(($sub_total + $shipping_charges) - ($sub_total/100)*$coupon_discount, 2) }}</span>
+             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format(round(($sub_total + $shipping_charges) - ($sub_total/100)*$coupon_discount, 2)) }}</span>
              @endif
          </div>
      </div>

@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\CashOnDelivery;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Validate;
+use PDO;
 
 class Checkout extends Component
 {
@@ -19,6 +21,8 @@ class Checkout extends Component
     public $last_name = '';
     public $address = '';
     public $city = '';
+    private $cod_list = [];
+    public $lst_cod = [];
     public $cities = [];
     public $country = 0;
     public $phone = '';
@@ -41,9 +45,14 @@ class Checkout extends Component
 
     public function mount()
     {
-        $response = Http::get(env('COD_API') . 'getAllCities/format/json/', [
-            'api_key' => env('COD_API_KEY'),
-            'api_password' => env('COD_API_PASSWORD')
+        $this->cod_list = CashOnDelivery::activeOrDefault()->whereHas('countries', function ($q) {
+            $q->where('country_id', getLocation()->id);
+        })->get();
+        // $this->lst_cod = $this->cod_list->only(['id', 'title', 'status'])->toArray();
+        // dd($this->lst_cod);
+        $response = Http::get($this->cod_list->where('title', 'Leopards COD')->first()->api_url . 'getAllCities/format/json/', [
+            'api_key' => $this->cod_list->where('title', 'Leopards COD')->first()->api_key,
+            'api_password' => $this->cod_list->where('title', 'Leopards COD')->first()->api_password
         ]);
 
         $res_data = $response->json();
