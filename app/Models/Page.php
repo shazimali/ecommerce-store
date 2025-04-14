@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Page extends Model
 {
-    protected $fillable = ['title', 'slug', 'description', 'seo_title', 'seo_desc', 'status',  'created_at', 'updated_at'];
+    protected $table = 'custom_pages';
+
+    protected $fillable = ['title', 'slug', 'content',  'seo_title', 'seo_description', 'status',  'created_at', 'updated_at'];
 
     public function countries(): BelongsToMany
     {
