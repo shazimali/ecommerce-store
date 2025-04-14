@@ -214,6 +214,7 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [CODController::class, 'update']);
             Route::delete('/delete/{id}', [CODController::class, 'destroy']);
             Route::get('/get-all-countries', [CODController::class, 'getAllCountries']);
+        });
         //Pages
         Route::prefix('/pages')->group(function () {
             Route::get('/', [PagesController::class, 'index']);
