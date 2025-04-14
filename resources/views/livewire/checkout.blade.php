@@ -111,7 +111,7 @@
                             <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
                             <div>
                                     <div class="text-xs"><b>{{ $crt['title'] }}</b></div> 
-                                    <div class="text-xs">{{ getLocation()->currency }} {{ number_format(round($crt['unit_amount'],2))  }}</div> 
+                                    <div class="text-xs">{{ getLocation()->currency }} {{ number_format($crt['unit_amount'],2)  }}</div> 
                                     
                                     <div class="flex text-xs">
                                             Color: {{ $crt['color'] ? $crt['color'] : 'N/A' }}
@@ -122,7 +122,7 @@
                             </div>
                     </div>
                     <div class="text-end text-xs mt-1 dark:text-black">
-                            {{ getLocation()->currency }} {{ number_format(round($crt['total_amount'],2)) }}
+                            {{ getLocation()->currency }} {{ number_format($crt['total_amount'],2) }}
                     </div>    
             </div>      
         </div>
@@ -148,16 +148,16 @@
              {{-- <input type="submit" value="Apply" class="bg-primary text-white font-semibold w-[10%] h-10 cursor-pointer"/> --}}
          </form>
          @if (!$is_shipping_free)
-         <div class="text-xs text-end font-semibold">Shipping is free is your order price more than {{ getLocation()->currency }} {{ number_format(getSettingVal('free_shipping'),2)   }}</div>     
+         <div class="text-xs text-end font-semibold">Shipping is free if your order price more than {{ getLocation()->currency }} {{ number_format(getSettingVal('free_shipping'),2)   }}</div>     
          @endif
          <div class="flex justify-between">
              <span class="">SubTotal</span>
-             <span class="">{{ getLocation()->currency }} {{ number_format(round($sub_total,2))  }}</span>
+             <span class="">{{ getLocation()->currency }} {{ number_format($sub_total,2)  }}</span>
          </div>
          @if($coupon_discount > 0)
              <div class="flex justify-between">
                  <span class="">Coupon Discount</span>
-                 <span class="">{{ getLocation()->currency }} {{ number_format(round(($sub_total/100)*$coupon_discount,2))  }}</span>
+                 <span class="">- {{ getLocation()->currency }} {{ number_format(round(($sub_total/100)*$coupon_discount,2))  }}</span>
              </div> 
          @endif
          <div class="flex justify-between">
@@ -171,11 +171,7 @@
          </div>
          <div class="flex justify-between">
              <span class="font-semibold">Total</span>
-             @if ($is_shipping_free)
-             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format(round($sub_total - ($sub_total/100)*$coupon_discount, 2)) }}</span>
-             @else
-             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format(round(($sub_total + $shipping_charges) - ($sub_total/100)*$coupon_discount, 2)) }}</span>
-             @endif
+             <span class="font-semibold">{{ getLocation()->currency }} {{ number_format($total,2)}}</span>
          </div>
      </div>
     </div>

@@ -78,7 +78,7 @@ class CartManagementService
                 'image' => $product->colors->count() > 0 ? $product->colors->where('color_name', $color)->first()->image1 : $product->image,
                 'quantity' => $qty,
                 'unit_amount' => $price,
-                'total_amount' => $price
+                'total_amount' => round($qty * $price)
             ];
         }
 
@@ -128,7 +128,7 @@ class CartManagementService
         foreach ($cart_items as $key => $item) {
             if ($item['slug'] == $slug  && $item['color'] == $color) {
                 $cart_items[$key]['quantity'] += 1;
-                $cart_items[$key]['total_amount'] = $cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount'];
+                $cart_items[$key]['total_amount'] = round($cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount']);
             }
         }
         self::addCartItemsToCookie($cart_items);
@@ -143,7 +143,7 @@ class CartManagementService
             if ($item['slug'] == $slug  && $item['color'] == $color) {
                 if ($cart_items[$key]['quantity'] > 1) {
                     $cart_items[$key]['quantity']--;
-                    $cart_items[$key]['total_amount'] = $cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount'];
+                    $cart_items[$key]['total_amount'] = round($cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount']);
                 }
             }
         }
