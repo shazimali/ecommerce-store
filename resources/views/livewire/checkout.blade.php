@@ -1,4 +1,5 @@
 <div class="px-8 py-10">
+    @if(!$order_completed)
     <div class="grid grid-cols-2">
      <div class="pr-2 dark:text-white"> 
          <form wire:submit="completeOrder">
@@ -9,7 +10,7 @@
                  @error('email')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
              </div>
              <div class="py-1">
-                 <input type="checkbox" class="border-secondary dark:bg-black dark:border-slate-800" id="name" wire:model="email" placeholder="Name"/>
+                 <input type="checkbox" class="border-secondary dark:bg-black dark:border-slate-800"/>
                  <span class="text-xs px-1">Email me with news and offers</span>
              </div>
              <div class="py-1">
@@ -175,4 +176,12 @@
          </div>
      </div>
     </div>
+    @endif
+    @if($order_completed)
+    <div class="bg-white p-5 rounded-lg shadow-md">
+        <div class="flex justify-between">
+            <span class="text-lg font-bold text-green-700">Your order has been placed successfully and we will let you know once your package is on its way.</span>
+        </div>
+    </div>
+    @endif
  </div>

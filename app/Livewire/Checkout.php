@@ -4,17 +4,23 @@ namespace App\Livewire;
 
 use App\Models\CashOnDelivery;
 use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\ProductColor;
+use App\Models\ProductHead;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
+use Faker\Core\Color;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Validate;
-use PDO;
+use Illuminate\Support\Str;
 
 class Checkout extends Component
 {
     public $cartItems = [];
     public $sub_total = 0;
+    public $order_completed = false;
     public $total = 0;
     public $shipping_charges = 0;
     public $is_shipping_free = false;
@@ -44,6 +50,8 @@ class Checkout extends Component
         'postal_code'         => 'nullable'
     ];
 
+    public $coupon_discount = 0;
+    private $coupon_id = 0;
 
     public function mount()
     {
@@ -80,8 +88,10 @@ class Checkout extends Component
             ->where('country_id', getLocation()->id)
             ->whereDate('date_to', '>=', Carbon::today()->toDateString())
             ->first();
+
         if ($coupon_detail) {
             $this->coupon_discount = $coupon_detail->discount;
+            $this->coupon_id = $coupon_detail->id;
             if ($this->is_shipping_free) {
                 $this->total =  $this->coupon_discount == 0 ?  $this->sub_total : round($this->sub_total - ($this->sub_total / 100 * $this->coupon_discount));
             } else {
@@ -96,6 +106,39 @@ class Checkout extends Component
     public function completeOrder()
     {
         $this->validate($this->completeOrderRules);
+        $order = new Order();
+        $order->order_id = Str::uuid();
+        $order->email = $this->email;
+        $order->first_name = $this->first_name;
+        $order->last_name = $this->last_name;
+        $order->city = $this->city;
+        $order->country = $this->country;
+        $order->postal_code = $this->postal_code;
+        $order->address = $this->address;
+        $order->sub_total = $this->sub_total;
+        $order->free_shipping = $this->is_shipping_free;
+        $order->coupon_id = $this->coupon_id;
+        $order->shipping_charges = $this->shipping_charges;
+        $order->save();
+
+        // foreach ($this->cartItems as $key => $cart_item) {
+        //     $order_detail = new OrderDetail();
+        //     $order_detail->order_id = $order->id;
+        //     $color_id =  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->color_id : 0;
+        //     $order_detail->color_id = $color_id;
+        //     $product_id = ProductHead::where('slug', $cart_item['slug'])->first()->id;
+        //     $order_detail->product_id = $product_id;
+        //     $order_detail->currency = $cart_item['currency'];
+        //     $order_detail->quantity = $cart_item['quantity'];
+        //     $order_detail->unit_amount = $cart_item['unit_amount'];
+        //     $order_detail->total_amount = $cart_item['total_amount'];
+        //     $order_detail->save();
+        // }
+        $this->order_completed = true;
+        CartManagementService::clearCartItems();
+        $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
+        $this->dispatch('update-cart', data: $data);
+        $this->dispatch('cart-refresh');
         // $response = Http::get('https://merchantapistaging.leopardscourier.com/api/bookPacket/format/json/', [
         //     'api_key' => '',
         //     'api_password' => '',
