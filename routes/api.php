@@ -9,6 +9,7 @@ use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Pages\PagesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
+use App\Http\Controllers\API\Admin\ProductReviews\ProductReviewController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
 use App\Http\Controllers\API\Admin\Purchases\PurchasesController;
@@ -223,6 +224,16 @@ Route::prefix('admin')->group(function () {
             Route::put('/update/{id}', [PagesController::class, 'update']);
             Route::delete('/delete/{id}', [PagesController::class, 'destroy']);
             Route::get('/get-all-countries', [PagesController::class, 'getAllCountries']);
+        });
+
+        //ProductReview
+        Route::prefix('/product-review')->group(function () {
+            Route::get('/', [ProductReviewController::class, 'index']);
+            Route::post('/store', [ProductReviewController::class, 'store']);
+            Route::get('/edit/{id}', [ProductReviewController::class, 'edit']);
+            Route::post('/update/{id}', [ProductReviewController::class, 'update']);
+            Route::delete('/delete/{id}', [ProductReviewController::class, 'destroy']);
+            Route::get('/get-all-products', [ProductReviewController::class, 'getAllProducts']);
         });
     });
 });
