@@ -16,6 +16,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        env('APP_NAME', 'Every Day ' . website()->title);
     }
 }

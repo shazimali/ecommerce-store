@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Mail\OrderPlacedEamil;
+use App\Mail\OrderPlacedEmail;
 use App\Models\CashOnDelivery;
 use App\Models\Coupon;
 use App\Models\Order;
@@ -13,6 +15,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Faker\Core\Color;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Str;
 
@@ -50,7 +53,6 @@ class Checkout extends Component
         'postal_code'         => 'nullable'
     ];
 
-    public $coupon_discount = 0;
     private $coupon_id = 0;
 
     public function mount()
@@ -105,26 +107,33 @@ class Checkout extends Component
 
     public function completeOrder()
     {
-        $this->validate($this->completeOrderRules);
-        $order = new Order();
-        $order->order_id = Str::uuid();
-        $order->email = $this->email;
-        $order->first_name = $this->first_name;
-        $order->last_name = $this->last_name;
-        $order->city = $this->city;
-        $order->country = $this->country;
-        $order->postal_code = $this->postal_code;
-        $order->address = $this->address;
-        $order->sub_total = $this->sub_total;
-        $order->free_shipping = $this->is_shipping_free;
-        $order->coupon_id = $this->coupon_id;
-        $order->shipping_charges = $this->shipping_charges;
-        $order->save();
+        $order =  Order::where('id', 15)->first();
+        $email_data['order'] = $order;
+        $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->first();
+
+        Mail::to($order->email)->send(new OrderPlacedEmail($email_data));
+
+        // $this->validate($this->completeOrderRules);
+        // $order = new Order();
+        // $order->order_id = Str::uuid();
+        // $order->email = $this->email;
+        // $order->first_name = $this->first_name;
+        // $order->last_name = $this->last_name;
+        // $order->city = $this->city;
+        // $order->country = $this->country;
+        // $order->postal_code = $this->postal_code;
+        // $order->address = $this->address;
+        // $order->sub_total = $this->sub_total;
+        // $order->free_shipping = $this->is_shipping_free;
+        // $order->coupon_id = $this->coupon_id;
+        // $order->shipping_charges = $this->shipping_charges;
+        // $order->status = 'Placed';
+        // $order->save();
 
         // foreach ($this->cartItems as $key => $cart_item) {
         //     $order_detail = new OrderDetail();
         //     $order_detail->order_id = $order->id;
-        //     $color_id =  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->color_id : 0;
+        //     $color_id =  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->id : 0;
         //     $order_detail->color_id = $color_id;
         //     $product_id = ProductHead::where('slug', $cart_item['slug'])->first()->id;
         //     $order_detail->product_id = $product_id;
@@ -134,11 +143,16 @@ class Checkout extends Component
         //     $order_detail->total_amount = $cart_item['total_amount'];
         //     $order_detail->save();
         // }
-        $this->order_completed = true;
-        CartManagementService::clearCartItems();
-        $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
-        $this->dispatch('update-cart', data: $data);
-        $this->dispatch('cart-refresh');
+        // $this->order_completed = true;
+        // CartManagementService::clearCartItems();
+        // $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
+        // $this->dispatch('update-cart', data: $data);
+        // $this->dispatch('cart-refresh');
+
+        // $email_data['order'] = $order;
+        // $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->first();
+        // Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
+
         // $response = Http::get('https://merchantapistaging.leopardscourier.com/api/bookPacket/format/json/', [
         //     'api_key' => '',
         //     'api_password' => '',
