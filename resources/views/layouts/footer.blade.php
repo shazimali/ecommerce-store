@@ -11,19 +11,19 @@
                                 class="text-primary dark:text-secondary">Every Day</span><span
                                 class="dark:text-primary ml-1"></span>Plastic</h1>
                     </a>
-                    {{-- <div x-data="{ map: false }" class="mt-3"> --}}
+                    <div x-data="{ map: false }" class="mt-3">
                     <i class="fa-solid fa-location-dot text-primary"></i>
                     <span>Ali Pur Chowk, Raj Kot, Gondlanwala Road, Gujranwala </span>
                     <span x-on:click="map = !map" class="text-primary cursor-pointer">
                         <i class="fa-solid fa-map"></i>
                     </span>
-                    {{-- <div x-show="map">
+                    <div x-show="map">
                             <iframe width="100%"
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3376.742099062221!2d74.14975991104262!3d32.18422861393571!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391f296cd6e20c8f%3A0xf7cd2b43e82153b1!2sEvery%20Day%20Plastic%20Industry!5e0!3m2!1sen!2s!4v1726393584794!5m2!1sen!2s"
                                 style="border:0;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div> --}}
-                    {{-- </div> --}}
+                        </div>
+                    </div>
                     <div class="mt-3">
                         <i class="fa-solid fa-envelope text-primary"></i>
                         <a href="#" class="hover:text-primary">plastic@gmail.com</a>
