@@ -19,31 +19,37 @@ class ProductReviewController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('product_review_access');
         return $this->productReviewService->getAll($request);
     }
 
     public function getAllProducts()
     {
+        $this->authorize('product_review_create');
         return $this->productReviewService->getAllProducts();
     }
 
     public function store(StoreProductReviewRequest $request)
     {
+        $this->authorize('product_review_create');
         return $this->productReviewService->store($request);
     }
 
     public function edit(int $id)
     {
+        $this->authorize('product_review_edit');
         return $this->productReviewService->edit($id);
     }
 
     public function update(UpdateProductReviewRequest $request, int $id)
     {
+        $this->authorize('product_review_edit');
         return $this->productReviewService->update($request, $id);
     }
 
     public function  destroy(int $id)
     {
+        $this->authorize('product_review_delete');
         return $this->productReviewService->destroy($id);
     }
 }

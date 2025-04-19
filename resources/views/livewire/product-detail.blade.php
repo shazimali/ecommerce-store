@@ -137,7 +137,7 @@
                 @foreach ($reviews as $review)
                     <div class="border-b py-2 border-secondary dark:text-white">
                         <div class="inline-flex text-sm">
-                            @for ($i = 0; $i < 5;  $i++)    
+                            @for ($i = 0; $i < $review->rating;  $i++)    
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                 fill="currentColor" class="w-4 h-4 text-primary cursor-pointer">
                                 <path fill-rule="evenodd"
@@ -156,12 +156,18 @@
                                 @endfor
                             @endif
                         </div>
-                        <div class="text-xs text-gray-500">{{ $review->name }}</div>
-                        <div>{{ $review->comment }}</div>
+                        <div class="text-xs text-gray-500">Test User</div>
+                        <div>{{ $review->review }}</div>
                         <div class="flex mt-1">
-                            @foreach ($review->getMedia('images') as $media)
-                            <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$media->id.'/'.$media->file_name) }}" alt="{{ $review->name }}"/>
-                            @endforeach
+                            @if($review->image1)
+                            <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$review->image1) }}" alt=""/>
+                            @endif
+                            @if($review->image2)
+                            <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$review->image2) }}" alt=""/>
+                            @endif
+                            @if($review->image3)
+                            <img class="border border-solid h-16 mx-2 w-16 cursor-pointer" src="{{ asset('storage/'.$review->image3) }}" alt=""/>
+                            @endif
                         </div>
                     </div>
                 @endforeach

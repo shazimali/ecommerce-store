@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ProductHead;
+use App\Models\ProductReview;
 use App\Services\CartManagementService;
 use Livewire\Component;
 
@@ -22,6 +23,8 @@ class ProductDetail extends Component
     public function mount()
     {
         $this->product = ProductHead::where('slug', $this->slug)->with('stocks')->first();
+        $this->reviews = ProductReview::Where('product_id', $this->product->id)->get();
+
         $this->activeImage = env('APP_URL') . '/storage/' . $this->product->image;
         $this->colors = $this->product->colors->isNotEmpty() ? $this->product->colors : [];
         $this->current_color = $this->colors ? $this->colors->first()->color_name : '';
