@@ -43,18 +43,14 @@
                     <h1 class="font-bold text-2xl mb-3">Quick Links</h1>
                     <ul>
                         <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Home</a>
+                            <a class="hover:text-primary hover:underline" href="{{ route('home') }}">Home</a>
                         </li>
                         <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Shop</a>
+                            <a class="hover:text-primary hover:underline" href="{{ route('shop') }}">Shop</a>
 
                         </li>
                         <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Blogs</a>
-
-                        </li>
-                        <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">About us</a>
+                            <a class="hover:text-primary hover:underline" href="{{ route('blogs.index') }}">Blogs</a>
 
                         </li>
                         <li class="py-1">
@@ -67,21 +63,13 @@
                 <div>
                     <h1 class="font-bold text-2xl mb-3">Support</h1>
                     <ul>
-                        <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Refund Policy</a>
-                        </li>
-                        <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Privacy Policy</a>
-
-                        </li>
-                        <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Return Policy</a>
-
-                        </li>
-                        <li class="py-1">
-                            <a class="hover:text-primary hover:underline" href="">Terms & Conditions</a>
-
-                        </li>
+                        @if(footer_pages()->count())
+                            @foreach(footer_pages() as $page)
+                            <li class="py-1">
+                                <a class="hover:text-primary hover:underline" href="{{ route('pages.index',['slug' => $page->slug]) }}">{{ $page->title }}</a>
+                            </li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
                 <div class="">

@@ -49,6 +49,26 @@ function facilities()
     return $country->facilities()->get();
 }
 
+function header_pages()
+{
+    $loc = Location::get(request()->ip());
+    $country = Country::whereId(167)->first(); // default country
+    if ($loc) {
+        $country = Country::where('iso', $loc->countryCode)->first();
+    }
+    return $country->pages()->active()->header()->get();
+}
+
+function footer_pages()
+{
+    $loc = Location::get(request()->ip());
+    $country = Country::whereId(167)->first(); // default country
+    if ($loc) {
+        $country = Country::where('iso', $loc->countryCode)->first();
+    }
+    return $country->pages()->active()->footer()->get();
+}
+
 function getSettingVal($key)
 {
     $setting = Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;

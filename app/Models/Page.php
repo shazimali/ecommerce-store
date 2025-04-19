@@ -20,4 +20,14 @@ class Page extends Model
     {
         return $query->where('status', 'ACTIVE');
     }
+
+    public function scopeHeader($query)
+    {
+        return $query->where('position', 'HEADER');
+    }
+
+    public function scopeFooter($query)
+    {
+        return $query->where('position', 'FOOTER');
+    }
 }
