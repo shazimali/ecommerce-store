@@ -31,6 +31,9 @@
             class="text-primary cursor-pointer border border-solid border-secondary dark:border-slate-800 py-2 px-6 mx-3">
             <i class="fas fa-search"></i>
         </div>
+        <div>
+            <livewire:mobile-cart-side-bar/>
+        </div>
         @include('inc.social_icons')
         @include('inc.theme_changer')
     </div>

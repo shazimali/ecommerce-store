@@ -103,8 +103,8 @@ class="lg:block md:block sm:hidden xs:hidden">
             </div>
         </div>
     </div>
-    {{-- @include('inc.mobile_nav_bar')
+     @include('inc.mobile_navbar')
     <div class="lg:hidden md:hidden sm:hidden xs:block lg:px-8 md:px-8 xs:px-2">
-        <livewire:partials.mobile-banners  lazy/>
-    </div> --}}
+        @include('inc.banners')
+    </div>
 </div>
