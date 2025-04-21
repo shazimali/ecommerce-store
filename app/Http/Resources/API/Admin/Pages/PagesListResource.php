@@ -22,6 +22,7 @@ class PagesListResource extends JsonResource
             'status' => $this->status,
             'seo_title' => $this->seo_title,
             'seo_description' => $this->seo_description,
+            'position' => $this->position,
             'created_at' => $this->created_at->toDateString(),
             'countries' => $this->countries->pluck('name'),
         ];

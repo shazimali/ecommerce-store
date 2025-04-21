@@ -70,6 +70,7 @@ class PagesService implements PagesInterface
                 'status' => $request->status,
                 'seo_title' => $request->seo_title,
                 'seo_description' => $request->seo_description,
+                'position' => $request->position,
             ];
 
             $page->update($data);

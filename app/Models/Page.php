@@ -9,7 +9,7 @@ class Page extends Model
 {
     protected $table = 'custom_pages';
 
-    protected $fillable = ['title', 'slug', 'content',  'seo_title', 'seo_description', 'status',  'created_at', 'updated_at'];
+    protected $fillable = ['title', 'slug', 'content',  'seo_title', 'seo_description', 'status', 'position',  'created_at', 'updated_at'];
 
     public function countries(): BelongsToMany
     {

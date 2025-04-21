@@ -22,6 +22,7 @@ class PagesEditResource extends JsonResource
             'status' => $this->status,
             'seo_title' => $this->seo_title,
             'seo_description' => $this->seo_description,
+            'position' => $this->position,
             'countries' => $this->countries,
 
         ];

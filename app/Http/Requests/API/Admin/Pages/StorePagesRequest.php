@@ -29,6 +29,7 @@ class StorePagesRequest extends JsonFormRequest
             'status' => 'required',
             'seo_title' => 'required',
             'seo_description' => 'required',
+            'position' => 'required',
         ];
     }
 }
