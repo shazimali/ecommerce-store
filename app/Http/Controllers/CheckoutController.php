@@ -17,8 +17,8 @@ class CheckoutController extends Controller
         $order =  Order::where('id', 15)->first();
         $email_data['order'] = $order;
         $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->with('product')->get();
-        Mail::to('hamza.khalid44444@gmail.com')->send(new OrderPlacedEmail($email_data));
+        // Mail::to('hamza.khalid44444@gmail.com')->send(new OrderPlacedEmail($email_data));
         // return view('email.order-placed', ['email_data' => $email_data]);
-        // return view('checkout');
+        return view('checkout');
     }
 }

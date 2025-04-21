@@ -40,24 +40,23 @@
              </div>  
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
-                   <label class="block mb-2 dark:bg-black" for="first-name">
+                   <label class="block mb-2 dark:bg-black" for="city">
                      City
                    </label>
                    <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city" id="city">
                     <option value="">Select City</option>
                     @foreach ($cities as $get_city)
-                        <option value="{{ $get_city['name'] }}">{{ $get_city['name'] }}</option>
+                        <option value="{{ $get_city->id }}">{{ $get_city->name }}</option>
                     @endforeach
                    </select>
                    @error('city')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                  </div>
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
-                     <label class="block mb-2 dark:bg-black" for="last-name">
-                       Postal Code
-                     </label>
-                     <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="postal_code" id="postal_code" type="text">
-                     
-                   </div>
+                    <label class="block mb-2 dark:bg-black" for="postal_code">
+                    Postal Code
+                    </label>
+                    <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="postal_code" id="postal_code" type="text">  
+                </div>
              </div>  
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">

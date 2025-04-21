@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Mail\OrderPlacedEamil;
 use App\Mail\OrderPlacedEmail;
 use App\Models\CashOnDelivery;
+use App\Models\City;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -57,18 +58,7 @@ class Checkout extends Component
 
     public function mount()
     {
-        $this->cod_list = CashOnDelivery::activeOrDefault()->whereHas('countries', function ($q) {
-            $q->where('country_id', getLocation()->id);
-        })->get();
-        // $this->lst_cod = $this->cod_list->only(['id', 'title', 'status'])->toArray();
-        // dd($this->lst_cod);
-        $response = Http::get($this->cod_list->where('title', 'Leopards COD')->first()->api_url . 'getAllCities/format/json/', [
-            'api_key' => $this->cod_list->where('title', 'Leopards COD')->first()->api_key,
-            'api_password' => $this->cod_list->where('title', 'Leopards COD')->first()->api_password
-        ]);
-
-        $res_data = $response->json();
-        $this->cities = $res_data['city_list'];
+        $this->cities = City::get();
         $this->cartItems = CartManagementService::getCartItemsFromCookies();
         $this->sub_total = CartManagementService::calculateGrandTotal($this->cartItems);
         $this->shipping_charges = getSettingVal('shipping_charges');
