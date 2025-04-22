@@ -121,7 +121,7 @@
 <td colspan="2" valign="middle" style="text-align: center;">Thank you for your order!</td>
 </tr>
 <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-    <td style="text-align: start;">Hi {{ $email_data['order']->first_name }} {{ $email_data['order']->last_name }},</td>
+    <td style="text-align: start;">Hi {{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }},</td>
 </tr>
 <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
     <td colspan="2" style="text-align: start;">Your order <b># {{ $email_data['order']->order_id }}</b> has been placed successfully and we will let you know once your package is on its way.</td>
@@ -162,19 +162,19 @@
     </tr>
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Name</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->first_name }} {{ $email_data['order']->last_name }}</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }}</td>
     </tr>
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Address</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->address }}</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['shipment']->address }}</td>
     </tr>
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Email</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->email }}</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->email }}</td>
     </tr>
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Phone</td>
-        <td style="text-align: start;  padding: 5px 0px;">+92300434343</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['shipment']->phone }}</td>
     </tr>
 </table>
 <table width="100%" border="0" cellpadding="4" class="agenda-table" align="center" style="border-spacing: 4px !important; border-collapse: separate;">
@@ -245,13 +245,15 @@
         <td style="text-align: start;  padding: 5px 0px;">Delivery Fees</td>
         <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->free_shipping ?  number_format($email_data['order']->shipping_charges,2) : 'FREE'  }}</td>
     </tr>
+    @if($email_data['order']->coupon_id != 0)
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Discount</td>
         <td style="text-align: start;  padding: 5px 0px;">1273 (10%)</td>
     </tr>
+    @endif
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Grand Total</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges + 1273,2) }}</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges ,2) }}</td>
     </tr>
     <tr>
         <td></td>

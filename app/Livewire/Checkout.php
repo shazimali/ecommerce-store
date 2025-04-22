@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductColor;
 use App\Models\ProductHead;
+use App\Models\ShipmentAddress;
+use App\Models\User;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -32,8 +34,7 @@ class Checkout extends Component
     public $first_name = '';
     public $last_name = '';
     public $address = '';
-    public $city = '';
-    private $cod_list = [];
+    public $city_id = '';
     public $lst_cod = [];
     public $cities = [];
     public $country = 0;
@@ -48,10 +49,14 @@ class Checkout extends Component
         'first_name'          => 'required|string|max:500',
         'last_name'           => 'required|string|max:500',
         'address'             => 'required',
-        'city'                => 'required',
+        'city_id'             => 'required',
         'country'             => 'required',
         'phone'               => 'required|numeric',
         'postal_code'         => 'nullable'
+    ];
+
+    protected $messages = [
+        'city_id.required' => 'The Country field is required.',
     ];
 
     private $coupon_id = 0;
@@ -97,61 +102,68 @@ class Checkout extends Component
 
     public function completeOrder()
     {
-        $order =  Order::where('id', 15)->first();
+        $this->validate($this->completeOrderRules);
+
+        $user = User::where('email', $this->email)->first();
+        if (!$user) {
+            $user = User::create([
+                'email' => $this->email,
+                'name' => $this->first_name . ' ' . $this->last_name,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'type' => 'CUSTOMER',
+                'password' => bcrypt(rand(10, 100)),
+            ]);
+        }
+        //placing order
+        $order = Order::create([
+            'id' => 1,
+            'user_id' => $user->id,
+            'order_id' => Str::uuid(),
+            'order_status' => 'PLACED',
+            'sub_total' => $this->sub_total,
+            'total' => $this->total,
+            'shipping_charges' => $this->shipping_charges,
+            'free_shipping' => $this->is_shipping_free,
+            'coupon_id' => $this->coupon_id,
+        ]);
+
+
+        //storing order detail
+        foreach ($this->cartItems as $key => $cart_item) {
+            $order_detail = OrderDetail::create([
+                'order_id' => $order->id,
+                'color_id' =>  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->id : 0,
+                'product_id' => ProductHead::where('slug', $cart_item['slug'])->first()->id,
+                'currency' => $cart_item['currency'],
+                'quantity' => $cart_item['quantity'],
+                'unit_amount' => $cart_item['unit_amount'],
+                'total_amount' => $cart_item['total_amount'],
+            ]);
+        }
+
+        //storing shipment address
+        $shipment = ShipmentAddress::create([
+            'user_id' => $user->id,
+            'country_id' => getLocation()->id,
+            'city_id' => $this->city_id,
+            'address' => $this->address,
+            // 'postal_code' => $this->postal_code,
+            'phone' => $this->phone
+        ]);
+
         $email_data['order'] = $order;
-        $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->first();
+        $email_data['order_detail'] = OrderDetail::where('order_id', 1)->first();
+        $email_data['user_detail'] = $user;
+        $email_data['shipment'] =  $shipment;
+        Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
 
-        Mail::to($order->email)->send(new OrderPlacedEmail($email_data));
-
-        // $this->validate($this->completeOrderRules);
-        // $order = new Order();
-        // $order->order_id = Str::uuid();
-        // $order->email = $this->email;
-        // $order->first_name = $this->first_name;
-        // $order->last_name = $this->last_name;
-        // $order->city = $this->city;
-        // $order->country = $this->country;
-        // $order->postal_code = $this->postal_code;
-        // $order->address = $this->address;
-        // $order->sub_total = $this->sub_total;
-        // $order->free_shipping = $this->is_shipping_free;
-        // $order->coupon_id = $this->coupon_id;
-        // $order->shipping_charges = $this->shipping_charges;
-        // $order->status = 'Placed';
-        // $order->save();
-
-        // foreach ($this->cartItems as $key => $cart_item) {
-        //     $order_detail = new OrderDetail();
-        //     $order_detail->order_id = $order->id;
-        //     $color_id =  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->id : 0;
-        //     $order_detail->color_id = $color_id;
-        //     $product_id = ProductHead::where('slug', $cart_item['slug'])->first()->id;
-        //     $order_detail->product_id = $product_id;
-        //     $order_detail->currency = $cart_item['currency'];
-        //     $order_detail->quantity = $cart_item['quantity'];
-        //     $order_detail->unit_amount = $cart_item['unit_amount'];
-        //     $order_detail->total_amount = $cart_item['total_amount'];
-        //     $order_detail->save();
-        // }
-        // $this->order_completed = true;
-        // CartManagementService::clearCartItems();
-        // $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
-        // $this->dispatch('update-cart', data: $data);
-        // $this->dispatch('cart-refresh');
-
-        // $email_data['order'] = $order;
-        // $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->first();
-        // Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
-
-        // $response = Http::get('https://merchantapistaging.leopardscourier.com/api/bookPacket/format/json/', [
-        //     'api_key' => '',
-        //     'api_password' => '',
-        //     'booked_packet_weight' => '2000',
-        //     'booked_packet_no_piece' => 
-
-        // ]);
-
-        // $res_data = $response->json();
+        $this->order_completed = true;
+        CartManagementService::clearCartItems();
+        $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
+        $this->dispatch('update-cart', data: $data);
+        $this->dispatch('cart-refresh');
     }
 
     public function render()
