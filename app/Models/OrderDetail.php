@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderDetail extends Model
 {
+
+    protected $fillable = ['order_id', 'product_id', 'color_id', 'currency', 'unit_amount', 'quantity', 'total_amount', 'created_at', 'updated_at'];
     /**
      * Get the user associated with the OrderDetail
      *

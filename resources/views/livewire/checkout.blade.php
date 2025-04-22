@@ -34,8 +34,8 @@
                    </div>
              </div> 
              <div>
-                 <label class="block mb-2" for="address">Address</label>
-                 <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="address" id="address" type="text">
+                 <label class="block mb-2" for="address">Shping Address</label>
+                 <textarea class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" name="address" wire:model="address"  id="address" cols="30" rows="10"></textarea>
                  @error('address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
              </div>  
              <div class="flex flex-wrap -mx-3">
@@ -43,13 +43,13 @@
                    <label class="block mb-2 dark:bg-black" for="city">
                      City
                    </label>
-                   <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city" id="city">
+                   <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city_id" id="city_id">
                     <option value="">Select City</option>
                     @foreach ($cities as $get_city)
                         <option value="{{ $get_city->id }}">{{ $get_city->name }}</option>
                     @endforeach
                    </select>
-                   @error('city')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
+                   @error('city_id')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                  </div>
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block mb-2 dark:bg-black" for="postal_code">
@@ -74,10 +74,10 @@
                     @error('phone')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                </div>
              </div>
-             <div>
+             {{-- <div>
                  <input type="checkbox" class="border-secondary dark:bg-black dark:border-slate-800" id="name" name="name" placeholder="Name"/>
                  <span class="text-xs px-1">save this information for next time</span>
-             </div>  
+             </div>   --}}
              <h3 class="text-2xl font-semibold py-2">Shipping method</h3> 
               
              <div class="p-2 border-secondary border mb-2 dark:bg-black dark:border-slate-800">

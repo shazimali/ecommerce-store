@@ -14,8 +14,5 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        env('APP_NAME', 'Every Day ' . website()->title);
-    }
+    public function boot(): void {}
 }
