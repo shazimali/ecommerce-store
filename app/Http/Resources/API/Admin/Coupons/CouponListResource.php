@@ -21,6 +21,7 @@ class CouponListResource extends JsonResource
             'discount' => $this->discount,
             'date_from' => $this->date_from,
             'date_to' => $this->date_to,
+            'status' => $this->status,
             'country_id' => $this->country_id,
             'country' => $this->country->name,
             'created_at' => $this->created_at->toDateString(),

@@ -27,6 +27,7 @@ class UpdateCouponRequest extends FormRequest
             'discount' => 'required',
             'date_from' => 'required',
             'date_to' => 'required',
+            'status' => 'required',
             'country_id' => 'required',
         ];
     }

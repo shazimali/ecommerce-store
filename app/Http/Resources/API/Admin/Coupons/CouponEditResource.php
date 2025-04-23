@@ -21,6 +21,7 @@ class CouponEditResource extends JsonResource
             'discount' => $this->discount,
             'date_from' => $this->date_from,
             'date_to' => $this->date_to,
+            'status' => $this->status,
             'country_id' => $this->country_id,
 
 
