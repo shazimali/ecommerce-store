@@ -81,7 +81,7 @@ class Checkout extends Component
 
         $this->validateOnly($this->coupon);
 
-        $coupon_detail = Coupon::where('code', $this->coupon)
+        $coupon_detail = Coupon::active()->where('code', $this->coupon)
             ->where('country_id', getLocation()->id)
             ->whereDate('date_to', '>=', Carbon::today()->toDateString())
             ->first();

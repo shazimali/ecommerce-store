@@ -18,4 +18,9 @@ class Coupon extends Model
     {
         return $this->hasOne(Country::class, 'id', 'country_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'ACTIVE');
+    }
 }
