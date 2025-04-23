@@ -2,6 +2,7 @@
 @section('title','Home')
 @section('content')
 <section>
+    @if(count(facilities()))
     <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
         @foreach (facilities() as $facility)
         <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
@@ -10,6 +11,7 @@
         </div>
         @endforeach    
     </div>
+    @endif
     @if(count(website()->categories)) 
     <div class="mt-16 text-center">
         <h1 class="font-bold text-4xl dark:text-secondary">Categories</h1>
