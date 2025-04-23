@@ -198,8 +198,8 @@
     @foreach ($email_data['order_detail'] as $order_detail)
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: left;">
-            <img   height="75" width="75" src="https://everydayplastic.co/storage/01JCATBVMN8MP0E4QGBH1KZBW6.png" alt="">
-            {{-- <img height="75" width="75" src="{{ asset('/storage/'.$order_detail['product']->image) }}" alt=""> --}}
+            {{-- <img   height="75" width="75" src="https://everydayplastic.co/storage/01JCATBVMN8MP0E4QGBH1KZBW6.png" alt=""> --}}
+            <img height="75" width="75" src="{{ asset('/storage/'.$order_detail['product']->image) }}" alt="">
         </td>
         <td style="text-align: left;">
             <table style="font-size: 12px">
@@ -241,19 +241,25 @@
         <td style="text-align: start;  padding: 5px 0px;">Sub Total</td>
         <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total,2)  }}</td>
     </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Delivery Fees</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->free_shipping ?  number_format($email_data['order']->shipping_charges,2) : 'FREE'  }}</td>
-    </tr>
     @if($email_data['order']->coupon_id != 0)
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Discount</td>
-        <td style="text-align: start;  padding: 5px 0px;">1273 (10%)</td>
+        <td style="text-align: start;  padding: 5px 0px;">- {{ number_format($email_data['coupon_discount_amount'],2) }} ({{ $email_data['coupon_discount'] }}%)</td>
     </tr>
     @endif
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+        <td style="text-align: start;  padding: 5px 0px;">Delivery</td>
+        <td style="text-align: start;  padding: 5px 0px;">
+            @if($email_data['order']->free_shipping == 0)
+            {{ number_format($email_data['order']->shipping_charges,2) }}
+            @else
+            FREE {{ $email_data['order']->free_shipping }}
+            @endif
+        </td>
+    </tr>
+    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: start;  padding: 5px 0px;">Grand Total</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges ,2) }}</td>
+        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount'] ,2)  }}</td>
     </tr>
     <tr>
         <td></td>

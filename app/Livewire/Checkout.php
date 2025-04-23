@@ -41,6 +41,7 @@ class Checkout extends Component
     public $phone = '';
     public $postal_code = '';
     public $coupon_discount = 0;
+    public $coupon_id = 0;
     #[Validate('required')]
     public $coupon = '';
 
@@ -59,7 +60,6 @@ class Checkout extends Component
         'city_id.required' => 'The Country field is required.',
     ];
 
-    private $coupon_id = 0;
 
     public function mount()
     {
@@ -103,7 +103,6 @@ class Checkout extends Component
     public function completeOrder()
     {
         $this->validate($this->completeOrderRules);
-
         $user = User::where('email', $this->email)->first();
         if (!$user) {
             $user = User::create([
@@ -118,7 +117,6 @@ class Checkout extends Component
         }
         //placing order
         $order = Order::create([
-            'id' => 1,
             'user_id' => $user->id,
             'order_id' => Str::uuid(),
             'order_status' => 'PLACED',
@@ -132,7 +130,7 @@ class Checkout extends Component
 
         //storing order detail
         foreach ($this->cartItems as $key => $cart_item) {
-            $order_detail = OrderDetail::create([
+            OrderDetail::create([
                 'order_id' => $order->id,
                 'color_id' =>  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->id : 0,
                 'product_id' => ProductHead::where('slug', $cart_item['slug'])->first()->id,
@@ -153,12 +151,13 @@ class Checkout extends Component
             'phone' => $this->phone
         ]);
 
-        $email_data['order'] = $order;
-        $email_data['order_detail'] = OrderDetail::where('order_id', 1)->first();
+        $email_data['order'] = Order::where('id', $order->id)->first();
+        $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->get();
         $email_data['user_detail'] = $user;
         $email_data['shipment'] =  $shipment;
+        $email_data['coupon_discount_amount'] = number_format(round($email_data['order']->sub_total / 100 * $this->coupon_discount), 2);
+        $email_data['coupon_discount'] = $this->coupon_discount;
         Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
-
         $this->order_completed = true;
         CartManagementService::clearCartItems();
         $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
