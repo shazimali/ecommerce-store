@@ -46,7 +46,7 @@ class Checkout extends Component
     public $coupon = '';
 
     protected $completeOrderRules = [
-        'email'               => 'required|email',
+        'email'               => 'required|email|email:rfc,dns',
         'first_name'          => 'required|string|max:500',
         'last_name'           => 'required|string|max:500',
         'address'             => 'required',
