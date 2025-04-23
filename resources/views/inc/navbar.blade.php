@@ -46,10 +46,10 @@ class="lg:block md:block sm:hidden xs:hidden">
                 </ul>
                 <ul class="flex justify-end">
                     <li class="mr-6">
-                        <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Login</a>
+                        <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('login')]) href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="mr-6">
-                        <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Register</a>
+                        <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('register')]) href="{{ route('register') }}">Register</a>
                     </li>
                 </ul>
                 <div
