@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\COD\CODController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
+use App\Http\Controllers\API\Admin\Orders\OrdersController;
 use App\Http\Controllers\API\Admin\Pages\PagesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\ProductReviews\ProductReviewController;
@@ -234,6 +235,11 @@ Route::prefix('admin')->group(function () {
             Route::post('/update/{id}', [ProductReviewController::class, 'update']);
             Route::delete('/delete/{id}', [ProductReviewController::class, 'destroy']);
             Route::get('/get-all-products', [ProductReviewController::class, 'getAllProducts']);
+        });
+
+        //Orders
+        Route::prefix('/orders')->group(function () {
+            Route::get('/', [OrdersController::class, 'index']);
         });
     });
 });

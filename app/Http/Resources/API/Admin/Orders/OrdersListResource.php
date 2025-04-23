@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Resources\API\Admin\Orders;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class OrdersListResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'order_id' => $this->order_id,
+            'sub_total' => $this->sub_total,
+            'total' => $this->total,
+            'free_shipping' => $this->free_shipping,
+            'shipping_charges' => $this->shipping_charges,
+            'code' => $this->coupon->code,
+            'discount' => $this->coupon->discount,
+            'created_at' => $this->created_at->toDateString(),
+            'status' => $this->status,
+            'name' => $this->user->name,
+            'email' => $this->user->email,
+
+
+        ];
+    }
+}

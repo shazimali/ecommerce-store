@@ -26,7 +26,7 @@ class Order extends Model
      */
     public function coupon(): HasOne
     {
-        return $this->hasOne(Coupon::class, 'coupon_id', 'id');
+        return $this->hasOne(Coupon::class, 'id', 'coupon_id');
     }
 
     /**
@@ -36,6 +36,6 @@ class Order extends Model
      */
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }
