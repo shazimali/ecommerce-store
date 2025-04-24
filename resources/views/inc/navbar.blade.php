@@ -66,7 +66,7 @@ class="lg:block md:block sm:hidden xs:hidden">
                                         {{-- class=" max-h-52" --}}
                                         alt="{{ $new_pr->title }}" />
                                     <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">       
-                                        {{$new_pr->title }}     
+                                        {{$new_pr->short_desc }}     
                                     </div>
                                 @if ($new_pr->coming_soon)
                                 <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>    

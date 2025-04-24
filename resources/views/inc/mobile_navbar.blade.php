@@ -31,7 +31,7 @@ x-data="{mobileMenu: false, mobileNewArr: false}"
                                 
                             <div
                             x-show="mobileNewArr"
-                            class="bg-white mt-5 absolute">
+                            class="bg-white mt-5 absolute z-50 block">
                             @foreach (newArrivals() as $new_pr)
                             <div class="text-center relative dark:text-secondary px-5 py-5">
                                 @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
@@ -41,28 +41,32 @@ x-data="{mobileMenu: false, mobileNewArr: false}"
                                         src="{{ asset('storage/'.$new_pr->nav_image) }}"
                                         alt="{{ $new_pr->title }}" />
                                     <div class="pt-2 overflow-hidden  text-xs truncate">               
-                                         {{$new_pr->title }}     
+                                         {{$new_pr->short_desc }}     
                                     </div>
-                                    @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
-                                        <div class="pt-2 overflow-hidden  text-xs truncate text-center">
-                                            <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount)),2 ) }}
-                                            <del class="text-gray-500">
-                                                {{ $new_pr->price_detail->country->currency }} {{  number_format($new_pr->price_detail->price,2)  }}
-                                            </del>
-                                        </div>
-                                        @else
-                                        <div class="text-xs text-center">
-                                            <b>{{ $new_pr->price_detail->country->currency }}</b>  {{  number_format($new_pr->price_detail->price,2)  }}
-                                        </div>
+                                    @if ($new_pr->coming_soon)
+                                    <p class="text-primary text-xs text-center"><b>Coming Soon</b></p>    
+                                    @else 
+                                        @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                            <div class="pt-2 overflow-hidden  text-xs truncate text-center">
+                                                <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount)),2 ) }}
+                                                <del class="text-gray-500">
+                                                    {{ $new_pr->price_detail->country->currency }} {{  number_format($new_pr->price_detail->price,2)  }}
+                                                </del>
+                                            </div>
+                                            @else
+                                            <div class="text-xs text-center">
+                                                <b>{{ $new_pr->price_detail->country->currency }}</b>  {{  number_format($new_pr->price_detail->price,2)  }}
+                                            </div>
                                         @endif
+                                    @endif
                                     <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2" href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
                                         <i class="fa-regular fa-eye text-primary"></i>
                                         View Detail
                                     </a>
-                                    <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary" href="">
+                                    {{-- <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary" href="">
                                         <i class="fa-solid fa-cart-shopping text-primary"></i>
                                         Add to Cart
-                                    </a>
+                                    </a> --}}
                             </div>
                         @endforeach      
                             </div>
