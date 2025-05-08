@@ -6,7 +6,7 @@
         <div class="text-4xl font-semibold">
             <a href="{{ route('home') }}">
                 <span class="text-primary dark:text-secondary">Every Day</span>
-                <span class="dark:text-primary">{{ website()->title }}</span>
+                <span class="dark:text-primary text-black">{{ website()->title }}</span>
             </a>
         </div>
         <div class="flex justify-center">

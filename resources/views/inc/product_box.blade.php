@@ -3,8 +3,8 @@
     <div class="w-full relative overflow-hidden bg-cover bg-no-repeat border-b border-secondary">
         @if ($product->price_detail && $product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
         <div
-            class="absolute right-0 top-0 w-auto px-2  py-2 bg-green-600 text-white text-center text-1xl font-extrabold">
-            - {{ $product->price_detail->discount }} <br/> % off
+            class="absolute right-0 top-0 w-auto px-2  py-1 bg-green-600 text-white text-center text-1xl font-extrabold">
+            - {{ $product->price_detail->discount }} <br/> %
         </div>
         @endif
         <img src="{{ asset('storage/'. $product->image) }}"

@@ -1,5 +1,5 @@
     {{-- Footer section start --}}
-    <div class="mt-16">
+    <div class="mt-16 text-black">
         <div class="bg-secondary py-10 border-b-2 border-white">
             <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1  gap-10 px-8">
                 <div>
@@ -26,16 +26,16 @@
                     </div>
                     <div class="mt-3">
                         <i class="fa-solid fa-envelope text-primary"></i>
-                        <a href="#" class="hover:text-primary">plastic@gmail.com</a>
+                        <a href="#" class="hover:text-primary">{{ website()->email }}</a>
                     </div>
                     <div class="mt-3">
                         <i class="fa-solid fa-phone text-primary"></i>
-                        <a href="#" class="hover:text-primary">phone</a>
+                        <a href="#" class="hover:text-primary">{{ website()->phone  }}</a>
                     </div>
                     {{-- @if (website()->phone1) --}}
                     <div class="mt-3">
                         <i class="fa-solid fa-phone text-primary"></i>
-                        <a href="#" class="hover:text-primary">phone1</a>
+                        <a href="#" class="hover:text-primary">{{ website()->phone1  }}</a>
                     </div>
                     {{-- @endif --}}
                 </div>

@@ -11,7 +11,7 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   </head>
   <body
   
-  class="dark:bg-black w-full">
+  class="dark:bg-black bg-white w-full">
     @include('layouts.header')
     @include('inc.navbar')
     @yield('content')

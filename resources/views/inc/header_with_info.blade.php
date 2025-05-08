@@ -2,11 +2,12 @@
     <div class="hidden md:block lg:block">
         <a class="hover:text-primary dark:text-secondary border-solid border-black dark:border-secondary border-r-2 pr-2 dark:hover:text-primary" href="tel:{{ website()->phone }}">
             <i class="fa-solid fa-phone text-primary  dark:hover:text-primary"></i>&nbsp;
-            {{ website()->phone }}
+            <span class="text-black hover:text-primary dark:text-secondary dark:hover:text-primary">{{ website()->phone }}</span>
+            
         </a>
         <a class="hover:text-primary dark:text-secondary pl-3 dark:hover:text-primary" href="mailto:test@email.com" >
             <i class="fa-solid fa-envelope text-primary  dark:hover:text-primary"></i>&nbsp;
-            {{ website()->email }}
+            <span class="text-black hover:text-primary dark:text-secondary dark:hover:text-primary">{{ website()->email }}</span>
         </a>
     </div>
 

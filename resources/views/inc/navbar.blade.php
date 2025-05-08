@@ -8,11 +8,11 @@ class="lg:block md:block sm:hidden xs:hidden">
 x-data="{menu: false, sideBarOpen: false, newArOpen: false}"
 class="lg:block md:block sm:hidden xs:hidden">
 @endif
-        <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8">
-            <div class="">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8 bg-white dark:bg-black">
+            <div>
                 <livewire:nav-bar-collection/>
             </div>
-            <div  class="col-span-3 grid grid-cols-2 py-5 dark:bg-black relative">
+            <div  class="col-span-3 grid grid-cols-2 py-5 bg-white text-black dark:bg-black relative">
                 <ul class="flex">
                     <li class="mr-6">
                         <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('home')])  href="{{ route('home') }}">Home</a>
