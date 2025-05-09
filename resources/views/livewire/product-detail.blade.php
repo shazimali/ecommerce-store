@@ -1,5 +1,5 @@
 <div>
-    <div class="grid lg:grid-cols-[40%_60%] md:grid-cols-[40%_60%] sm:grid-cols-[40%_60%] xs:grid-cols-[100%] px-8 py-10">
+    <div class="grid lg:grid-cols-[40%_60%] md:grid-cols-[40%_60%] sm:grid-cols-[40%_60%] xs:grid-cols-[100%] px-8 py-10 text-black">
         <div class="px-2">
             <div class="border border-secondary dark:border-slate-800  relative overflow-hidden">
                 <img class="transition duration-300 ease-in-out hover:scale-110" src="{{ $activeImage }}" alt="{{ $product['title'] }}" />
@@ -125,7 +125,7 @@
        </div>
     </div>
     <hr class="mt-5 dark:to-slate-800"/>
-    <div class="px-8" x-data="{tab: 0}">
+    <div class="px-8 text-black" x-data="{tab: 0}">
         <div class="flex dark:text-white">
             <button class="px-4 py-2 w-full hover:text-primary focus:text-primary" x-on:click.prevent="tab = 0">Description</button>
             <button class="px-4 py-2 w-full hover:text-primary focus:text-primary" x-on:click.prevent="tab = 1">Reviews</button>

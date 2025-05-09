@@ -75,7 +75,7 @@
         @foreach ($category->sub_categories as $sub_cat)
         <div class="swiper-slide">
           <div
-            class="bg-white border border-secondary overflow-hidden cursor-pointer group px-[12px] pt-[12px] pb-[32px]"
+            class="bg-white dark:bg-black border border-secondary overflow-hidden cursor-pointer group px-[12px] pt-[12px] pb-[32px]"
           >
             <div class="aspect-w-16 aspect-h-9 relative">
               <img
@@ -87,7 +87,7 @@
             <div class="pt-4 px-0 pb-0 flex flex-col items-start">
               {{-- <span class="text-gray-500 text-sm">Products ({{ $sub_cat->product_heads->where('status','ACTIVE')->count() }})</span> --}}
               <a href="{{ route('sub-categories',[$sub_cat->slug]) }}">
-                <h3 class="text-center text-xl font-semibold mt-2 flex justify-between items-center group-hover:text-primary transition-colors w-full">
+                <h3 class="text-center dark:text-secondary text-xl font-semibold mt-2 flex justify-between items-center group-hover:text-primary transition-colors w-full">
                   {{ $sub_cat->title }}
                 </h3>
               </a>
