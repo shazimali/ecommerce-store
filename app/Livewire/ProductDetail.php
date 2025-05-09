@@ -90,7 +90,7 @@ class ProductDetail extends Component
     }
     public function decrementQty($val)
     {
-        if ($val >  1) {
+        if ($val >  0) {
             $this->qty = $val;
         }
     }
