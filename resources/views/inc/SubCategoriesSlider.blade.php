@@ -85,9 +85,9 @@
               />
             </div>
             <div class="pt-4 px-0 pb-0 flex flex-col items-start">
-              <span class="text-gray-500 text-sm">Products ({{ $sub_cat->product_heads->where('status','ACTIVE')->count() }})</span>
+              {{-- <span class="text-gray-500 text-sm">Products ({{ $sub_cat->product_heads->where('status','ACTIVE')->count() }})</span> --}}
               <a href="{{ route('sub-categories',[$sub_cat->slug]) }}">
-                <h3 class="text-xl font-semibold mt-2 flex justify-between items-center group-hover:text-primary transition-colors w-full">
+                <h3 class="text-center text-xl font-semibold mt-2 flex justify-between items-center group-hover:text-primary transition-colors w-full">
                   {{ $sub_cat->title }}
                 </h3>
               </a>
