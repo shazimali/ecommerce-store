@@ -89,10 +89,10 @@
             <div class="lg:tex-start md:text-start sm:text-start xs:text-center">
                 All reserved by <b>Every day plastic</b>
             </div>
-            <div>
+            {{-- <div>
                 <img class="block m-auto md:float-right lg:float-right sm:float-right"
                     src="https://themewagon.github.io/eshopper/img/payments.png" alt="">
-            </div>
+            </div> --}}
         </div>
     </div>
 
