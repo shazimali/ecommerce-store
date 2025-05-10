@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagesController;
@@ -28,3 +29,5 @@ Route::get('cart', [CartController::class, 'index'])->name('cart');
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.basic');
+
+Route::get('contact-page', [ContactController::class, 'index'])->name('contact.page');

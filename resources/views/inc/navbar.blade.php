@@ -47,7 +47,8 @@
                     @endforeach
                 @endif
                 <li class="mr-6">
-                    <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="{{ ('inc.contact_page')}}">Contact</a>
+                    <a class="hover:text-primary dark:text-secondary dark:hover:text-primary"
+                        href="{{ route('contact.page') }}">Contact</a>
                 </li>
             </ul>
             <ul class="flex justify-end">
