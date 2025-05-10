@@ -48,7 +48,7 @@
                 @endif
                 <li class="mr-6">
                     <a class="hover:text-primary dark:text-secondary dark:hover:text-primary"
-                        href="{{ route('contact.page') }}">Contact</a>
+                        href="{{ route('contact_us') }}">Contact</a>
                 </li>
             </ul>
             <ul class="flex justify-end">
