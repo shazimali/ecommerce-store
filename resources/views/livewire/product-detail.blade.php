@@ -137,18 +137,14 @@
             @endif
 
             <div class="py-2 dark:text-white">
-                <b>Share on:</b>
-                {{-- <iframe width="720" height="315"
-                    src="https://www.youtube.com/embed/hxaCTjYS9vA?si=Gedd7Xnr-QuyRL08" title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> --}}
-                @isset(website()->socialMedia)
+                {{-- <b>Share on:</b> --}}
+                {!! $product['youtube_link'] !!}
+                {{-- @isset(website()->socialMedia)
                     @foreach (website()->socialMedia as $social)
                         <a class="mr-3 hover:text-primary" target="_blank" href="{{ $social->url }}"><i
                                 class="{{ $social->class }}"></i></a>
                     @endforeach
-                @endisset
+                @endisset --}}
             </div>
         </div>
     </div>
