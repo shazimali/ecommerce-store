@@ -31,3 +31,4 @@ Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.basic');
 
 Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_us');
+Route::post('mail-send', [ContactUsController::class, 'sendEmail'])->name('mail-send');
