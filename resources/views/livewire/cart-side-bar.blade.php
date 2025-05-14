@@ -8,7 +8,7 @@
         </label>
     </div>
 
-    <div class="drawer-side">
+    <div class="drawer-side text-black">
         <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
         <div class="menu  bg-white dark:bg-black min-h-full w-96 p-4 text-start">
             <div class="flex justify-between border-b border-b-secondary dark:border-b-slate-800">
