@@ -1,4 +1,4 @@
-<div class="px-8 py-10">
+<div class="px-8 py-10 text-black">
     @if(!$order_completed)
     <div class="grid grid-cols-2">
      <div class="pr-2 dark:text-white"> 
@@ -34,8 +34,8 @@
                    </div>
              </div> 
              <div>
-                 <label class="block mb-2" for="address">Shping Address</label>
-                 <textarea class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" name="address" wire:model="address"  id="address" cols="30" rows="10"></textarea>
+                 <label class="block mb-2" for="address">Address</label>
+                 <input type="text" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="address" id="address">
                  @error('address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
              </div>  
              <div class="flex flex-wrap -mx-3">
@@ -105,7 +105,7 @@
          <div class="lg:block md:block sm:block xs:hidde">
             <div @class([
                     'grid grid-cols-[70%_30%] py-2' => true,
-                    'border-b border-gray-300 dark:text-white dark:border-slate-800 dark:text-black' => true
+                    'border-b border-gray-300  dark:border-slate-800' => true
                     ])>
                     <div class="grid grid-cols-[20%_80%] gap-2 relative">
                             <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
