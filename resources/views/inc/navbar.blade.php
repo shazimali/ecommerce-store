@@ -12,8 +12,9 @@
             <ul class="flex">
                 <li class="mr-6">
                     <a @class([
-                        'hover:text-primary dark:text-secondary dark:hover:text-primary',
-                        'text-primary' => Route::is('home'),
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'home',
+                        'text-primary dark:text-primary' => Route::is('home'),
                     ]) href="{{ route('home') }}">Home</a>
                 </li>
                 @if (count(newArrivals()) > 0)
