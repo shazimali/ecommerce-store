@@ -25,16 +25,13 @@ class ContactRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email_address' => 'required|email',
-            'email_address_confirmation' => 'required|email',
-            'contact_number' => 'required',
-            'type' => 'required',
-            'product_code' => 'required',
+            'subject' => 'required',
             'message' => 'required',
             'attachment' => [
                 'required',
                 'file', // Explicitly check for a valid file upload
-                'mimes:pdf,doc,docx',
-                'max:500' // 500KB limit (adjust if you meant 500MB)
+                'mimes:pdf,doc,docx,png,jpg,jpeg',
+                'max:500'
             ]
 
         ];
