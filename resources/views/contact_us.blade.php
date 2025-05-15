@@ -36,7 +36,7 @@
                             <label class="block text-sm font-medium mb-2 dark:text-white" for="last_name">
                                 Last name <span class="text-primary">*</span>
                             </label>
-                            <input type="text" name="last_name"
+                            <input type="text" value="{{ old('last_name') }}" name="last_name"
                                 class="w-full border border-gray-300 rounded px-3 py-2
                                 dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('last_name')
@@ -47,7 +47,7 @@
                             <label class="block text-sm font-medium mb-2 dark:text-white" for="email_address">
                                 Email address <span class="text-primary">*</span>
                             </label>
-                            <input type="email" name="email_address"
+                            <input type="email" value="{{ old('email_address') }}" name="email_address"
                                 class="w-full border border-gray-300 rounded px-3 py-2
                             dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('email_address')
@@ -62,11 +62,11 @@
                             <select
                                 class="w-full border border-gray-300 rounded px-3 py-2
                             dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                name="subject">
+                                name="subject" value="{{ old('subject') }}">
                                 <option value="" disabled selected>Select a subject</option>
-                                <option value="inquire">Inquire</option>
-                                <option value="support">Support</option>
-                                <option value="help">Help</option>
+                                <option value="Inquire">Inquire</option>
+                                <option value="Support">Support</option>
+                                <option value="Help">Help</option>
                             </select>
                             @error('subject')
                                 <p class="text-red-500 text-xs">{{ $message }}</p>
@@ -78,8 +78,8 @@
                     <label class="block text-sm font-medium dark:text-white" for="message">
                         Message <span class="text-primary">*</span>
                     </label>
-                    <textarea type="text" name="message" placeholder="Message"
-                        class="w-full border border-gray-300 rounded mt-2  focus:outline-none
+                    <textarea type="text" name="message" placeholder="Message" value="{{ old('message') }}"
+                        class="w-full border border-gray-300 rounded px-3 py-2   focus:outline-none
                          dark:bg-black dark:text-white">
                         </textarea>
                     @error('message')

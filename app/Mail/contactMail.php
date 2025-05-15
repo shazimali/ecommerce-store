@@ -33,7 +33,7 @@ class contactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Contact Us Email Message",
+            subject: "Everyday Contact-Us Email | " . $this->request['subject'],
         );
     }
 

@@ -26,14 +26,17 @@
                 @endif
                 <li class="mr-6">
                     <a @class([
-                        'hover:text-primary dark:text-secondary dark:hover:text-primary',
-                        'text-primary' => Route::is('shop'),
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'shop',
+                        'text-primary dark:text-primary' => Route::is('shop'),
                     ]) href="{{ route('shop') }}">Shop</a>
                 </li>
                 <li class="mr-6">
                     <a @class([
-                        'hover:text-primary dark:text-secondary dark:hover:text-primary',
-                        'text-primary' => Route::is('blogs.*') || Route::is('blogs.index'),
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'blogs.index',
+                        'text-primary dark:text-primary' =>
+                            Route::is('blogs.*') || Route::is('blogs.index'),
                     ]) href="{{ route('blogs.index') }}">Blogs</a>
                 </li>
                 @if (header_pages()->count() > 0)
@@ -48,21 +51,26 @@
                     @endforeach
                 @endif
                 <li class="mr-6">
-                    <a class="hover:text-primary dark:text-secondary dark:hover:text-primary"
-                        href="{{ route('contact_us') }}">Contact</a>
+                    <a @class([
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'contact_us',
+                        'text-primary dark:text-primary' => Route::is('contact_us'),
+                    ]) href="{{ route('contact_us') }}">Contact</a>
                 </li>
             </ul>
             <ul class="flex justify-end">
                 <li class="mr-6">
                     <a @class([
-                        'hover:text-primary dark:text-secondary dark:hover:text-primary',
-                        'text-primary' => Route::is('login'),
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'login',
+                        'text-primary dark:text-primary' => Route::is('login'),
                     ]) href="{{ route('login') }}">Login</a>
                 </li>
                 <li class="mr-6">
                     <a @class([
-                        'hover:text-primary dark:text-secondary dark:hover:text-primary',
-                        'text-primary' => Route::is('register'),
+                        'hover:text-primary dark:hover:text-primary',
+                        'dark:text-secondary ' => Route::currentRouteName() != 'register',
+                        'text-primary dark:text-primary' => Route::is('register'),
                     ]) href="{{ route('register') }}">Register</a>
                 </li>
             </ul>
