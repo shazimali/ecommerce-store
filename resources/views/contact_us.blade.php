@@ -75,13 +75,11 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <label class="block text-sm font-medium dark:text-white" for="message">
+                    <label class="block text-sm font-medium dark:text-white mb-2" for="message">
                         Message <span class="text-primary">*</span>
                     </label>
-                    <textarea type="text" name="message" placeholder="Message" value="{{ old('message') }}"
-                        class="w-full border border-gray-300 rounded px-3 py-2   focus:outline-none
-                         dark:bg-black dark:text-white">
-                        </textarea>
+                    <textarea name="message" rows="4" cols="50" placeholder="Message"
+                        class="w-full border border-gray-300 dark:bg-black dark:text-white"></textarea>
                     @error('message')
                         <p class="text-red-500 text-xs">{{ $message }}</p>
                     @enderror
