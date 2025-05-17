@@ -37,7 +37,16 @@
                  <label class="block mb-2" for="address">Address</label>
                  <input type="text" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="address" id="address">
                  @error('address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
-             </div>  
+             </div>
+             <div class="py-1">
+                <input type="checkbox"  wire:model="same_for_billing_address" class="border-secondary dark:bg-black dark:border-slate-800"/>
+                <span class="text-xs px-1">Same for billing address</span>
+            </div>
+            <div wire:show="!same_for_billing_address">
+                <label class="block mb-2" for="billing_address">Billing Address</label>
+                <input type="text" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="billing_address" id="billing_address">
+                @error('billing_address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
+            </div>  
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                    <label class="block mb-2 dark:bg-black" for="city">
@@ -84,13 +93,13 @@
                  <input type="radio" checked class="border-secondary dark:bg-black dark:border-slate-800" id="name" name="shipping_method">
                  <span class="px-1 font-semibold text-sm">Cash on Delivery (COD)</span>
              </div>
-             <div class="p-2 border-secondary border mb-5 dark:bg-black dark:border-slate-800">
+             {{-- <div class="p-2 border-secondary border mb-5 dark:bg-black dark:border-slate-800">
                  <input type="radio" class="border-secondary dark:bg-black dark:border-slate-800" id="name" name="shipping_method">
                  <span class="px-1 font-semibold text-sm ">
                      <span class="w-1/2">Debit - Credit Card</span>
                      <img class="inline-block w-1/5 ml-2" src="https://themewagon.github.io/eshopper/img/payments.png" alt="">
                  </span>
-             </div>
+             </div> --}}
              <button type="submit" class="font-semibold bg-primary text-white mt-1 w-full py-3 text-center">
                  <svg wire:loading wire:target="completeOrder" aria-hidden="true" role="status" class="inline mr-1 w-6 h-6 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"></path>

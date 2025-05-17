@@ -34,6 +34,8 @@ class Checkout extends Component
     public $first_name = '';
     public $last_name = '';
     public $address = '';
+    public $same_for_billing_address = false;
+    public $billing_address = '';
     public $city_id = '';
     public $lst_cod = [];
     public $cities = [];
@@ -50,6 +52,7 @@ class Checkout extends Component
         'first_name'          => 'required|string|max:500',
         'last_name'           => 'required|string|max:500',
         'address'             => 'required',
+        'billing_address'     => 'required_if:same_for_billing_address,false',
         'city_id'             => 'required',
         'country'             => 'required',
         'phone'               => 'required|numeric',
@@ -100,6 +103,11 @@ class Checkout extends Component
         }
     }
 
+    // public function updateBillingAddressFlag()
+    // {
+    //     $this->same_for_billing_address = !$this->same_for_billing_address;
+    // }
+
     public function completeOrder()
     {
         $this->validate($this->completeOrderRules);
@@ -125,6 +133,11 @@ class Checkout extends Component
             'shipping_charges' => $this->shipping_charges,
             'free_shipping' => $this->is_shipping_free,
             'coupon_id' => $this->coupon_id,
+            'address' => $this->address,
+            'billing_address' => $this->same_for_billing_address ?  $this->address : $this->billing_address,
+            'country_id' => getLocation()->id,
+            'city_id' => $this->city_id,
+            'phone' => $this->phone
         ]);
 
 
