@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Admin\Blogs\BlogsController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\COD\CODController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
+use App\Http\Controllers\API\Admin\Customers\CustomersController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
 use App\Http\Controllers\API\Admin\Orders\OrdersController;
 use App\Http\Controllers\API\Admin\Pages\PagesController;
@@ -240,6 +241,11 @@ Route::prefix('admin')->group(function () {
         //Orders
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrdersController::class, 'index']);
+        });
+
+        //Customers
+        Route::prefix('/customers')->group(function () {
+            Route::get('/', [CustomersController::class, 'index']);
         });
     });
 });
