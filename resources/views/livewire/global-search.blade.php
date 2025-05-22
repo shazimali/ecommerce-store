@@ -10,7 +10,7 @@
             @foreach ($products as $product)
             <div class="flex justify-start py-2">
                 <img class="h-10 w-10" src="{{ asset('storage/'.$product->image) }}" alt="">
-                <span class="text-sm">{{ $product->title }}</span>
+                <span class="text-sm pt-2">{{ $product->title }}</span>
             </div>
             @endforeach
         @else
