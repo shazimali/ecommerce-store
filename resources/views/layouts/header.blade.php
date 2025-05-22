@@ -9,12 +9,7 @@
                 <span class="dark:text-primary text-black">{{ website()->title }}</span>
             </a>
         </div>
-        <div class="flex justify-center">
-            <input type="text" id="hs-trailing-button-add-on-multiple-add-ons" placeholder="Search For Products"
-                name="hs-trailing-button-add-on-multiple-add-ons"
-                class="py-3 px-4 block text-sm border border-secondary lg:w-full md:w-full dark:bg-black dark:border-slate-800">
-            <i class="-ml-7 mt-4 text-primary fas fa-search"></i>
-        </div>
+        <livewire:global-search/>
         <div class="text-end">
           <livewire:cart-side-bar/>
         </div>
