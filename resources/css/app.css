@@ -59,14 +59,14 @@ swiper-slide {
 .trix-editor h2 {
   font-size: 1.25rem !important;
   line-height: 1.25rem !important;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   font-weight: 600;
 }
 
 .trix-editor h3 {
   font-size: 1rem !important;
   line-height: 1rem !important;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   font-weight: 400;
 }
 
