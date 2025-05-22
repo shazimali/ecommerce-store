@@ -28,7 +28,6 @@ class Shop extends Component
 
     public function mount()
     {
-
         $this->categories = Category::get();
         $this->colors = ProductColor::distinct()->select('color_name')->get();
         $this->price_from = getSettingVal('shop_filter_price_from');
@@ -71,6 +70,8 @@ class Shop extends Component
 
     public function render()
     {
+
+        $this->colors = ProductColor::distinct()->select('color_name')->get();
 
         $query = ProductHead::query();
 
