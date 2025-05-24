@@ -3,6 +3,33 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Order Placed</title>
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "EmailMessage",
+      "sender": {
+        "@type": "Person",
+        "name": "John Doe",
+        "email": "john.doe@example.com"
+      },
+      "recipient": {
+        "@type": "Person",
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com"
+      },
+      "subject": "Event Reminder",
+      "text": "This is a reminder about the upcoming event.",
+      "description": "A short description of the email's content.",
+      "event": {
+        "@type": "Event",
+        "name": "Example Event",
+        "startDate": "2025-05-31T18:00:00",
+        "endDate": "2025-05-31T20:00:00",
+        "location": "Event location",
+        "url": "https://example.com/event"
+      }
+    }
+  </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="color: #2a2a2a; font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
@@ -110,7 +137,7 @@
 <table border="0" align="center" style="border-collapse: collapse; background-color: #ffffff;">
 <tr>
 <td style="text-align: center;">
-    <img src="https://everydayplastic.co/storage/01J9P7Y7AWBVK0H5W0BBP8MN57.png" style="max-width:  200px; " width="200" alt="Every day logo">
+    <img src="{{ asset('images/logo.png') }}" alt="Every day logo">
 {{-- <img src="{{ asset('/storage/'.website()->logo) }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
 </td>
 </tr>
