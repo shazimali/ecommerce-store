@@ -137,7 +137,7 @@
 <table border="0" align="center" style="border-collapse: collapse; background-color: #ffffff;">
 <tr>
 <td style="text-align: center;">
-    <img src="{{ asset('images/logo.png') }}" alt="Every day logo">
+    <img src="{{ asset('images/logo.png') }}" style="max-width:  200px; " width="200" alt="Every day logo">
 {{-- <img src="{{ asset('/storage/'.website()->logo) }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
 </td>
 </tr>
