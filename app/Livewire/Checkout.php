@@ -126,7 +126,7 @@ class Checkout extends Component
         //placing order
         $order = Order::create([
             'user_id' => $user->id,
-            'order_id' => Order::get()->count() > 0 ? Order::latest()->first()->order_id + 1 : 0001,
+            'order_id' => Order::get()->count() > 0 ? Order::latest()->first()->order_id + 1 : 1,
             'order_status' => 'PLACED',
             'sub_total' => $this->sub_total,
             'total' => $this->total,
@@ -149,8 +149,8 @@ class Checkout extends Component
                 'product_id' => ProductHead::where('slug', $cart_item['slug'])->first()->id,
                 'currency' => $cart_item['currency'],
                 'quantity' => $cart_item['quantity'],
-                'unit_amount' => $cart_item['unit_amount'],
-                'total_amount' => $cart_item['total_amount'],
+                'unit_amount' => round($cart_item['unit_amount']),
+                'total_amount' => round($cart_item['total_amount']),
             ]);
         }
 

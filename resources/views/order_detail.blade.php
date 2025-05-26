@@ -69,7 +69,7 @@
                            <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$order_detail->product->image }}" alt="{{ $order_detail->product->title }}">
                            <div>
                                    <div class="text-xs"><b>{{ $order_detail->product->title }}</b></div> 
-                                   <div class="text-xs">{{ getLocation()->currency }} {{ number_format($order_detail->unit_amount,2)  }}</div> 
+                                   <div class="text-xs">{{ $order_detail->currency }} {{ number_format($order_detail->unit_amount,2)  }}</div> 
                                    
                                    <div class="flex text-xs">
                                            Color: {{ $order_detail->color ? $order_detail->color->color_name : 'N/A' }}
@@ -80,33 +80,33 @@
                            </div>
                    </div>
                    <div class="text-end text-xs mt-1 dark:text-black">
-                           {{ getLocation()->currency }} {{ number_format($order_detail->total_amount,2) }}
+                           {{ $order_detail->currency }} {{ number_format($order_detail->total_amount,2) }}
                    </div>    
            </div>      
        </div>
         @endforeach
         <div class="flex justify-between">
             <span class="">SubTotal</span>
-            <span class="">{{ getLocation()->currency }} {{ number_format($order->sub_total,2)  }}</span>
+            <span class="">{{ $order_detail->currency }} {{ number_format($order->sub_total,2)  }}</span>
         </div>
         @if($order->coupon)
             <div class="flex justify-between">
                 <span class="">Coupon Discount</span>
-                <span class="">- {{ getLocation()->currency }} {{ number_format(round(($order->sub_total/100)*$order->coupon->discount,2))  }}</span>
+                <span class="">- {{ $order_detail->currency }} {{ number_format(round(($order->sub_total/100)*$order->coupon->discount,2))  }}</span>
             </div> 
         @endif
         <div class="flex justify-between">
             <span class="">Shipping</span>
-            @if ($order->free_shipping  == 1)
-            <span class="">{{ getLocation()->currency }} {{ $order->shipping_charges }}</span>
-            @endif
             @if ($order->free_shipping  == 0)
+            <span class="">{{ $order_detail->currency }} {{ $order->shipping_charges }}</span>
+            @endif
+            @if ($order->free_shipping  == 1)
             <span class="">Free</span>
             @endif
         </div>
         <div class="flex justify-between">
             <span class="font-semibold">Total</span>
-            <span class="font-semibold">{{ getLocation()->currency }} {{ number_format($order->total,2)}}</span>
+            <span class="font-semibold">{{ $order_detail->currency }} {{ number_format($order->total,2)}}</span>
         </div>
     </div>
    </div>

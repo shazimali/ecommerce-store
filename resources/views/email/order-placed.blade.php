@@ -33,113 +33,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="color: #2a2a2a; font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
-<style>
-    body{
-        color: #2a2a2a;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-    }
-    .mail-wrapper{
-        /* text-align: center;
-        background-color: #dadbdd;
-        width: 750px;
-        margin: 0 auto; */
-    }
-    .session{
-        background: #dadbdd;
-                font-family: Arial, sans-serif;
-        font-size: 12px !important;
-                height: 18px;
-    }
-    .session-title-label{
-        font-weight: bold;
-                font-family: Arial, sans-serif;
-            }
-
-    .session-speech
-    {
-        background: #00aeef;
-        color: #ffffff;
-    }
-    .session-keynote
-    {
-        background: #00aeef;
-        color: #ffffff;
-    }
-    .person-name{
-        color: #3754a5;
-        font-weight:bold;
-        margin-bottom:5px;
-    }
-    .position{
-        font-size:11px;
-        margin:5px 0;
-    }
-    .company{
-        margin:5px 0;
-        font-weight: bold;
-    }
-    .person-name,.paper-title,.text-presentation{
-                font-family: Arial, sans-serif;
-            }
-    .position{
-                font-family: Arial, sans-serif;
-            }
-    .company{
-                font-size:11px;
-        font-family: Arial, sans-serif;
-            }
-    .paper-title,.text-presentation{
-                font-size:11px;
-        }
-    .paper-title{
-        max-width: 250px;
-        display: block;
-        margin: 0 auto;
-    }
-    .chair-pill{
-        font-weight: bold;
-        color: black;
-        background: #fce664;
-        line-height: 20px;
-        border-radius: 5px;
-        width: 100%;
-    }
-    .speakers-pill-wrapper{
-        text-align: left;
-        max-width: 83px;
-    }
-    .speakers-pill{
-        padding: 0 10px;
-        font-weight: bold;
-        color: #ffffff;
-        background: #414242;
-        margin-bottom: 5px;
-        line-height: 20px;
-        border-radius: 5px;
-        width: auto;
-        text-align: center;
-        display: inline-block;
-    }
-    .agenda-table{
-        border-spacing:4px !important;
-
-        border-collapse:separate;
-    }
-    .wrapper-table{
-        border-collapse:collapse;
-    }
-    .wrapper-table td{
-        text-align: center;
-    }
-</style>
 <div class="mail-wrapper">
 <table border="0"  style="border-collapse: collapse; background-color: #ffffff;">
 <tr>
-<td style="text-align: center;">
-    {{-- <img src="{{ asset('images/logo.png') }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
-    <img src="https://everydaygroup.co/images/logo.png" style="max-width:  200px; " width="200" alt="Every day logo">
-{{-- <img src="{{ asset('/storage/'.website()->logo) }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
+<td style="font-weight: 600; font-size: 2.25rem; line-height: 2.5rem;">
+    <a style="text-decoration: none;" href="{{ route('home') }}">
+        <span style="color:#D19C97;">Every Day</span>
+        <span style="color: black;">{{ website()->title }}</span>
+    </a>
 </td>
 </tr>
 <tr>
@@ -221,7 +122,12 @@
     <tr>
         <td></td>
         <td style="text-align: left;">Grand Total</td>
+        @if($email_data['order']->free_shipping == 0)
         <td style="text-align: end;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount'] ,2)  }}</td>
+        @endif
+        @if($email_data['order']->free_shipping == 1)
+        <td style="text-align: end;">{{ number_format($email_data['order']->sub_total - $email_data['coupon_discount_amount'] ,2)  }}</td>
+        @endif
     </tr>
 </table> 
 <table border="0" style="border-collapse: collapse; background-color: #ffffff;">

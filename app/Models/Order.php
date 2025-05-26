@@ -47,7 +47,7 @@ class Order extends Model
 
     public function detail(): HasMany
     {
-        return $this->hasMany(OrderDetail::class, 'id', 'order_id');
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
 
     public function city(): HasOne
