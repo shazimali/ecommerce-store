@@ -126,7 +126,7 @@ class Checkout extends Component
         //placing order
         $order = Order::create([
             'user_id' => $user->id,
-            'order_id' => Str::uuid(),
+            'order_id' => Order::get()->count() > 0 ? Order::latest()->first()->order_id + 1 : 0001,
             'order_status' => 'PLACED',
             'sub_total' => $this->sub_total,
             'total' => $this->total,
@@ -155,19 +155,18 @@ class Checkout extends Component
         }
 
         //storing shipment address
-        $shipment = ShipmentAddress::create([
-            'user_id' => $user->id,
-            'country_id' => getLocation()->id,
-            'city_id' => $this->city_id,
-            'address' => $this->address,
-            // 'postal_code' => $this->postal_code,
-            'phone' => $this->phone
-        ]);
+        // $shipment = ShipmentAddress::create([
+        //     'user_id' => $user->id,
+        //     'country_id' => getLocation()->id,
+        //     'city_id' => $this->city_id,
+        //     'address' => $this->address,
+        //     'postal_code' => $this->postal_code,
+        //     'phone' => $this->phone
+        // ]);
 
         $email_data['order'] = Order::where('id', $order->id)->first();
         $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->get();
         $email_data['user_detail'] = $user;
-        $email_data['shipment'] =  $shipment;
         $email_data['coupon_discount_amount'] = number_format(round($email_data['order']->sub_total / 100 * $this->coupon_discount), 2);
         $email_data['coupon_discount'] = $this->coupon_discount;
         Mail::to($this->email)->send(new OrderPlacedEmail($email_data));

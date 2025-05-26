@@ -27,6 +27,7 @@ Route::get('blogs/{slug}', [BlogsController::class, 'detail'])->name('blogs.deta
 Route::get('pages/{slug}', [PagesController::class, 'index'])->name('pages.index');
 Route::get('cart', [CartController::class, 'index'])->name('cart');
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::get('order/{id}', [CheckoutController::class, 'orderDetail'])->name('checkout.order-detail');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.basic');
 

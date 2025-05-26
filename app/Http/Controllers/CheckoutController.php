@@ -18,11 +18,15 @@ class CheckoutController extends Controller
             return view('checkout');
         }
         return redirect()->route('home');
-        // $order =  Order::where('id', 15)->first();
-        // $email_data['order'] = $order;
-        // $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->with('product')->get();
-        // Mail::to('shazimali03@gmail.com')->send(new OrderPlacedEmail($email_data));
-        // return view('email.order-placed', ['email_data' => $email_data]);
+    }
 
+    public function orderDetail($order_id)
+    {
+        $order = Order::where('order_id', $order_id)->first();
+        if ($order) {
+            return view('order_detail', ['order' => $order]);
+        } else {
+            abort('404');
+        }
     }
 }

@@ -19,7 +19,7 @@
             <h2 class="text-2xl font-semibold py-2 dark:text-white">{{ $product->title }}</h2>
             <div class="inline-flex text-sm py-2 dark:text-white">
                 @php
-                    $review_mean = $reviews->sum('rating') / $reviews->count();
+                    $review_mean = $reviews->count() > 0 ? $reviews->sum('rating') / $reviews->count(): 0;
                 @endphp
                 @for ($i = 0; $i < $review_mean; $i++)
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"

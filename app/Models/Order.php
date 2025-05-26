@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
@@ -42,5 +43,20 @@ class Order extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function detail(): HasMany
+    {
+        return $this->hasMany(OrderDetail::class, 'id', 'order_id');
+    }
+
+    public function city(): HasOne
+    {
+        return $this->hasOne(City::class, 'id', 'city_id');
+    }
+
+    public function country(): HasOne
+    {
+        return $this->hasOne(Country::class, 'id', 'country_id');
     }
 }

@@ -28,4 +28,9 @@ class OrderDetail extends Model
     {
         return $this->hasOne(ProductColor::class, 'id', 'color_id');
     }
+
+    public function coupon(): HasOne
+    {
+        return $this->hasOne(Coupon::class, 'id', 'coupon_id');
+    }
 }

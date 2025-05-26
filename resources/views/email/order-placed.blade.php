@@ -40,10 +40,10 @@
                 font-size: 14px;
     }
     .mail-wrapper{
-        text-align: center;
+        /* text-align: center;
         background-color: #dadbdd;
         width: 750px;
-        margin: 0 auto;
+        margin: 0 auto; */
     }
     .session{
         background: #dadbdd;
@@ -134,24 +134,25 @@
     }
 </style>
 <div class="mail-wrapper">
-<table border="0" align="center" style="border-collapse: collapse; background-color: #ffffff;">
+<table border="0"  style="border-collapse: collapse; background-color: #ffffff;">
 <tr>
 <td style="text-align: center;">
-    <img src="{{ asset('images/logo.png') }}" style="max-width:  200px; " width="200" alt="Every day logo">
+    {{-- <img src="{{ asset('images/logo.png') }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
+    <img src="https://everydaygroup.co/images/logo.png" style="max-width:  200px; " width="200" alt="Every day logo">
 {{-- <img src="{{ asset('/storage/'.website()->logo) }}" style="max-width:  200px; " width="200" alt="Every day logo"> --}}
 </td>
 </tr>
 <tr>
-<td style="text-align: center;">
-<table width="100%" border="0" cellpadding="4" class="agenda-table" align="center" style="border-spacing: 4px !important; border-collapse: separate;">
+<td style="">
+<table width="100%" border="0"  style="border-spacing: 4px !important; border-collapse: separate;">
 <tr style="color: #000000; font-size: 24px; font-weight: bold; font-family: Arial, sans-serif;">
-<td colspan="2" valign="middle" style="text-align: center;">Thank you for your order!</td>
+<td colspan="2" valign="middle">Thank you for your purchase!</td>
 </tr>
 <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-    <td style="text-align: start;">Hi {{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }},</td>
+    <td style="text-align: end;"><b>ORDER #ED{{ $email_data['order']->order_id }}</b></td>
 </tr>
 <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-    <td colspan="2" style="text-align: start;">Your order <b># {{ $email_data['order']->order_id }}</b> has been placed successfully and we will let you know once your package is on its way.</td>
+    <td colspan="2" style="text-align: start;">Your order is being prepared for shipment. You will receive a notification once it has been dispatched. Please be aware that your order is expected to arrive within 3-4 business days.</td>
 </tr>
 <tr>
     <td></td>
@@ -163,8 +164,8 @@
     <td></td>
 </tr>
 <tr>
-    <td colspan="2" valign="middle" style="text-align: center;">
-        <a href="" style="color: #ffffff; background-color:#D19C97; padding: 10px 20px; font-weight: bold;  font-size: 18px; font-family: Arial, sans-serif; text-decoration: none;">Track My Order</a>
+    <td >
+        <a href="{{ route('checkout.order-detail',['id' => $email_data['order']->order_id ]) }}" style="color: #ffffff; background-color:#D19C97; padding: 10px 20px; font-weight: bold;  font-size: 18px; font-family: Arial, sans-serif; text-decoration: none;">View your Order</a>
     </td>
 </tr>
 <tr>
@@ -173,9 +174,6 @@
 <tr>
     <td></td>
 </tr>
-<tr>
-    <td>_______________________________________________________</td>
-</tr>
 </table>
 <table border="0" style="border-collapse: collapse; background-color: #ffffff;">
     <tr>
@@ -185,24 +183,92 @@
         <td></td>
     </tr>
     <tr style="color: #000000; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif;">
-        <td style="text-align: start;padding: 5px 0px;">Delivery Details</td>
+        <td style="text-align: start;padding: 5px 0px;">Order summary</td>
     </tr>
+    @foreach ($email_data['order_detail'] as $order_detail)
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Name</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }}</td>
+        <td style="text-align: left;">
+            {{-- <img   height="75" width="75" src="https://everydayplastic.co/storage/01JCATBVMN8MP0E4QGBH1KZBW6.png" alt=""> --}}
+            <img height="75" width="75" src="{{ asset('/storage/'.$order_detail['product']->image) }}" alt="">
+        </td>
+        <td style="text-align: left;"><b>{{ $order_detail['product']->title }} x {{ $order_detail['quantity'] }}</b></td>
+        <td><b> {{ getLocation()->currency }}  {{ number_format( $order_detail['total_amount'],2) }}</b></td>
     </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Address</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['shipment']->address }}</td>
+    @endforeach
+    <tr>
+        <td></td>
+        <td style="text-align: left;"> Sub Total</td>
+        <td style="text-align: end;">  {{ getLocation()->currency }} {{ number_format($email_data['order']->sub_total,2)  }}</td>
     </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Email</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->email }}</td>
+    @if($email_data['order']->coupon_id != 0)
+    <tr>
+        <td></td>
+        <td style="text-align: left;">Discount</td>
+        <td style="text-align: end;"> {{ number_format($email_data['coupon_discount_amount'],2) }} ({{ $email_data['coupon_discount'] }}%)</td>
     </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Phone</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['shipment']->phone }}</td>
+    @endif
+    <tr>
+        <td></td>
+        <td style="text-align: left;">Delivery</td>
+        <td style="text-align: end;">
+            @if($email_data['order']->free_shipping == 0)
+            {{ number_format($email_data['order']->shipping_charges,2) }}
+            @else
+            FREE
+            @endif
+        </td>
     </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: left;">Grand Total</td>
+        <td style="text-align: end;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount'] ,2)  }}</td>
+    </tr>
+</table> 
+<table border="0" style="border-collapse: collapse; background-color: #ffffff;">
+    <tr>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+    </tr>
+    <tr style="color: #000000; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif;">
+        <td style="text-align: start;padding: 5px 0px;">Customer information</td>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;"><b>Shipping address</b></td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }}</td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->address }}</td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->city->name }}</td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <table>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;"><b>Billing address</b></td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['user_detail']->first_name }} {{ $email_data['user_detail']->last_name }}</td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->billing_address }}</td>
+                </tr>
+                <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
+                    <td style="text-align: start;  padding: 5px 0px;">{{ $email_data['order']->city->name }}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+   
 </table>
 <table width="100%" border="0" cellpadding="4" class="agenda-table" align="center" style="border-spacing: 4px !important; border-collapse: separate;">
     <tr>
@@ -211,93 +277,12 @@
     <tr>
         <td>_______________________________________________________</td>
     </tr>
+    <td>
+        If you have any questions, reply to this email or contact us at <a href="mailto:info@everydayplastic.co">info@everydayplastic.co</a>
+    </td>
 </table>
-<table border="0" style="border-collapse: collapse; background-color: #ffffff;">
-    <tr>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    <tr style="color: #000000; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif;">
-        <td style="text-align: start;padding: 5px 0px;">Order Details</td>
-    </tr>
-    @foreach ($email_data['order_detail'] as $order_detail)
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: left;">
-            {{-- <img   height="75" width="75" src="https://everydayplastic.co/storage/01JCATBVMN8MP0E4QGBH1KZBW6.png" alt=""> --}}
-            <img height="75" width="75" src="{{ asset('/storage/'.$order_detail['product']->image) }}" alt="">
-        </td>
-        <td style="text-align: left;">
-            <table style="font-size: 12px">
-                <tr>
-                    <td><b>{{ $order_detail['product']->title }}</b></td>
-                </tr>
-                <tr>
-                    <td> {{ getLocation()->currency }} {{ number_format( $order_detail['unit_amount'], 2) }}</td>
-                </tr>
-                <tr>
-                    <td>Color: {{ $order_detail['color'] ? $order_detail['color']->color_name : 'N/A' }}</td>
-                </tr>
-                <tr>
-                    <td>Qty: {{ $order_detail['quantity'] }}</td>
-                </tr>
-            </table>
-        </td>
-        <td style="text-align: right;">
-            <table style="font-size: 12px">
-                <tr>
-                    <td><b>{{ number_format( $order_detail['total_amount'],2) }}</b></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    @endforeach
-</table>
-<table border="0" style="border-collapse: collapse; background-color: #ffffff;">
-    <tr>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Sub Total</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total,2)  }}</td>
-    </tr>
-    @if($email_data['order']->coupon_id != 0)
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Discount</td>
-        <td style="text-align: start;  padding: 5px 0px;">- {{ number_format($email_data['coupon_discount_amount'],2) }} ({{ $email_data['coupon_discount'] }}%)</td>
-    </tr>
-    @endif
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Delivery</td>
-        <td style="text-align: start;  padding: 5px 0px;">
-            @if($email_data['order']->free_shipping == 0)
-            {{ number_format($email_data['order']->shipping_charges,2) }}
-            @else
-            FREE {{ $email_data['order']->free_shipping }}
-            @endif
-        </td>
-    </tr>
-    <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
-        <td style="text-align: start;  padding: 5px 0px;">Grand Total</td>
-        <td style="text-align: start;  padding: 5px 0px;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount'] ,2)  }}</td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-</table>   
+
+ 
 </div>
 </body>
 </html>
