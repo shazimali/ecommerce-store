@@ -21,4 +21,11 @@ class OrdersController extends Controller
 
         return $this->ordersService->getAll($request);
     }
+
+    public function CODList()
+    {
+        $this->authorize('order_access');
+
+        return $this->ordersService->getAllCODs();
+    }
 }

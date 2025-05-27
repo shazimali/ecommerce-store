@@ -241,6 +241,7 @@ Route::prefix('admin')->group(function () {
         //Orders
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrdersController::class, 'index']);
+            Route::get('/cod-list', [OrdersController::class, 'CODList']);
         });
 
         //Customers
