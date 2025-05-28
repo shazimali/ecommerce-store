@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests\API\Admin\Orders;
+
+use App\Http\Requests\JsonFormRequest;
+
+class BookOrderRequest extends JsonFormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'cod_company' => 'required',
+            'weight' => 'numeric|required',
+            'piece' => 'numeric|required',
+            'order_id' => 'required',
+            'special_instruction' => 'nullable'
+        ];
+    }
+}

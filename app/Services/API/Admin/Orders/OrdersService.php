@@ -2,12 +2,15 @@
 
 namespace App\Services\API\Admin\Orders;
 
+use App\Http\Requests\API\Admin\Orders\BookOrderRequest;
 use App\Http\Resources\API\Admin\Orders\OrderCODListResource;
 use App\Http\Resources\API\Admin\Orders\OrdersListResource;
 use App\Interfaces\API\Admin\Orders\OrdersInterface;
 use App\Models\CashOnDelivery;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Ramsey\Uuid\Type\Integer;
 
 class OrdersService implements OrdersInterface
 {
@@ -29,5 +32,61 @@ class OrdersService implements OrdersInterface
         } else {
             return response()->json(['message' => 'COD not found'], 200);
         }
+    }
+
+    public function bookOrder(BookOrderRequest $request)
+    {
+        try {
+            $order = Order::where('order_id', $request->order_id)->first();
+
+            if ($request->cod_company == 'Leopards') {
+                $cod_company = CashOnDelivery::where('title', 'Leopards')->first();
+
+                $response = Http::post($cod_company->api_url . 'bookPacket/format/json/', [
+                    'api_key' => $cod_company->api_key,
+                    'api_password' => $cod_company->api_password,
+                    'booked_packet_weight' => $request->weight,
+                    'booked_packet_collect_amount' => $order->total,
+                    'booked_packet_order_id' => 'ED#' . $order->order_id,
+                    'booked_packet_no_piece' => $request->piece,
+                    'origin_city' => 'self',
+                    'destination_city' => $order->city_id,
+                    'shipment_id' => $order->order_id,
+                    'shipment_name_eng' => 'self',
+                    'shipment_email' => 'self',
+                    'shipment_phone' => 'self',
+                    'shipment_address' => 'self',
+                    'consignment_name_eng' => $order->user->name,
+                    'consignment_email' => $order->user->email,
+                    'consignment_phone' => $order->phone,
+                    'consignment_address' => $order->address,
+                    'special_instructions' => !empty($request->special_instruction) ? $request->special_instruction : 'N/A'
+                ]);
+
+                $res_data = $response->json();
+                if ($res_data['status'] == 1) {
+                    $order->weight = $request->weight;
+                    $order->piece = $request->piece;
+                    $order->special_instructions = !empty($request->special_instruction) ? $request->special_instruction : 'N/A';
+                    $order->track_number = $res_data['track_number'];
+                    $order->slip_link = $res_data['slip_link'];
+                    $order->status = 'IN_TRANSIT';
+                    $order->save();
+                } else {
+                    return response()->json(['message' => 'COD response =>' . $res_data['error']], 401);
+                }
+            }
+            if ($request->cod_company == 'Post_Ex') {
+            }
+
+            return response()->json(['message' => 'Order Booked Successfully.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 201);
+        }
+    }
+    public function deleteOrder(int $id)
+    {
+        Order::where('order_id', $id)->delete();
+        return response()->json(['message' => 'Order Deleted Successfully.'], 200);
     }
 }
