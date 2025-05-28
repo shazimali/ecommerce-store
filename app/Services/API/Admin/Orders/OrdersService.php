@@ -51,7 +51,7 @@ class OrdersService implements OrdersInterface
                     'booked_packet_no_piece' => $request->piece,
                     'origin_city' => 'self',
                     'destination_city' => $order->city_id,
-                    'shipment_id' => $order->order_id,
+                    'shipment_id' => getSettingVal('leopards_cod_shipper_id'),
                     'shipment_name_eng' => 'self',
                     'shipment_email' => 'self',
                     'shipment_phone' => 'self',
