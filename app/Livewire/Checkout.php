@@ -167,7 +167,7 @@ class Checkout extends Component
         $email_data['order'] = Order::where('id', $order->id)->first();
         $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->get();
         $email_data['user_detail'] = $user;
-        $email_data['coupon_discount_amount'] = number_format(round($email_data['order']->sub_total / 100 * $this->coupon_discount), 2);
+        $email_data['coupon_discount_amount'] = $email_data['order']->sub_total / 100 * $this->coupon_discount;
         $email_data['coupon_discount'] = $this->coupon_discount;
         Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
         $this->order_completed = true;

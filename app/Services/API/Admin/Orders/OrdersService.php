@@ -41,8 +41,7 @@ class OrdersService implements OrdersInterface
 
             if ($request->cod_company == 'Leopards') {
                 $cod_company = CashOnDelivery::where('title', 'Leopards')->first();
-
-                $response = Http::post($cod_company->api_url . 'bookPacket/format/json/', [
+                $data = [
                     'api_key' => $cod_company->api_key,
                     'api_password' => $cod_company->api_password,
                     'booked_packet_weight' => $request->weight,
@@ -61,7 +60,8 @@ class OrdersService implements OrdersInterface
                     'consignment_phone' => $order->phone,
                     'consignment_address' => $order->address,
                     'special_instructions' => !empty($request->special_instruction) ? $request->special_instruction : 'N/A'
-                ]);
+                ];
+                $response = Http::post($cod_company->api_url . 'bookPacket/format/json/', $data);
 
                 $res_data = $response->json();
                 if ($res_data['status'] == 1) {

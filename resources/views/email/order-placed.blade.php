@@ -105,7 +105,7 @@
     <tr>
         <td></td>
         <td style="text-align: left;">Discount</td>
-        <td style="text-align: end;"> {{ number_format($email_data['coupon_discount_amount'],2) }} ({{ $email_data['coupon_discount'] }}%)</td>
+        <td style="text-align: end;"> {{ number_format(round($email_data['coupon_discount_amount']),2) }} ({{ $email_data['coupon_discount'] }}%)</td>
     </tr>
     @endif
     <tr>
@@ -123,10 +123,10 @@
         <td></td>
         <td style="text-align: left;">Grand Total</td>
         @if($email_data['order']->free_shipping == 0)
-        <td style="text-align: end;">{{ number_format($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount'] ,2)  }}</td>
+        <td style="text-align: end;">{{ number_format(round($email_data['order']->sub_total + $email_data['order']->shipping_charges - $email_data['coupon_discount_amount']) ,2)  }}</td>
         @endif
         @if($email_data['order']->free_shipping == 1)
-        <td style="text-align: end;">{{ number_format($email_data['order']->sub_total - $email_data['coupon_discount_amount'] ,2)  }}</td>
+        <td style="text-align: end;">{{ number_format(round($email_data['order']->sub_total - $email_data['coupon_discount_amount']) ,2)  }}</td>
         @endif
     </tr>
 </table> 
