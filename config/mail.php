@@ -49,7 +49,7 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
         'noreply' => [
-            'transport' => env('NO_REPLY_MAIL_MAILER'),
+            'transport' => 'noreply',
             'url' => env('NO_REPLY_MAIL_URL'),
             'host' => env('NO_REPLY_MAIL_HOST', '127.0.0.1'),
             'port' => env('NO_REPLY_MAIL_PORT', 2525),
