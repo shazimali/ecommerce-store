@@ -50,13 +50,10 @@ return [
         ],
         'noreply' => [
             'transport' => 'noreply',
-            'url' => env('NO_REPLY_MAIL_URL'),
             'host' => env('NO_REPLY_MAIL_HOST', '127.0.0.1'),
             'port' => env('NO_REPLY_MAIL_PORT', 2525),
             'username' => env('NO_REPLY_MAIL_USERNAME'),
-            'password' => env('NO_REPLY_MAIL_PASSWORD'),
-            'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'password' => env('NO_REPLY_MAIL_PASSWORD')
         ],
 
         'ses' => [
