@@ -169,7 +169,7 @@ class Checkout extends Component
         $email_data['user_detail'] = $user;
         $email_data['coupon_discount_amount'] = $email_data['order']->sub_total / 100 * $this->coupon_discount;
         $email_data['coupon_discount'] = $this->coupon_discount;
-        Mail::to($this->email)->send(new OrderPlacedEmail($email_data));
+        Mail::mailer('noreply')->to($this->email)->send(new OrderPlacedEmail($email_data));
         $this->order_completed = true;
         CartManagementService::clearCartItems();
         $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
