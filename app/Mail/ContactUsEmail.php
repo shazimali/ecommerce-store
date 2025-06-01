@@ -55,7 +55,7 @@ class ContactUsEmail extends Mailable
     public function attachments(): array
     {
         return [
-            $this->filePath ? 
+            !empty($this->filePath) ? 
             Attachment::fromStorageDisk('public', $this->filePath)
             : ''
         ];
