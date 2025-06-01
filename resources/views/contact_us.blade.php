@@ -83,7 +83,7 @@
                         <p class="text-red-500 text-xs">{{ $message }}</p>
                     @enderror
                 </div>
-                <div class="mb-4 mt-4">
+                {{-- <div class="mb-4 mt-4">
                     <label class="block text-sm font-medium mb-2 dark:text-white" for="attachment">
                         Upload File <span class="text-primary">*</span>
                     </label>
@@ -93,7 +93,7 @@
                     @error('attachment')
                         <p class="text-red-500 text-xs">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="text-center">
                     <button type="submit"
                         class="w-96 mt-4 bg-primary text-secondary py-3 px-4 rounded hover:bg-primary transition-colors">
