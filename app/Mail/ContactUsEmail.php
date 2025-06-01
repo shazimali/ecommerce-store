@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class contactMail extends Mailable
+class ContactUsEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,7 +33,7 @@ class contactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Everyday Contact-Us Email | " . $this->request['subject'],
+            subject: "Every Day Contact Us| " . $this->request['subject'],
         );
     }
 
@@ -55,7 +55,9 @@ class contactMail extends Mailable
     public function attachments(): array
     {
         return [
+            $this->filePath ? 
             Attachment::fromStorageDisk('public', $this->filePath)
+            : ''
         ];
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContactRequest;
-use App\Mail\contactMail;
+use App\Http\Requests\ContactUsRequest;
+use App\Mail\ContactUsEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,15 +15,16 @@ class ContactUsController extends Controller
         return view('contact_us');
     }
 
-    public function sendEmail(ContactRequest $request)
+    public function sendEmail(ContactUsRequest $request)
     {
-        $adminEmail = "abidranaabid90@gmail.com";
-
-        $fileName = time() . '.' . $request->attachment->extension();
-        $path = $request->file('attachment')->storeAs('uploads', $fileName, 'public');
-
-
-        $response = Mail::to($adminEmail)->send(new contactMail($request->all(), $path));
-        dd($response);
+        if($request->hasFile('attachment')){
+            $fileName = time() . '.' . $request->attachment->extension();
+            $path = $request->file('attachment')->storeAs('uploads', $fileName, 'public');
+            Mail::mailer('contactus')->to(env('CONTACT_US_MAIL_USERNAME'))->send(new ContactUsEmail($request->all(), $path));
+        }else{
+            $path = '';
+            Mail::mailer('contactus')->to(env('CONTACT_US_MAIL_USERNAME'))->send(new ContactUsEmail($request->all(), $path));
+        }
+        return back()->with('success', 'Your request has been sent.');
     }
 }

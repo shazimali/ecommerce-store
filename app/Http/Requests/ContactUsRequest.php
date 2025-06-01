@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactRequest extends FormRequest
+class ContactUsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class ContactRequest extends FormRequest
             'subject' => 'required',
             'message' => 'required',
             'attachment' => [
-                'required',
+                'nullable',
                 'file', // Explicitly check for a valid file upload
                 'mimes:pdf,doc,docx,png,jpg,jpeg',
                 'max:500'

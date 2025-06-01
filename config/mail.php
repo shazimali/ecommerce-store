@@ -61,6 +61,19 @@ return [
                 'name' => env('NO_REPLY_MAIL_FROM_NAME', 'Example'),
             ]
         ],
+        'contactus' => [
+            'transport' => 'smtp',
+            'host' => env('CONTACT_US_MAIL_HOST', '127.0.0.1'),
+            'port' => env('CONTACT_US_MAIL_PORT', 2525),
+            'encryption' => env('CONTACT_US_MAIL_ENCRYPTION', 'tls'),
+            'username' => env('CONTACT_US_MAIL_USERNAME'),
+            'password' => env('CONTACT_US_MAIL_PASSWORD'),
+            'timeout' => null,
+            'from' => [
+                'address' => env('CONTACT_US_MAIL_FROM_ADDRESS', 'hello@example.com'),
+                'name' => env('CONTACT_US_MAIL_FROM_NAME', 'Example'),
+            ]
+        ],
 
         'ses' => [
             'transport' => 'ses',

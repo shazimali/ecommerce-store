@@ -32,4 +32,4 @@ Route::get('order/{id}', [CheckoutController::class, 'orderDetail'])->name('chec
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.basic');
 
 Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_us');
-Route::post('mail-send', [ContactUsController::class, 'sendEmail'])->name('mail-send');
+Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('contact_us.post');

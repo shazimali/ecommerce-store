@@ -1,25 +1,24 @@
 @extends('layouts.app')
 @section('title', 'Contact Us')
 @section('content')
-    <div class="">
-        <div style="background-image: url('{{ asset('images/background.jpeg') }}')"
-            class="w-full min-h-64 bg-no-repeat bg-cover">
-            {{-- <div>tets</div>
-        <div>tets</div>
-        <div>tets</div>
-        <div>tets</div>
-        <div>tets</div>
-        <div>tets</div>
-        <div>tets</div> --}}
+    <div class="text-black">
+        <div style="background-image: url('{{asset('images/contact_us.webp')}}')"
+            class="h-screen flex items-center justify-center bg-no-repeat bg-cover">
+                <div class="text-white text-7xl font-semibold">Contact Us</div>            
         </div>
         <div class="z-10 pt-16 pb-16">
-            <form class="w-full  mx-auto bg-white px-4 py-8 rounded-lg shadow-lg  dark:bg-black"
-                action="{{ route('mail-send') }}" method="POST" enctype="multipart/form-data">
+            <form class="w-full  mx-auto bg-white px-4 py-8 dark:bg-black"
+                action="{{ route('contact_us.post') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Your Information Section -->
                 <div class="">
+                @session('success')
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Success!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                    </div>
+                @endsession
                     <h2 class="text-xl font-semibold mb-6 dark:text-white">Your Information</h2>
-
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium mb-2 dark:text-white" for="first_name ">
@@ -95,10 +94,12 @@
                         <p class="text-red-500 text-xs">{{ $message }}</p>
                     @enderror
                 </div>
-                <button type="submit"
-                    class="w-full mt-4 bg-primary text-secondary py-3 px-4 rounded hover:bg-primary transition-colors">
-                    Submit
-                </button>
+                <div class="text-center">
+                    <button type="submit"
+                        class="w-96 mt-4 bg-primary text-secondary py-3 px-4 rounded hover:bg-primary transition-colors">
+                        Submit
+                    </button>
+                </div>
             </form>
         </div>
     </div>
