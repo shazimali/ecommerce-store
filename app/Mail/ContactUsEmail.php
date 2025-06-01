@@ -20,10 +20,11 @@ class ContactUsEmail extends Mailable
     public $request;
     public $filePath;
 
-    public function __construct($request, $filePath= null)
+    // public function __construct($request, $filePath= null)
+    public function __construct($request)
     {
         $this->request = $request;
-        $this->filePath = $filePath;
+        // $this->filePath = $filePath;
     }
 
 
@@ -55,9 +56,9 @@ class ContactUsEmail extends Mailable
     public function attachments(): array
     {
         return [
-            !is_null($this->filePath) ? 
-            Attachment::fromStorageDisk('public', $this->filePath)
-            : ''
+            // !is_null($this->filePath) ? 
+            // Attachment::fromStorageDisk('public', $this->filePath)
+            // : ''
         ];
     }
 }

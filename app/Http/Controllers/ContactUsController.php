@@ -17,11 +17,13 @@ class ContactUsController extends Controller
 
     public function sendEmail(ContactUsRequest $request)
     {
+        // $path = '';
         if($request->hasFile('attachment')){
             $fileName = time() . '.' . $request->attachment->extension();
             $path = $request->file('attachment')->storeAs('uploads', $fileName, 'public');
             Mail::mailer('contactus')->to(env('CONTACT_US_MAIL_USERNAME'))->send(new ContactUsEmail($request->all(), $path));
         }else{
+            // Mail::mailer('contactus')->to(env('CONTACT_US_MAIL_USERNAME'))->send(new ContactUsEmail($request->all(), $path));
             Mail::mailer('contactus')->to(env('CONTACT_US_MAIL_USERNAME'))->send(new ContactUsEmail($request->all()));
         }
         return back()->with('success', 'Your request has been sent.');
