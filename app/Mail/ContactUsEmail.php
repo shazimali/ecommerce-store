@@ -34,7 +34,7 @@ class ContactUsEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Every Day Contact Us| " . $this->request['subject'],
+            subject: "Every Day Contact Us | " . $this->request['subject'],
         );
     }
 
