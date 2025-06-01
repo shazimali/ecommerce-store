@@ -20,7 +20,7 @@ class ContactUsEmail extends Mailable
     public $request;
     public $filePath;
 
-    public function __construct($request, $filePath)
+    public function __construct($request, $filePath?)
     {
         $this->request = $request;
         $this->filePath = $filePath;
