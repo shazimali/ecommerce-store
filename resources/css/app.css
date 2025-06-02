@@ -82,8 +82,8 @@ swiper-slide {
   text-decoration: underline;
 }
 
-.trix-editor a:visited {
-  color: #D19C97;
+.trix-editor a {
+  color: #D19C97 !important;
 }
 
 .trix-editor ul {
