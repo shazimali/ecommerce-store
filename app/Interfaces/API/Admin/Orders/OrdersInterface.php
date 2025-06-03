@@ -10,5 +10,6 @@ interface OrdersInterface
     public function getAll(Request $request);
     public function getAllCODs();
     public function bookOrder(BookOrderRequest $request);
+    public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request);
     public function deleteOrder(int $id);
 }

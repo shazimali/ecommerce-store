@@ -38,6 +38,13 @@ class OrdersController extends Controller
         return $this->ordersService->bookOrder($request);
     }
 
+    public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request)
+    {
+        $this->authorize('order_access');
+
+        return $this->ordersService->bookedOrderStatus($request);
+    }
+
     public function deleteOrder(int $id)
     {
         $this->authorize('order_access');

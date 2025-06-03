@@ -95,6 +95,15 @@ class OrdersService implements OrdersInterface
             return response()->json(['message' => $th->getMessage()], 201);
         }
     }
+
+    public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request){
+     
+        Order::where('order_id',$request->order_id)->update([
+            'stataus' => $request->status
+        ]);
+     return response()->json(['message' => 'Order Status Updated Successfully.'], 200);
+   
+    }
     public function deleteOrder(int $id)
     {
         Order::where('order_id', $id)->delete();

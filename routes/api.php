@@ -243,6 +243,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [OrdersController::class, 'index']);
             Route::get('/cod-list', [OrdersController::class, 'CODList']);
             Route::post('/book', [OrdersController::class, 'bookOrder']);
+            Route::post('/book/status', [OrdersController::class, 'bookedOrderStatus']);
             Route::post('/delete/{id}', [OrdersController::class, 'deleteOrder']);
         });
 
