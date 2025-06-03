@@ -4,11 +4,11 @@ namespace App\Http\Requests\API\Admin\Orders;
 
 use App\Http\Requests\JsonFormRequest;
 
-class UpdateBookedOrderStatusRequest extends JsonFormRequest
+class BookedOrderStatusRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-    */
+     */
     public function authorize(): bool
     {
         return true;

@@ -38,7 +38,7 @@ class OrdersController extends Controller
         return $this->ordersService->bookOrder($request);
     }
 
-    public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request)
+    public function bookedOrderStatus(BookedOrderStatusRequest $request)
     {
         $this->authorize('order_access');
 

@@ -3,6 +3,7 @@
 namespace App\Services\API\Admin\Orders;
 
 use App\Http\Requests\API\Admin\Orders\BookOrderRequest;
+use App\Http\Requests\API\Admin\Orders\UpdateBookedOrderStatusRequest;
 use App\Http\Resources\API\Admin\Orders\OrderCODListResource;
 use App\Http\Resources\API\Admin\Orders\OrdersListResource;
 use App\Interfaces\API\Admin\Orders\OrdersInterface;
@@ -96,12 +97,12 @@ class OrdersService implements OrdersInterface
         }
     }
 
-    public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request){
-     
-        Order::where('order_id',$request->order_id)->update([
-            'stataus' => $request->status
-        ]);
-     return response()->json(['message' => 'Order Status Updated Successfully.'], 200);
+    public function bookedOrderStatus(BookedOrderStatusRequest $request){
+        
+        $order = Order::where('order_id',$request->order_id)->first();
+        $order->status = $request->status;
+        $order->save();
+        return response()->json(['message' => 'Order Status Updated Successfully.'], 200);
    
     }
     public function deleteOrder(int $id)
