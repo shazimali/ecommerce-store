@@ -22,7 +22,13 @@ class Order extends Model
         'phone',
         'free_shipping',
         'shipping_charges',
+        'weight',
+        'piece',
+        'special_instructions',
+        'track_number',
+        'slip_link',
         'coupon_id',
+        'cod_id',
         'status',
         'user_id'
     ];

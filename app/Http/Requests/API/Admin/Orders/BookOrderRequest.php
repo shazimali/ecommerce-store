@@ -22,11 +22,12 @@ class BookOrderRequest extends JsonFormRequest
     public function rules(): array
     {
         return [
-            'cod_company' => 'required',
-            'weight' => 'numeric|required',
-            'piece' => 'numeric|required',
+            'cod_company' => 'required',    
+            'track_number' => 'required',
+            // 'weight' => 'numeric|required',
+            // 'piece' => 'numeric|required',
             'order_id' => 'required',
-            'special_instruction' => 'nullable'
+            // 'special_instruction' => 'nullable'
         ];
     }
 }
