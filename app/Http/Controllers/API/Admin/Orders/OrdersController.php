@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Admin\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Admin\Orders\BookOrderRequest;
+use App\Http\Requests\API\Admin\Orders\BookedOrderStatusRequest;
 use App\Services\API\Admin\Orders\OrdersService;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Type\Integer;
