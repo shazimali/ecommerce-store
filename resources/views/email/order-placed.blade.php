@@ -3,33 +3,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Order Placed</title>
-<script type="application/ld+json">
+    <script type="application/ld+json">
     {
-      "@context": "http://schema.org/",
-      "@type": "EmailMessage",
+      "@context": "http://schema.org",
+      "@type": "Email",
+      "name": "Welcome to Our Newsletter",
       "sender": {
-        "@type": "Person",
-        "name": "John Doe",
-        "email": "john.doe@example.com"
+        "@type": "Organization",
+        "name": "Your Company Name"
       },
       "recipient": {
         "@type": "Person",
-        "name": "Jane Doe",
-        "email": "jane.doe@example.com"
+        "name": "Recipient Name"
       },
-      "subject": "Event Reminder",
-      "text": "This is a reminder about the upcoming event.",
-      "description": "A short description of the email's content.",
-      "event": {
-        "@type": "Event",
-        "name": "Example Event",
-        "startDate": "2025-05-31T18:00:00",
-        "endDate": "2025-05-31T20:00:00",
-        "location": "Event location",
-        "url": "https://example.com/event"
-      }
+      "subject": "Newsletter Issue",
+      "text": "This is a sample newsletter email."
     }
-  </script>
+    </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="color: #2a2a2a; font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
