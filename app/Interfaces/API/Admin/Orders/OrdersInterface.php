@@ -3,6 +3,7 @@
 namespace App\Interfaces\API\Admin\Orders;
 
 use App\Http\Requests\API\Admin\Orders\BookOrderRequest;
+use App\Http\Requests\API\Admin\Orders\UpdateBookedOrderStatusRequest;
 use Illuminate\Http\Request;
 
 interface OrdersInterface
