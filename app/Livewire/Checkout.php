@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Mail\OrderPlacedEamil;
 use App\Mail\OrderPlacedEmail;
 use App\Models\CashOnDelivery;
 use App\Models\City;

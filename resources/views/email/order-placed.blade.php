@@ -3,23 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Order Placed</title>
-    <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "Email",
-      "name": "Welcome to Our Newsletter",
-      "sender": {
-        "@type": "Organization",
-        "name": "Your Company Name"
-      },
-      "recipient": {
-        "@type": "Person",
-        "name": "Recipient Name"
-      },
-      "subject": "Newsletter Issue",
-      "text": "This is a sample newsletter email."
-    }
-    </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="color: #2a2a2a; font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">

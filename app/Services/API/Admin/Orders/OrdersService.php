@@ -9,7 +9,10 @@ use App\Http\Resources\API\Admin\Orders\OrdersListResource;
 use App\Interfaces\API\Admin\Orders\OrdersInterface;
 use App\Models\CashOnDelivery;
 use App\Models\Order;
+use App\Mail\OrderShippedEmail;
+use App\Mail\OrderDeliveredEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Ramsey\Uuid\Type\Integer;
 
@@ -37,8 +40,15 @@ class OrdersService implements OrdersInterface
 
     public function bookOrder(BookOrderRequest $request)
     {
-        try {
-            $order = Order::where('order_id', $request->order_id)->first();
+            $order =Order::where('order_id',$request->order_id)
+                    ->with('detail','user','city','country','coupon','cod')
+                    ->first(); 
+            
+            Mail::mailer('noreply')
+            ->to($order->user->email)
+            ->bcc(env('OWNER_EMAIL_ADDRESS'))
+            ->send(new OrderShippedEmail($order,$request->cod_company,$request->track_number));
+
             if($request->cod_company == 'Leopards'){
                 $order->status = 'IN_TRANSIT';
                 $order->track_number = $request->track_number;
@@ -51,6 +61,7 @@ class OrdersService implements OrdersInterface
                 $order->cod_id = CashOnDelivery::where('title',$request->cod_company)->first()->id;
                 $order->save();
             }
+
             // if ($request->cod_company == 'Leopards') {
             //     $cod_company = CashOnDelivery::where('title', 'Leopards')->first();
             //     $data = [
@@ -92,14 +103,19 @@ class OrdersService implements OrdersInterface
             // }
 
             return response()->json(['message' => 'Order Booked Successfully.'], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 201);
-        }
     }
 
     public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request){
         
-        $order = Order::where('order_id',$request->order_id)->first();
+        $order = Order::where('order_id',$request->order_id)
+        ->with('detail','user','city','country','coupon','cod')
+        ->first();
+        if($request->status == 'DELIVERED'){
+            Mail::mailer('noreply')
+               ->to($order->user->email)
+               ->bcc(env('OWNER_EMAIL_ADDRESS'))
+               ->send(new OrderDeliveredEmail($order));
+        }
         $order->status = $request->status;
         $order->save();
 

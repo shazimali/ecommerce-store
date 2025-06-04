@@ -67,4 +67,9 @@ class Order extends Model
     {
         return $this->hasOne(Country::class, 'id', 'country_id');
     }
+
+     public function cod(): HasOne
+    {
+        return $this->hasOne(CashOnDelivery::class, 'id', 'cod_id');
+    }
 }
