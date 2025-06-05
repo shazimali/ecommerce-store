@@ -4,6 +4,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Order Placed</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EmailMessage",
+  "name": "Order Placed",
+  "description": "Your order is being prepared for shipment.",
+  "potentialAction": {
+    "@type": "ConfirmAction",
+    "name": "View Order",
+    "handler": {
+      "@type": "HttpActionHandler",
+      "url": "https://everydayplastic.co"
+    }
+  }
+}
+</script>
 </head>
 <body style="color: #2a2a2a; font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0;">
 <div class="mail-wrapper">
