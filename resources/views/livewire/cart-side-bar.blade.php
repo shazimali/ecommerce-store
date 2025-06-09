@@ -1,7 +1,7 @@
 <div class="drawer drawer-end">
-    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+    <input id="cart-side-bar" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content mt-3 cursor-pointer">
-        <label for="my-drawer-4"
+        <label for="cart-side-bar"
             class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-3 px-6">
             <i class="fa-solid fa-cart-shopping"></i>
             <span class="text-gray-500 text-sm font-semibold">{{ $cart_count }}</span>
@@ -9,8 +9,8 @@
     </div>
 
     <div class="drawer-side text-black">
-        <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
-        <div class="menu  bg-white dark:bg-black min-h-full w-96 p-4 text-start">
+        <label for="cart-side-bar" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="menu  bg-white dark:bg-black min-h-full lg:w-96 md:w-96 sm:w-25 xs:w-25 p-4 text-start">
             <div class="flex justify-between border-b border-b-secondary dark:border-b-slate-800">
                 <h1 class="uppercase text-1xl dark:text-white font-semibold pb-1">your Cart ({{ $cart_count }})</h1>
             </div>

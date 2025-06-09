@@ -15,21 +15,3 @@
         </div>
     </div>
 </div>
-
-<div class="sticky top-0 z-50 xs:block lg:hidden md:hidden">
-    @include('inc.news')
-    @include('inc.header_with_info')
-    <div class="flex bg-white justify-between py-2 px-2 dark:bg-black dark:border-b-slate-800">
-        {{-- <livewire:partials.wish-list /> --}}
-        {{-- <livewire:partials.cart-button /> --}}
-        <div
-            class="text-primary cursor-pointer border border-solid border-secondary dark:border-slate-800 py-2 px-6 mx-3">
-            <i class="fas fa-search"></i>
-        </div>
-        <div>
-            <livewire:mobile-cart-side-bar/>
-        </div>
-        @include('inc.social_icons')
-        @include('inc.theme_changer')
-    </div>
-</div>

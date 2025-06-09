@@ -1,27 +1,28 @@
-<div class="mobile-navbar lg:hidden md:hidden px-2"
-x-data="{mobileMenu: false, mobileNewArr: false}"
->
-    <nav class="flex justify-between border-secondary border dark:border-slate-800 p-2 static">
-        <a class="font-semibold text-2xl" href="{{ route('home') }}">
+<div class="mobile-navbar lg:hidden md:hidden ">
+@include('inc.news')
+    <div class="flex justify-center py-1 text-black">
+    <a class="font-semibold text-4xl" href="{{ route('home') }}">
             <span class="text-primary dark:text-secondary">Every Day</span>
             <span class="dark:text-primary">{{ website()->title }}</span>
-        </a>
+    </a>
+    </div>
+    <nav class="flex justify-between border-secondary border dark:border-slate-800 p-2">
         <div class="drawer drawer-start w-6">
             <input id="mobile-menu" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content cursor-pointer">
                 <label for="mobile-menu" class="drawer-button">
-                    <i class="fa-solid fa-bars text-slate-500 text-2xl"></i>
+                    <i class="fa-solid fa-bars text-black dark:text-white text-3xl"></i>
                 </label>
             </div>
         
             <div class="drawer-side z-50">
                 <label for="mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
                 <div class="menu  bg-white dark:bg-black min-h-full w-64 p-4 text-start">
-                    <ul>
+                    <ul x-data="{mobileNewArr:false}">
                         <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('home')])  href="{{ route('home') }}">Home</a>
                         </li>
-                        <li x-on:click="mobileNewArr = !mobileNewArr" class="py-2 text-start">
+                        <li x-on:click="mobileNewArr = !mobileNewArr" class="py-2 text-start relative">
                                 <div class="flex justify-between">
                                     New Arrival
                                     <div>
@@ -31,7 +32,7 @@ x-data="{mobileMenu: false, mobileNewArr: false}"
                                 
                             <div
                             x-show="mobileNewArr"
-                            class="bg-white mt-5 absolute z-50 block">
+                            class="bg-white mt-5 z-50 block">
                             @foreach (newArrivals() as $new_pr)
                             <div class="text-center relative dark:text-secondary px-5 py-5">
                                 @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
@@ -63,10 +64,6 @@ x-data="{mobileMenu: false, mobileNewArr: false}"
                                         <i class="fa-regular fa-eye text-primary"></i>
                                         View Detail
                                     </a>
-                                    {{-- <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary" href="">
-                                        <i class="fa-solid fa-cart-shopping text-primary"></i>
-                                        Add to Cart
-                                    </a> --}}
                             </div>
                         @endforeach      
                             </div>
@@ -123,5 +120,12 @@ x-data="{mobileMenu: false, mobileNewArr: false}"
                 </div>
             </div>
         </div>
+        <div>
+            <livewire:global-search/>
+        </div>
+        <div>
+            <livewire:mobile-cart-side-bar/>
+        </div>
+         {{-- @include('inc.theme_changer') --}}
     </nav>
 </div>

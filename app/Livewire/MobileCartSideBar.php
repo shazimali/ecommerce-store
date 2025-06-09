@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 
 class MobileCartSideBar extends Component
 {
+
     public $cart_count = 0;
     public $cartItems = [];
     public $sub_total = 0;
@@ -61,6 +62,7 @@ class MobileCartSideBar extends Component
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');
     }
+
     public function render()
     {
         return view('livewire.mobile-cart-side-bar');

@@ -14,11 +14,11 @@
                 @endif
                 <div class="grid grid-cols-2 pr-6">
                     <div class="flex py-1">
-                            <button wire:click="decreaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-3">-</button>
+                            <button wire:click="decreaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs lg:px-3 md:px-3 sm:px-3 xs:px-2">-</button>
                             <input type="text" value="{{ $crt['quantity'] }}" class="bg-secondary text-black text-xs border-none text-center w-10" readonly>
-                            <button wire:click="increaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-3">+</button>
+                            <button wire:click="increaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs lg:px-3 md:px-3 sm:px-3 xs:px-2">+</button>
                     </div>
-                    <span class="text-sm text-end py-3">{{ $crt['currency'] }} {{ number_format($crt['total_amount'],2) }}</span>
+                    <span class="lg:text-sm md:text-sm sm:text-sm xs:text-xs text-end lg:py-3 md:py-3 sm:py-3 xs:py-2">{{ $crt['currency'] }} {{ number_format($crt['total_amount'],2) }}</span>
                 </div>
                 
                     
