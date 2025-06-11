@@ -1,5 +1,5 @@
 <div class="mobile-navbar lg:hidden md:hidden ">
-@include('inc.news')
+    @include('inc.news')
     <div class="flex justify-center py-1 text-black">
     <a class="font-semibold text-4xl" href="{{ route('home') }}">
             <span class="text-primary dark:text-secondary">Every Day</span>
@@ -11,18 +11,18 @@
             <input id="mobile-menu" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content cursor-pointer">
                 <label for="mobile-menu" class="drawer-button">
-                    <i class="fa-solid fa-bars text-black dark:text-white text-3xl"></i>
+                    <i class="fa-solid fa-bars text-gray-500 dark:text-white text-3xl"></i>
                 </label>
             </div>
         
             <div class="drawer-side z-50">
                 <label for="mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
-                <div class="menu  bg-white dark:bg-black min-h-full w-64 p-4 text-start">
+                <div class="menu bg-white dark:bg-black text-black dark:text-white min-h-full w-64 p-4 text-start">
                     <ul x-data="{mobileNewArr:false}">
                         <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('home')])  href="{{ route('home') }}">Home</a>
                         </li>
-                        <li x-on:click="mobileNewArr = !mobileNewArr" class="py-2 text-start relative">
+                        <li x-on:click="mobileNewArr = !mobileNewArr" class="py-2 text-start grid grid-cols-1">
                                 <div class="flex justify-between">
                                     New Arrival
                                     <div>
@@ -34,7 +34,7 @@
                             x-show="mobileNewArr"
                             class="bg-white mt-5 z-50 block">
                             @foreach (newArrivals() as $new_pr)
-                            <div class="text-center relative dark:text-secondary px-5 py-5">
+                            <div class="text-center dark:text-secondary px-5 py-5 relative">
                                 @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
                                 <div class="absolute right-5  top-5 w-auto px-1 py-1 bg-green-600 text-white text-[8px] text-center">{{ $new_pr->price_detail->discount}} % off</div>
                                 @endif
@@ -65,7 +65,7 @@
                                         View Detail
                                     </a>
                             </div>
-                        @endforeach      
+                            @endforeach      
                             </div>
                         </li>
                         <li x-data="{mobileCollection: false}">
