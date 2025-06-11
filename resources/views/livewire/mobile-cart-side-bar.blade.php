@@ -2,9 +2,9 @@
     <input id="mob-cart-side-bar" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content mt-[0.4rem] cursor-pointer">
         <label for="mob-cart-side-bar"
-            class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-2 px-6">
+            class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-2 lg:px-6 md:px-6 sm:px-4 xs:px-4">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span class="text-gray-500 text-sm font-semibold">{{ $cart_count }}</span>
+            <span class="text-black dark:text-white text-sm font-semibold">{{ $cart_count }}</span>
         </label>
     </div>
 

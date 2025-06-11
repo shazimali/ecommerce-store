@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title',$category_title)
 @section('content')
-<div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 px-8 gap-5">
+<div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 lg:px-8 md:px-8 sm:px-2 xs:px-2 gap-5">
     @foreach ($subCategories as $category)
         <a href="{{ route('sub-categories',[$category->slug]) }}" class="border border-secondary dark:border-slate-800 p-5">
             <div x-show="{{ $category->product_heads->where('status','ACTIVE')->count() }}" class="text-gray-500 text-end">{{ $category->product_heads->where('status','ACTIVE')->count() }} Products</div>

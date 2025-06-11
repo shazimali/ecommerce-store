@@ -4,7 +4,7 @@
         <label for="cart-side-bar"
             class="drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-3 px-6">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span class="text-gray-500 text-sm font-semibold">{{ $cart_count }}</span>
+            <span class="text-black dark:text-white text-sm font-semibold">{{ $cart_count }}</span>
         </label>
     </div>
 

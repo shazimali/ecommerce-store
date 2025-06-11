@@ -14,7 +14,7 @@
     <div class="text-center bg-gradient-to-r from-orange-200  via-red-500 to-violet-600 bg-clip-text text-transparent font-semibold">
        {{ website()->wel_msg }}
     </div>
-    <div class="text-end text-black dark:text-primary">        
+    <div class=" text-end text-black dark:text-primary">        
         @include('inc.social_icons')
         @include('inc.theme_changer')
     </div>

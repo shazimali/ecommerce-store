@@ -69,7 +69,7 @@
       </div>
     </div>
     <!-- Swiper -->
-    <div class="swiper-container px-6 md:px-0">
+    <div class="swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
       <div class="swiper-wrapper">
         @foreach (website()->categories as $category)
         @foreach ($category->sub_categories as $sub_cat)
@@ -84,10 +84,10 @@
                 class="w-full h-full object-cover"
               />
             </div>
-            <div class="pt-4 px-0 pb-0 flex flex-col items-start">
+            <div class="pt-4 px-0 pb-0 flex flex-col items-center">
               {{-- <span class="text-gray-500 text-sm">Products ({{ $sub_cat->product_heads->where('status','ACTIVE')->count() }})</span> --}}
               <a href="{{ route('sub-categories',[$sub_cat->slug]) }}">
-                <h3 class="text-center dark:text-secondary text-xl font-semibold mt-2 flex justify-between items-center group-hover:text-primary transition-colors w-full">
+                <h3 class="dark:text-secondary text-xl font-semibold mt-2 group-hover:text-primary transition-colors w-full">
                   {{ $sub_cat->title }}
                 </h3>
               </a>

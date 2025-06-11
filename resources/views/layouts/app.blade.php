@@ -10,7 +10,6 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <link rel="icon" type="image/svg+xml" href="{{asset('favicon.svg')}}" />
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{asset('apple-touch-icon.png')}}" />
-    <link rel="manifest" href="/site.webmanifest" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>

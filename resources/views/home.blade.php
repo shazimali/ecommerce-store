@@ -16,7 +16,7 @@
     <div class="mt-16 text-center">
         <h1 class="font-bold text-4xl dark:text-secondary">Categories</h1>
     </div>
-        <div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 px-8 gap-5">
+        <div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 lg:px-8 md:px-8 sm:px-2 xs:px-2 gap-5">
             @foreach (website()->categories as $category)
                 <a href="{{ route('categories',['slug' => $category->slug]) }}" class="border border-secondary dark:border-slate-800">
                     {{-- <div class="text-gray-500 text-end">{{ $category->subCategories->count() }}  Sub Categories</div> --}}
@@ -40,14 +40,14 @@
 <div class="mt-16 text-center">
     <h1 class="font-bold text-4xl dark:text-secondary">Featured Products</h1>
 </div>
-<div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-5 px-8">
+<div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2">
     @foreach ($featured_products as $featured_product)
        @include('inc.product_box', ['product' => $featured_product])
     @endforeach
     </div>
-<div class="flex text-center justify-center pt-5">
+{{-- <div class="flex text-center justify-center pt-5">
     <a class="bg-primary text-white py-2 px-4" href="">Show More</a>
-</div>
+</div> --}}
 @endif
     <div class="bg-secondary text-center mt-16 py-10">
         <h1 class="text-4xl py-5 font-bold">Recommended Products</h1>
@@ -70,14 +70,14 @@
 <div class="mt-16 text-center">
     <h1 class="font-bold text-4xl dark:text-secondary">Just Arrived</h1>
 </div>
-<div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-5 px-8">
+<div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2">
     @foreach ($new_products as $new_product)
     @include('inc.product_box', ['product' => $new_product])
     @endforeach
 </div>
-<div class="flex text-center justify-center pt-5">
+{{-- <div class="flex text-center justify-center pt-5">
     <a class="bg-primary text-white py-2 px-4" href="">Show More</a>
-</div>
+</div> --}}
 @endif
 </section>
 
