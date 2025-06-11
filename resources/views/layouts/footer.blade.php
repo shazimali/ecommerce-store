@@ -8,8 +8,8 @@
                     </a>
                     <a class="block" href="">
                         <h1 class="text-2xl font-semibold text-center my-2"><span
-                                class="text-primary dark:text-secondary">Every Day</span><span
-                                class="dark:text-primary ml-1"></span>Plastic</h1>
+                                class="text-primary dark:text-black">Every Day</span><span
+                                class="text-black dark:text-primary ml-1"></span>{{ website()->title }}</h1>
                     </a>
                     <div x-data="{ map: false }" class="mt-3">
                         <i class="fa-solid fa-location-dot text-primary"></i>
