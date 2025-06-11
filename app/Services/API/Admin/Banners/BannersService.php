@@ -88,13 +88,13 @@ class BannersService implements BannerInterface
                 'order' => $request->order,
             ];
             if ($request->hasFile('image')) {
-                if (Storage::exists($banner->image)) {
+                if (!is_null($banner->image) &&  Storage::exists($banner->image)) {
                     Storage::delete($banner->image);
                 }
                 $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
             }
             if ($request->hasFile('mob_image')) {
-                if (Storage::exists($banner->mob_image)) {
+                if (!is_null($banner->mob_image) &&  Storage::exists($banner->mob_image)) {
                     Storage::delete($banner->mob_image);
                 }
                 $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
@@ -115,10 +115,10 @@ class BannersService implements BannerInterface
             if ($is_banner_attached_with_website)
                 return  response()->json(['message' => 'Banners attached with website, can not delete.'], 201);
 
-            if (Storage::exists($banner->image)) {
+            if (!is_null($banner->image) && Storage::exists($banner->image)) {
                 Storage::delete($banner->image);
             }
-            if (Storage::exists($banner->mob_image)) {
+            if (!is_null($banner->mob_image) && Storage::exists($banner->mob_image)) {
                 Storage::delete($banner->mob_image);
             }
             $banner->delete();
