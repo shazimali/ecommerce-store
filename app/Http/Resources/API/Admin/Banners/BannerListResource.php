@@ -23,7 +23,7 @@ class BannerListResource extends JsonResource
             'btn_text' => $this->slug,
             'btn_link' => $this->slug,
             'image' => Env('APP_URL') . Storage::url($this->image),
-            'mob_image' => $this->mob_image,
+            'mob_image' => Env('APP_URL') . Storage::url($this->mob_image),
             'order' => $this->order,
             'created_at' => $this->created_at->toDateString(),
             'websites' =>  $this->websites->pluck('title')
