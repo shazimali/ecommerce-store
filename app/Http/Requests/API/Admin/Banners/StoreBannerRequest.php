@@ -25,6 +25,7 @@ class StoreBannerRequest extends JsonFormRequest
         return [
             'title' => 'required',
             'image' => 'required|image|max:500',
+            'mob_image' => 'required|image|max:500',
             'order' => 'required',
             // 'websites' => 'required|array'
         ];

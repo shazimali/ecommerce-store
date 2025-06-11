@@ -24,6 +24,7 @@ class UpdateBannerRequest extends FormRequest
         return [
             'title' => 'required|unique:banners,title,' . $this->id,
             'image' => 'nullable|image|max:500',
+            'mob_image' => 'nullable|image|max:500',
             'order' => 'required',
         ];
     }
