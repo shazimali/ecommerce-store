@@ -53,6 +53,9 @@ class BannersService implements BannerInterface
             if ($request->hasFile('image')) {
                 $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
             }
+            if ($request->hasFile('mob_image')) {
+                $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
+            }
             $banners = Banner::create($data);
             $banners->websites()->attach($request->websites);
 
@@ -90,6 +93,12 @@ class BannersService implements BannerInterface
                 }
                 $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
             }
+            if ($request->hasFile('mob_image')) {
+                if (Storage::exists($banner->mob_image)) {
+                    Storage::delete($banner->mob_image);
+                }
+                $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
+            }
             $banner->update($data);
             $banner->websites()->sync($request->websites);
             return  response()->json(['message' => 'Banner updated successfully.'], 200);
@@ -108,6 +117,9 @@ class BannersService implements BannerInterface
 
             if (Storage::exists($banner->image)) {
                 Storage::delete($banner->image);
+            }
+            if (Storage::exists($banner->mob_image)) {
+                Storage::delete($banner->mob_image);
             }
             $banner->delete();
             return  response()->json(['message' => 'Banners deleted successfully.'], 200);
