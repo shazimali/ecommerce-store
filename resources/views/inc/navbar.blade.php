@@ -59,6 +59,7 @@
                 </li>
             </ul>
             <ul class="flex justify-end">
+            @guest
                 <li class="mr-6">
                     <a @class([
                         'hover:text-primary dark:hover:text-primary',
@@ -73,7 +74,17 @@
                         'text-primary dark:text-primary' => Route::is('register'),
                     ]) href="{{ route('register') }}">Register</a>
                 </li>
+                @endguest
+                @auth
+                    <li class="mr-6">
+                        <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <input type="submit" value="Logout"  class="hover:text-primary dark:hover:text-primary cursor-pointer">
+                        </form>
+                    </li>
+                @endauth
             </ul>
+          
             <div x-show="newArOpen" style="top: 60px"
                 class="bg-white dark:bg-black z-50 min-h-64 w-full absolute flex justify-between py-10 px-10">
                 @foreach (newArrivals() as $new_pr)

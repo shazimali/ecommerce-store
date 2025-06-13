@@ -17,6 +17,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('categories/{slug}', [CategoriesController::class, 'subCategoriesByCategorySlug'])->name('categories');
 Route::get('sub-categories/{slug}', [SubCategoriesController::class, 'productsBySubCategorySlug'])->name('sub-categories');
