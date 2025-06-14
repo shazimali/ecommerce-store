@@ -47,7 +47,7 @@
       </form>
         <div class="text-center py-2">
             <span class="text-sm">Don't have an account?</span>
-            <a class="text-sm text-primary font-semibold" href="">Sign up</a>
+            <a class="text-sm text-primary font-semibold" href="{{ route('register') }}">Sign up</a>
         </div>
         <div class="text-center py-2">
             <span class="text-sm">Or, login with</span>
