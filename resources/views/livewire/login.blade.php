@@ -49,7 +49,7 @@
             <span class="text-sm">Don't have an account?</span>
             <a class="text-sm text-primary font-semibold" href="{{ route('register') }}">Sign up</a>
         </div>
-        <div class="text-center py-2">
+        {{-- <div class="text-center py-2">
             <span class="text-sm">Or, login with</span>
         </div>
         <div class="flex justify-around py-2">
@@ -61,6 +61,6 @@
             <img height="50" width="50" src="{{ asset('images/facebook.svg') }}" alt="facebook">
             <span class="text-sm">Facebook</span>
             </a>
-        </div>
+        </div> --}}
     </div>
 </div>
