@@ -10,15 +10,15 @@
     <li 
         x-show="menu"
         x-transition.duration.300ms
-        @class(['z-50'])
+        class="z-50 absolute"
         >
-        <ul>
+        <ul class="relative" style="left: 350px">
             @foreach (website()->categories as $category)
             <li
             x-data="{sideBarOpen:false}"
             x-on:mouseenter="sideBarOpen = true;"
             x-on:mouseleave="sideBarOpen = false;"
-            class="relative bg-white text-black cursor-pointer pl-5 block font-normal py-2 border-secondary border-b border-l border-r bd-white dark:text-secondary dark:border-slate-800 dark:bg-black">
+            class="bg-white text-black cursor-pointer pl-5 block font-normal py-2 border-secondary border-b border-l border-r bd-white dark:text-secondary dark:border-slate-800 dark:bg-black">
                 {{ $category->title }}
                 <div class="float-end inline-block pr-5">
                     <i class="fa-solid fa-caret-right"></i>
@@ -26,7 +26,6 @@
                 @if (count($category->sub_categories))
                     <div
                     x-show="sideBarOpen"
-                    style="left: 300px"
                     x-transition.duration.300ms
                     x-data="{
                     'selectedImage':'{{ asset('storage/'.$category->image) }}'
