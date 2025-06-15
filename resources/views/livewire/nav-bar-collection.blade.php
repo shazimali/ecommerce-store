@@ -28,6 +28,7 @@
                     <div
                     x-show="sideBarOpen"
                     x-transition.duration.300ms
+                    style="left:325px"
                     x-data="{
                     'selectedImage':'{{ asset('storage/'.$category->image) }}'
                     }"
