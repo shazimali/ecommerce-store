@@ -11,8 +11,9 @@
         x-show="menu"
         x-transition.duration.300ms
         class="z-50 absolute"
+        style="width: 22.8%"
         >
-        <ul class="relative" style="left: 350px">
+        <ul class="relative">
             @foreach (website()->categories as $category)
             <li
             x-data="{sideBarOpen:false}"
