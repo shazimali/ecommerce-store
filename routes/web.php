@@ -10,13 +10,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SubCategoriesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('login', [AuthController::class, 'login'])->name('login');
-Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('categories/{slug}', [CategoriesController::class, 'subCategoriesByCategorySlug'])->name('categories');
@@ -34,3 +32,15 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
 
 Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_us');
 Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('contact_us.post');
+
+Route::middleware('guest')->group(function () {
+    // ...
+    Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'loginSocial'])
+        ->name('socialite.auth');
+
+    Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callbackSocial'])
+        ->name('socialite.callback');
+
+    Route::get('login', [AuthController::class, 'login'])->name('login');
+    Route::get('register', [AuthController::class, 'register'])->name('register');
+});

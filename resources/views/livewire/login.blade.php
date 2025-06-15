@@ -53,14 +53,14 @@
             <span class="text-sm">Or, login with</span>
         </div>
         <div class="flex justify-around py-2">
-            <div>
+            <a href="{{ route('socialite.auth', 'google') }}">
                 <img src="{{ asset('images/google.svg') }}" alt="google">
                 <span class="text-sm">Google</span>
-            </div>
-            <div>
+            </a>
+            <a href="{{ route('socialite.auth', 'facebook') }}">
             <img height="50" width="50" src="{{ asset('images/facebook.svg') }}" alt="facebook">
             <span class="text-sm">Facebook</span>
-            </div>
+            </a>
         </div>
     </div>
 </div>
