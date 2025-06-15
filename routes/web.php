@@ -35,11 +35,11 @@ Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('cont
 
 Route::middleware('guest')->group(function () {
     // ...
-    Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'loginSocial'])
-        ->name('socialite.auth');
+    Route::get('social/{provider}/redirect', [SocialAuthController::class, 'loginSocial'])
+        ->name('social.auth');
 
-    Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callbackSocial'])
-        ->name('socialite.callback');
+    Route::get('social/{provider}/callback', [SocialAuthController::class, 'callbackSocial'])
+        ->name('social.callback');
 
     Route::get('login', [AuthController::class, 'login'])->name('login');
     Route::get('register', [AuthController::class, 'register'])->name('register');
