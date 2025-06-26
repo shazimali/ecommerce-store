@@ -32,10 +32,10 @@
         if (response.authResponse) {
           // Send the access token to your Laravel backend
           fetch('/social/facebook/callback', {
-            method: 'POST',
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            //   'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify({ access_token: response.authResponse.accessToken })
           })
