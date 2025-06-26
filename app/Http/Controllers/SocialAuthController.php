@@ -41,8 +41,8 @@ class SocialAuthController extends Controller
         $user->update($data);
 
         Auth::login($user, remember: true);
-
-        return redirect()->route('dashboard');
+        return $data;
+        // return redirect()->route('dashboard');
     }
 
     protected function validateProvider(Request $request): array
