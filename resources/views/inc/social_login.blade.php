@@ -29,30 +29,16 @@
 <script>
         function loginWithFacebook() {
       FB.login(function(response) {
-        if (response.authResponse) {
-          // Send the access token to your Laravel backend
-          fetch('/social/facebook/callback', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            //   'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ access_token: response.authResponse.accessToken })
-          })
-          .then(response => response.json())
-          .then(data => {
-            // Handle successful login (redirect, etc.)
-            console.log(data);
-          })
-          .catch(error => {
-            // Handle errors
-            console.error(error);
-          });
-        } else {
-          // User cancelled login or did not grant permissions
-          console.log('User cancelled login or did not grant permissions.');
-        }
-      }, {scope: 'email,public_profile'}); // Request permissions
+            if (response.authResponse) {
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me', function(response) {
+                console.log(response);
+            console.log('Good to see you, ' + response.name + '.');
+            });
+            } else {
+            console.log('User cancelled login or did not fully authorize.');
+            }
+        });
     }
 </script>
 @endpush
