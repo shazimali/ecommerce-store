@@ -30,7 +30,7 @@ class SocialAuthController extends Controller
             ['email' => $request->email],
             ['password' => Str::password()]
         );
-
+        $data = [];
         if ($user->wasRecentlyCreated) {
             $data['name'] = $request->name;
             $data['facebook_id'] = $request->id;
