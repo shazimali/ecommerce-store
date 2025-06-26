@@ -24,32 +24,22 @@ class SocialAuthController extends Controller
     {
         // $this->validateProvider($request);
 
-        $response = Socialite::driver($provider)->user();
+        // $response = Socialite::driver($provider)->user();
 
         $user = User::firstOrCreate(
-            ['email' => $response->getEmail()],
+            ['email' => $request->email],
             ['password' => Str::password()]
         );
-        $data = [$provider . '_id' => $response->getId()];
 
         if ($user->wasRecentlyCreated) {
-            $data['name'] = $response->getName() ?? $response->getNickname();
-
+            $data['name'] = $request->name;
+            $data['facebook_id'] = $request->id;
             event(new Registered($user));
         }
 
         $user->update($data);
 
         Auth::login($user, remember: true);
-        return $data;
-        // return redirect()->route('dashboard');
-    }
-
-    protected function validateProvider(Request $request): array
-    {
-        return $this->getValidationFactory()->make(
-            $request->route()->parameters(),
-            ['provider' => 'in:facebook,google,github']
-        )->validate();
+        return response()->json(['message' => 'success'], 200);
     }
 }

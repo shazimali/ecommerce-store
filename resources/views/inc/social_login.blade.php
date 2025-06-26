@@ -32,8 +32,22 @@
             if (response.authResponse) {
             console.log('Welcome!  Fetching your information.... ');
             FB.api('/me',{fields: 'name, email'}, function(response) {
-                console.log(response);
-                // console.log('Good to see you, ' + response.name + '.');
+            fetch('/social/facebook/callback', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ id: response.id, name:response.name, email:response.email })
+          })
+          .then(response => response.json())
+          .then(data => {
+            window.location.href = "{{ route('dashboard') }}"
+          })
+          .catch(error => {
+            // Handle errors
+            console.error(error);
+          });
             });
             } else {
             console.log('User cancelled login or did not fully authorize.');

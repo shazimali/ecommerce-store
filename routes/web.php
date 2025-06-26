@@ -38,7 +38,7 @@ Route::middleware('guest')->group(function () {
     Route::get('social/{provider}/redirect', [SocialAuthController::class, 'loginSocial'])
         ->name('social.auth');
 
-    Route::get('social/{provider}/callback', [SocialAuthController::class, 'callbackSocial'])
+    Route::post('social/{provider}/callback', [SocialAuthController::class, 'callbackSocial'])
         ->name('social.callback');
 
     Route::get('login', [AuthController::class, 'login'])->name('login');
