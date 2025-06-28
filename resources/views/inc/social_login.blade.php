@@ -67,7 +67,7 @@
 <script>
     function handleGoogleSignIn(res){
         // Decode the JWT to access user profile information
-        const profile = JSON.parse(atob(response.credential.split('.')[1]));
+        const profile = JSON.parse(atob(res.credential.split('.')[1]));
         console.log([profile]);
         return false;
         fetch("/social/google/callback", {
