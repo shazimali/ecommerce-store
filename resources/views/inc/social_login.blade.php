@@ -2,17 +2,26 @@
     <span class="text-sm">Or, login with</span>
 </div>
 <div class="flex justify-around py-2">
-    <a href="{{ route('social.auth', 'google') }}">
-        <img src="{{ asset('images/google.svg') }}" alt="google">
-        <span class="text-sm">Google</span>
-    </a>
-    {{-- <a href="{{ route('social.auth', 'facebook') }}">
-    <img height="50" width="50" src="{{ asset('images/facebook.svg') }}" alt="facebook">
-    <span onclick="loginWithFacebook()" class="text-sm">Facebook</span>
-    </a> --}}
+    <div>
+        <div 
+        id="g_id_onload"
+        data-client_id="{{ env('GOOGLE_CLIENT_ID') }}"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-callback="handleGoogleSignIn"
+        data-auto_prompt="false"
+        ></div>
+        <div class="g_id_signin bg-white dark:bg-black"
+        data-type="icon"
+        data-shape="circle"
+        data-theme="filled_blue"
+        data-text="signin_with"
+        data-size="large"
+        data-logo_alignment="left">
+        </div>
+    </div>
      <div onclick="loginWithFacebook()" class="cursor-pointer">
-    <img height="50" width="50" src="{{ asset('images/facebook.svg') }}" alt="facebook">
-    <span  class="text-sm">Facebook</span>
+    <img height="48" width="48" src="{{ asset('images/facebook.svg') }}" alt="facebook">
     </div>
 </div>
 @push('scripts')
@@ -30,7 +39,6 @@
         function loginWithFacebook() {
       FB.login(function(response) {
             if (response.authResponse) {
-            console.log('Welcome!  Fetching your information.... ');
             FB.api('/me',{fields: 'name, email'}, function(response) {
             fetch('/social/facebook/callback', {
             method: 'POST',
@@ -55,4 +63,23 @@
         });
     }
 </script>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script>
+    function handleGoogleSignIn(res){
+        fetch("/social/google/callback", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json"
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+         },
+        body: JSON.stringify({ credential: res.credential }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(console.error);
+    }
+</script>
+
 @endpush

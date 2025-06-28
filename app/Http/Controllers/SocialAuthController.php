@@ -24,7 +24,10 @@ class SocialAuthController extends Controller
     {
         // $this->validateProvider($request);
 
-        // $response = Socialite::driver($provider)->user();
+        if ($provider == 'google') {
+            $response = Socialite::driver($provider)->user();
+            return $response;
+        }
 
         $user = User::firstOrCreate(
             ['email' => $request->email],
