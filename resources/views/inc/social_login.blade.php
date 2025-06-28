@@ -69,8 +69,9 @@
         fetch("/social/google/callback", {
         method: "POST",
         headers: { 
-            "Content-Type": "application/json"
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            "Content-Type": "application/json",
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Cross-Origin-Opener-Policy': 'same-origin',
          },
         body: JSON.stringify({ credential: res.credential }),
     })
