@@ -66,6 +66,10 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
     function handleGoogleSignIn(res){
+        // Decode the JWT to access user profile information
+        const profile = JSON.parse(atob(response.credential.split('.')[1]));
+        console.log([profile]);
+        return false;
         fetch("/social/google/callback", {
         method: "POST",
         headers: { 
