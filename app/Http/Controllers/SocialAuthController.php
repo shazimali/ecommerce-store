@@ -24,11 +24,6 @@ class SocialAuthController extends Controller
     {
         // $this->validateProvider($request);
 
-        if ($provider == 'google') {
-            $response = Socialite::driver($provider)->user();
-            return $response;
-        }
-
         $user = User::firstOrCreate(
             ['email' => $request->email],
             ['password' => Str::password()]
@@ -36,7 +31,12 @@ class SocialAuthController extends Controller
         $data = [];
         if ($user->wasRecentlyCreated) {
             $data['name'] = $request->name;
-            $data['facebook_id'] = $request->id;
+            if ($provider == 'facebook') {
+                $data['facebook_id'] = $request->id;
+            }
+            if ($provider == 'google') {
+                $data['google_id'] = $request->id;
+            }
             event(new Registered($user));
         }
 
