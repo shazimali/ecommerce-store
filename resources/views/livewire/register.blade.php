@@ -64,8 +64,8 @@
             </div>
         </form>
         <div class="text-center py-2">
-            <span class="text-sm">Don't have an account?</span>
-            <a class="text-sm text-primary font-semibold" href="{{ route('register') }}">Sign up</a>
+            <span class="text-sm">Already have an account?</span>
+            <a class="text-sm text-primary font-semibold" href="{{ route('login') }}">Sign in</a>
         </div>
       @include('inc.social_login')
     </div>

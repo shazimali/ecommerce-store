@@ -1,5 +1,5 @@
 <div class="text-center py-2">
-    <span class="text-sm">Or, login with</span>
+    <span class="text-sm">Or, {{request()->routeIs('login') ?  'login ' : 'sing up '}} with</span>
 </div>
 <div class="flex justify-around py-2">
     <div>
