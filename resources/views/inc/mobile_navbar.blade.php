@@ -109,13 +109,13 @@
                         @endforeach
                         @endif
                         <li class="text-start py-2">
-                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Contact</a>
+                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="{{ route('contact-us') }}">Contact</a>
                         </li>
                         <li class="text-start py-2">
-                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Login</a>
+                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="{{ route('login') }}">Login</a>
                         </li>
                         <li class="text-start py-2">
-                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="#">Register</a>
+                            <a class="hover:text-primary dark:text-secondary dark:hover:text-primary" href="{{ route('register') }}">Register</a>
                         </li>
                     </ul>
                 </div>
