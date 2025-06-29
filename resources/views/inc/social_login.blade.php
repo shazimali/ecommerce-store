@@ -21,7 +21,7 @@
         </div>
     </div>
      <div onclick="loginWithFacebook()" class="cursor-pointer">
-    <img height="48" width="48" src="{{ asset('images/facebook.svg') }}" alt="facebook">
+    <img height="45" width="45" src="{{ asset('images/facebook.svg') }}" alt="facebook">
     </div>
 </div>
 @push('scripts')

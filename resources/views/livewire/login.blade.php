@@ -24,7 +24,7 @@
           </label>
           <input @class([
             "border border-secondary w-full py-2 px-3  dark:bg-black dark:border-slate-800" => true,
-            "border-red-500" => $errors->has('email')
+            "border-red-500" => $errors->has('password')
           ]) id="password" type="password" wire:model="password" placeholder="password">
           @error('password')  <span class="text-red-500 text-xs italic">{{ $message }}</span> @enderror
         </div>
