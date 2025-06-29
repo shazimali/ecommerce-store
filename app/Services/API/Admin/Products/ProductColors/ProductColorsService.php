@@ -88,22 +88,22 @@ class ProductColorsService implements ProductColorsInterface
     {
         $productColor = ProductColor::find($id);
         if ($productColor) {
-            if (Storage::exists($productColor->color_image)) {
+            if (!is_null($productColor->color_image)) {
                 Storage::delete($productColor->color_image);
             }
-            if (Storage::exists($productColor->image1)) {
+            if (!is_null($productColor->image1)) {
                 Storage::delete($productColor->image1);
             }
-            if (Storage::exists($productColor->image2)) {
+            if (!is_null($productColor->image2)) {
                 Storage::delete($productColor->image2);
             }
-            if (Storage::exists($productColor->image3)) {
+            if (!is_null($productColor->image3)) {
                 Storage::delete($productColor->image3);
             }
-            if (Storage::exists($productColor->image4)) {
+            if (!is_null($productColor->image4)) {
                 Storage::delete($productColor->image4);
             }
-            if (Storage::exists($productColor->image5)) {
+            if (!is_null($productColor->image5)) {
                 Storage::delete($productColor->image5);
             }
             $productColor->delete();
