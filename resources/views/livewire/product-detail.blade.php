@@ -91,8 +91,8 @@
                 </div>
             @endif
             @if (!$product->coming_soon && $product->stocks->count() > 0)
-                <div class="grid grid-cols-[25%_75%] py-2">
-                    <div class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1">
+                <div class="grid lg:grid-cols-[25%_75%] md:grid-cols-[25%_75%] sm:grid-cols-1 xs:grid-cols-1 py-2">
+                    <div class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1  lg:mb-0 md:mb-0 sm:mb-2 xs:mb-2">
                         <div @dblclick.prevent class="flex items-center">
                             <button wire:click="decrementQty({{ $qty - 1 }})"
                                 class="flex h-10 items-center justify-center  px-4 py-2 bg-primary text-white"
@@ -117,7 +117,7 @@
                     </div>
                     <div class="text-start">
                         <button wire:click="addToCart('{{ $product['slug'] }}')" wire:loading.attr="disabled"
-                            class="bg-primary text-white py-2 px-4 cursor-pointer w-1/3">
+                            class="bg-primary text-white py-2 px-4 cursor-pointer lg:w-1/3 md:w-1/3 sm:w-1/2 xs:w-1/2">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <svg wire:loading wire:target="addToCart('{{ $product['slug'] }}')" aria-hidden="true"
                                 role="status" class="inline mr-1 w-4 h-4 text-primary animate-spin"
