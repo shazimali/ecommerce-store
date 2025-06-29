@@ -147,7 +147,9 @@
         </div>
     </div>
 </div>
+ @if (request()->routeIs('home'))
 @include('inc.mobile_navbar')
+@endif
 <div class="lg:hidden md:hidden sm:hidden xs:block lg:px-8 md:px-8 xs:px-2">
     @include('inc.banners')
 </div>
