@@ -40,7 +40,8 @@
       FB.login(function(response) {
             if (response.authResponse) {
             FB.api('/me',{fields: 'name, email, picture'}, function(response) {
-                console.log(response.picture);
+                console.log(response);
+                return false;
             fetch('/social/facebook/callback', {
             method: 'POST',
             headers: {
