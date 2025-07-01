@@ -120,8 +120,11 @@
                         </li>
                         @endguest
                         @auth
-                             <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('logout')])  href="{{ route('logout') }}">Logout</a>
+                        <li class="text-start py-2">
+                            <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <input type="submit" value="Logout"  class="hover:text-primary dark:text-secondary dark:hover:text-primary cursor-pointer">
+                            </form>
                         </li>
                         @endauth
                     </ul>
