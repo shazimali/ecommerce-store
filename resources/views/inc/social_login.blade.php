@@ -39,7 +39,8 @@
         function loginWithFacebook() {
       FB.login(function(response) {
             if (response.authResponse) {
-            FB.api('/me',{fields: 'name, email'}, function(response) {
+            FB.api('/me',{fields: 'name, email','picture'}, function(response) {
+                console.log(response.picture);
             fetch('/social/facebook/callback', {
             method: 'POST',
             headers: {
