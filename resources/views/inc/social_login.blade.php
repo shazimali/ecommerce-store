@@ -40,7 +40,6 @@
       FB.login(function(response) {
             if (response.authResponse) {
             FB.api('/me',{fields: 'name, email, picture'}, function(response) {
-                console.log(response);
                 return false;
             fetch('/social/facebook/callback', {
             method: 'POST',
@@ -48,7 +47,7 @@
               'Content-Type': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({ id: response.id, name:response.name, email:response.email })
+            body: JSON.stringify({ id: response.id, name:response.name, email:response.email, avatar:response.picture.data.url })
           })
           .then(response => response.json())
           .then(data => {

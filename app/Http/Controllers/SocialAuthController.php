@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 
@@ -33,6 +34,12 @@ class SocialAuthController extends Controller
             $data['name'] = $request->name;
             if ($provider == 'facebook') {
                 $data['facebook_id'] = $request->id;
+                if ($request->avatar) {
+                    $url = $request->avatar;
+                    $contents = file_get_contents($url);
+                    $path = Storage::disk('public')->put('/', $contents);
+                    $data['avatar'] = $path;
+                }
             }
             if ($provider == 'google') {
                 $data['google_id'] = $request->id;
