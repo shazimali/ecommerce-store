@@ -111,12 +111,19 @@
                         <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('contact_us')])  href="{{ route('contact_us') }}">Contact</a>
                         </li>
+                        @guest
                         <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('login')])  href="{{ route('login') }}">Login</a>
                         </li>
                         <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('register')])  href="{{ route('register') }}">Register</a>
                         </li>
+                        @endguest
+                        @auth
+                             <li class="text-start py-2">
+                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('logout')])  href="{{ route('logout') }}">Logout</a>
+                        </li>
+                        @endauth
                     </ul>
                 </div>
             </div>
