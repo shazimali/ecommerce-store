@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Register extends Component
@@ -24,14 +25,17 @@ class Register extends Component
     {
         $this->validate($this->doRegisterRules);
 
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password,
             'type' => 'CUSTOMER'
         ]);
 
-        return redirect()->route('login')->with('success', 'congratulations you are successfully registered please proceed to login.');
+        Auth::login($user, remember: true);
+        return redirect()->route('dashboard');
+
+        // return redirect()->route('login')->with('success', 'congratulations you are successfully registered please proceed to login.');
     }
 
 
