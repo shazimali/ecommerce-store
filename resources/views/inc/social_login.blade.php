@@ -68,8 +68,6 @@
     function handleGoogleSignIn(res){
         // Decode the JWT to access user profile information
         const profile = JSON.parse(atob(res.credential.split('.')[1]));
-        console.log(profile);
-        return false;
         fetch("/social/google/callback", {
         method: "POST",
         headers: { 
@@ -77,7 +75,7 @@
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             'Cross-Origin-Opener-Policy': 'same-origin',
          },
-        body: JSON.stringify({ name: profile.name, email:profile.email, id:profile.sub }),
+        body: JSON.stringify({ name: profile.name, email:profile.email, id:profile.sub, avatar:profile.picture }),
     })
     .then(response => response.json())
     .then(data => {

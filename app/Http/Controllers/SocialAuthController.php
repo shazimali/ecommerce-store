@@ -32,9 +32,9 @@ class SocialAuthController extends Controller
         $data = [];
         if ($user->wasRecentlyCreated) {
             $data['name'] = $request->name;
+            $data['avatar'] = $request->avatar;
             if ($provider == 'facebook') {
                 $data['facebook_id'] = $request->id;
-                $data['avatar'] = $request->avatar;
             }
             if ($provider == 'google') {
                 $data['google_id'] = $request->id;
