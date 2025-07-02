@@ -34,12 +34,7 @@ class SocialAuthController extends Controller
             $data['name'] = $request->name;
             if ($provider == 'facebook') {
                 $data['facebook_id'] = $request->id;
-                if ($request->avatar) {
-                    $url = $request->avatar;
-                    $contents = file_get_contents($url);
-                    $path = Storage::disk('public')->put('/', $contents);
-                    $data['avatar'] = $path;
-                }
+                $data['avatar'] = $request->avatar;
             }
             if ($provider == 'google') {
                 $data['google_id'] = $request->id;

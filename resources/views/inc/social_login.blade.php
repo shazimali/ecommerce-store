@@ -50,7 +50,6 @@
           })
           .then(response => response.json())
           .then(data => {
-            return false;
             window.location.href = "{{ route('dashboard') }}"
           })
           .catch(error => {
