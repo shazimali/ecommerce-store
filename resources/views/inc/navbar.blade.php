@@ -80,9 +80,15 @@
                         <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                             <div class="w-10 rounded-full">
+                                @if(auth()->user()->avatar)
                             <img
                                 alt="Tailwind CSS Navbar component"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                src="{{ auth()->user()->avatar }}" />
+                                @else
+<img
+                                alt="Tailwind CSS Navbar component"
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" />
+                                @endif
                             </div>
                         </div>
                         <ul
