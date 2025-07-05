@@ -66,14 +66,14 @@
              </button>
             </div>
             <div>
-                <div>
+                {{-- <div>
                  <label class="block mb-2" for="password">Profile Image</label>
                 @if ($profile_image)
                     <img width="100" height="100" src="{{ $profile_image->temporaryUrl() }}">
                 @endif
                  <input type="file" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="profile_image" id="profile_image">
                  @error('profile_image')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
-                </div>
+                </div> --}}
                 <div>
                  <label class="block mb-2" for="password">Password</label>
                  <input type="password" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="password" id="password">
