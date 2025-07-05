@@ -25,7 +25,7 @@ class Login extends Component
             ->first();
         // if ($is_customer) {
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
         session()->flash('error', 'Invalid email or password!');
         // }

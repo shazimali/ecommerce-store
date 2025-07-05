@@ -33,7 +33,7 @@ class Register extends Component
         ]);
 
         Auth::login($user, remember: true);
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
 
         // return redirect()->route('login')->with('success', 'congratulations you are successfully registered please proceed to login.');
     }

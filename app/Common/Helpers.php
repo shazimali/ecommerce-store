@@ -4,6 +4,7 @@ use App\Models\Country;
 use App\Models\ProductHead;
 use App\Models\Setting;
 use App\Models\Website;
+use Illuminate\Support\Facades\Cache;
 use Stevebauman\Location\Facades\Location;
 
 function website()
@@ -27,15 +28,20 @@ function newArrivals()
     return ProductHead::new()->active()->with('price_detail', 'stocks')->orderBy('order', 'ASC')->get()->take(4);
 }
 
+
+
 function getLocation()
 {
-    $loc = Location::get(request()->ip());
     $country = Country::whereId(167)->first(); // default country
-
-    if ($loc) {
-        $country = Country::where('iso', $loc->countryCode)->first();
+    if (Cache::has('countryCode')) {
+        $country = Country::where('iso', Cache::get('countryCode'))->first();
+    } else {
+        $loc =   Location::get(request()->ip());
+        if ($loc) {
+            Cache::put('countryCode', $loc->countryCode);
+            $country = Country::where('iso', $loc->countryCode)->first();
+        }
     }
-
     return $country;
 }
 

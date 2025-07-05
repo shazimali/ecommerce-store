@@ -50,7 +50,7 @@
           })
           .then(response => response.json())
           .then(data => {
-            window.location.href = "{{ route('dashboard') }}"
+            window.location.href = "{{ route('home') }}"
           })
           .catch(error => {
             // Handle errors
@@ -79,7 +79,7 @@
     })
     .then(response => response.json())
     .then(data => {
-        window.location.href = "{{ route('dashboard') }}"
+        window.location.href = "{{ route('home') }}"
     })
     .catch(console.error);
     }

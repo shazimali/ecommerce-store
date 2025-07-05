@@ -77,10 +77,39 @@
                 @endguest
                 @auth
                     <li class="mr-6">
-                        <form method="post" action="{{ route('logout') }}">
-                            @csrf
-                            <input type="submit" value="Logout"  class="hover:text-primary dark:hover:text-primary cursor-pointer">
-                        </form>
+                        <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-10 rounded-full">
+                            <img
+                                alt="Tailwind CSS Navbar component"
+                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            </div>
+                        </div>
+                        <ul
+                            tabindex="0"
+                            class="menu menu-sm dropdown-content text-black dark:text-white bg-white dark:bg-black rounded-box z-50  w-52 p-2 shadow">
+                            <li class="border-b pb-1">
+                                @php
+                                    $user_name = explode(' ', auth()->user()->name);
+                                @endphp
+                                <a>Hi, {{ $user_name[0] }}</a>
+                            </li>
+                            <li>
+                            <a href="{{ route('dashboard.account') }}" class="justify-between">
+                                Account
+                                {{-- <span class="badge">New</span> --}}
+                            </a>
+                            </li>
+                            <li><a href="{{ route('dashboard.orders') }}">Orders</a></li>
+                            <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li>
+                            <li>
+                                <form method="post" action="{{ route('logout') }}">
+                                    @csrf
+                                    <input type="submit" value="Logout"  class="hover:text-primary dark:hover:text-primary cursor-pointer">
+                                </form>
+                            </li>
+                        </ul>
+                        </div>
                     </li>
                 @endauth
             </ul>
