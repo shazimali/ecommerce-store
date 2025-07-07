@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Mail\OrderPlacedEmail;
+use App\Mail\UserRegisterEmail;
 use App\Models\CashOnDelivery;
 use App\Models\City;
 use App\Models\Coupon;
@@ -16,6 +17,7 @@ use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
 use Faker\Core\Color;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Validate;
@@ -65,6 +67,15 @@ class Checkout extends Component
 
     public function mount()
     {
+        if (Auth::check()) {
+            $this->email = auth()->user()->email;
+            $this->first_name = auth()->user()->first_name;
+            $this->last_name = auth()->user()->last_name;
+            $this->address = auth()->user()->address;
+            $this->phone = auth()->user()->phone;
+            $this->billing_address = auth()->user()->billing_address;
+            $this->city_id = City::where('name', auth()->user()->city)->first()->id;
+        }
         $this->cities = City::get();
         $this->cartItems = CartManagementService::getCartItemsFromCookies();
         $this->sub_total = CartManagementService::calculateGrandTotal($this->cartItems);
@@ -111,7 +122,9 @@ class Checkout extends Component
     {
         $this->validate($this->completeOrderRules);
         $user = User::where('email', $this->email)->first();
+
         if (!$user) {
+            $password = rand(10, 10000);
             $user = User::create([
                 'email' => $this->email,
                 'name' => $this->first_name . ' ' . $this->last_name,
@@ -119,8 +132,15 @@ class Checkout extends Component
                 'last_name' => $this->last_name,
                 'email' => $this->email,
                 'type' => 'CUSTOMER',
-                'password' => bcrypt(rand(10, 100)),
+                'address' => $this->address,
+                'billing_address' => $this->same_for_billing_address ?  $this->address : $this->billing_address,
+                'password' => $password,
             ]);
+
+            Mail::mailer('noreply')
+                ->to($this->email)
+                ->bcc(env('OWNER_EMAIL_ADDRESS'))
+                ->send(new UserRegisterEmail($this->email, $this->first_name, $password));
         }
         //placing order
         $order = Order::create([
@@ -168,10 +188,12 @@ class Checkout extends Component
         $email_data['user_detail'] = $user;
         $email_data['coupon_discount_amount'] = $email_data['order']->sub_total / 100 * $this->coupon_discount;
         $email_data['coupon_discount'] = $this->coupon_discount;
+
         Mail::mailer('noreply')
-        ->to($this->email)
-        ->bcc(env('OWNER_EMAIL_ADDRESS'))
-        ->send(new OrderPlacedEmail($email_data));
+            ->to($this->email)
+            ->bcc(env('OWNER_EMAIL_ADDRESS'))
+            ->send(new OrderPlacedEmail($email_data));
+
         $this->order_completed = true;
         CartManagementService::clearCartItems();
         $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
