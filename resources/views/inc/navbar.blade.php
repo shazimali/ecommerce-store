@@ -82,7 +82,7 @@
                             <div class="w-10 rounded-full">
                                 @if(auth()->user()->avatar)
                             <img
-                                alt="Tailwind CSS Navbar component"
+                                alt="{{ auth()->user()->name }}"
                                 src="{{ auth()->user()->avatar }}" />
                                 @else
 <img

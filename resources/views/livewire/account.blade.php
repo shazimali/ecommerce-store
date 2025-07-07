@@ -2,14 +2,6 @@
         <div class="flex justify-center">
             <h3 class="text-2xl font-semibold py-2">Account Details</h3>
         </div>
-        <div class="w-[85%]">
-            @if (session()->has('error'))
-            <p class="text-red-500 text-xs">{{ session('error') }}</p>
-            @endif
-            @if (session()->has('success'))
-            <p class="text-green-500 text-xs">{{ session('success') }}</p>
-            @endif
-        </div>
         <form wire:submit="updateAccount" class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-5">
             <div>
                 <div>
@@ -97,4 +89,12 @@
                 
             </div>
         </form>
+        <div class="w-[85%]">
+            @if (session()->has('error'))
+            <p class="text-red-500 text-xs">{{ session('error') }}</p>
+            @endif
+            @if (session()->has('success'))
+            <p class="text-green-500 text-xs">{{ session('success') }}</p>
+            @endif
+        </div>
 </div>
