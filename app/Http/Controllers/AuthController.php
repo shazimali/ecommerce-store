@@ -11,12 +11,22 @@ class AuthController extends Controller
 
     function login()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     function register()
     {
-        return view('register');
+        return view('auth.register');
+    }
+
+    function forgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
+    function resetPassword()
+    {
+        return view('auth.reset-password');
     }
 
     function logout(Request $request)
