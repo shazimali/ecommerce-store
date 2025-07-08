@@ -37,7 +37,13 @@ Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_u
 Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('contact_us.post');
 
 Route::middleware('guest')->group(function () {
-    // ...
+
+
+    Route::get('forgot-password', [AuthController::class, 'forgotPassword'])
+        ->name('auth.forgot-password');
+    Route::get('reset-password/{token}', [AuthController::class, 'resetPassword'])
+        ->name('password.reset');
+
     Route::get('social/{provider}/redirect', [SocialAuthController::class, 'loginSocial'])
         ->name('social.auth');
 
