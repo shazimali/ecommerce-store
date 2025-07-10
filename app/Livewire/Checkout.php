@@ -74,7 +74,7 @@ class Checkout extends Component
             $this->address = auth()->user()->address;
             $this->phone = auth()->user()->phone;
             $this->billing_address = auth()->user()->billing_address;
-            $this->city_id = City::where('name', auth()->user()->city)->first()->id;
+            $this->city_id =  auth()->user()->city ? City::where('name', auth()->user()->city)->first()->id : null;
         }
         $this->cities = City::get();
         $this->cartItems = CartManagementService::getCartItemsFromCookies();
