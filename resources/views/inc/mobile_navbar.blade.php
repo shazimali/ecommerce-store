@@ -136,7 +136,47 @@
         </div>
         <div class="flex justify-between">
             <livewire:mobile-cart-side-bar/>
-             @include('inc.theme_changer')
+            @auth
+                <div class="dropdown dropdown-end -mt-2">
+                   <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                       <div class="w-8 rounded-full">
+                           @if(auth()->user()->avatar)
+                       <img
+                           alt="{{ auth()->user()->name }}"
+                           src="{{ auth()->user()->avatar }}" />
+                           @else
+                       <img
+                           alt="Tailwind CSS Navbar component"
+                           src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" />
+                           @endif
+                       </div>
+                   </div>
+                   <ul
+                       tabindex="0"
+                       class="menu menu-sm dropdown-content text-black dark:text-white bg-white dark:bg-black rounded-box z-50  w-52 p-2 shadow">
+                       <li class="border-b pb-1">
+                           @php
+                               $user_name = explode(' ', auth()->user()->name);
+                           @endphp
+                           <a>Hi, {{ $user_name[0] }}</a>
+                       </li>
+                       <li>
+                       <a href="{{ route('dashboard.account') }}" class="justify-between">
+                           Account
+                           {{-- <span class="badge">New</span> --}}
+                       </a>
+                       </li>
+                       <li><a href="{{ route('dashboard.orders') }}">Orders</a></li>
+                       <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li>
+                       <li>
+                           <form method="post" action="{{ route('logout') }}">
+                               @csrf
+                               <input type="submit" value="Logout"  class="hover:text-primary dark:hover:text-primary cursor-pointer">
+                           </form>
+                       </li>
+                   </ul>
+               </div>
+            @endauth
         </div>
     </nav>
 </div>
