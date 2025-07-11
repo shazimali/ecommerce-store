@@ -5,6 +5,7 @@
     <div class="flex justify-center">
         <h3 class="text-2xl font-semibold py-2">My Orders</h3>
     </div>
+    @if(count($orders))
     @foreach ($orders as $order)
         <div class="card w-full card-xs shadow-sm my-2 bg-secondary text-black">
             <div class="card-body">
@@ -38,5 +39,6 @@
             </div>
         </div>
     @endforeach
+    @endif
 </div>
 @endsection
