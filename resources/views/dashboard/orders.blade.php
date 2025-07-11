@@ -28,7 +28,7 @@
                                 <div class="py-1 text-xs max-w-60"><b>{{ $item->product->title }}</b></div> 
                                 <div class="py-1 text-xs"> {{ $item->currency }} {{ number_format($item->unit_amount,2)  }}</div> 
                                 <div class="py-1 flex text-xs">
-                                        Color: {{ $item->color_id != 0  ?  $item->color->color_name : 'N/A'}}
+                                        Color: {{ $item->color_id != 0 && $item->color_id != null ?  $item->color->color_name : 'N/A'}}
                                 </div>
                                 <div class="py-1 flex text-xs">
                                         Qty: {{ $item->quantity }}
