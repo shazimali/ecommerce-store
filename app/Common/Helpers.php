@@ -33,45 +33,45 @@ function newArrivals()
 function getLocation()
 {
     $country = Country::whereId(167)->first(); // default country
-    if (Cache::has('countryCode')) {
-        $country = Country::where('iso', Cache::get('countryCode'))->first();
-    } else {
-        $loc =   Location::get(request()->ip());
-        if ($loc) {
-            Cache::put('countryCode', $loc->countryCode);
-            $country = Country::where('iso', $loc->countryCode)->first();
-        }
-    }
+    // if (Cache::has('countryCode')) {
+    //     $country = Country::where('iso', Cache::get('countryCode'))->first();
+    // } else {
+    //     $loc =   Location::get(request()->ip());
+    //     if ($loc) {
+    //         Cache::put('countryCode', $loc->countryCode);
+    //         $country = Country::where('iso', $loc->countryCode)->first();
+    //     }
+    // }
     return $country;
 }
 
 function facilities()
 {
-    $loc = Location::get(request()->ip());
-    $country = Country::whereId(167)->first(); // default country
-    if ($loc) {
-        $country = Country::where('iso', $loc->countryCode)->first();
-    }
+    // $loc = Location::get(request()->ip());
+    $country = Country::whereId(getLocation()->id)->first(); // default country
+    // if ($loc) {
+    //     $country = Country::where('iso', $loc->countryCode)->first();
+    // }
     return $country->facilities()->get();
 }
 
 function header_pages()
 {
-    $loc = Location::get(request()->ip());
-    $country = Country::whereId(167)->first(); // default country
-    if ($loc) {
-        $country = Country::where('iso', $loc->countryCode)->first();
-    }
+    // $loc = Location::get(request()->ip());
+    $country = Country::whereId(getLocation()->id)->first(); // default country
+    // if ($loc) {
+    //     $country = Country::where('iso', $loc->countryCode)->first();
+    // }
     return $country->pages()->active()->header()->get();
 }
 
 function footer_pages()
 {
-    $loc = Location::get(request()->ip());
-    $country = Country::whereId(167)->first(); // default country
-    if ($loc) {
-        $country = Country::where('iso', $loc->countryCode)->first();
-    }
+    // $loc = Location::get(request()->ip());
+    $country = Country::whereId(getLocation()->id)->first(); // default country
+    // if ($loc) {
+    //     $country = Country::where('iso', $loc->countryCode)->first();
+    // }
     return $country->pages()->active()->footer()->get();
 }
 
