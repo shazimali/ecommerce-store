@@ -46,7 +46,7 @@ const swiper = new Swiper('.swiper-container', {
     prevEl: ".custom-prev-btn",
   },
   breakpoints: {
-    // Responsive design, changing slidesPerView based on screen width Code by Amit Niranjan
+    // Responsive design, changing slidesPerView based on screen
     640: {
       slidesPerView: 1.4,
     },
@@ -54,7 +54,7 @@ const swiper = new Swiper('.swiper-container', {
       slidesPerView: 2.4,
     },
     1024: {
-      slidesPerView: 3.5,
+      slidesPerView: 5.5,
     },
     1280: {
       slidesPerView: 4.2,

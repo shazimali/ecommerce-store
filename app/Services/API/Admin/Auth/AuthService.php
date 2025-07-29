@@ -2,10 +2,12 @@
 
 namespace App\Services\API\Admin\Auth;
 
+use App\Http\Requests\API\Admin\Auth\ForgotPasswordRequest;
 use App\Http\Requests\API\Admin\Auth\TokenRequest;
 use App\Interfaces\API\Admin\Auth\AuthInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class AuthService implements AuthInterface
 {
@@ -65,5 +67,17 @@ class AuthService implements AuthInterface
             'status' => 'Logout successfully.',
         ];
         return response()->json($response, 200);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $status = Password::sendResetLink(
+            ['email' => $request->email]
+        );
+        if ($status === Password::ResetLinkSent) {
+            return response()->json(__($status), 200);
+        } else {
+            return response()->json(__($status), 201);
+        }
     }
 }

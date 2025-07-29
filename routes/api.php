@@ -36,6 +36,7 @@ Route::prefix('admin')->group(function () {
     //Auth
     Route::prefix('auth')->group(function () {
         Route::post('/token', [AuthController::class, 'token']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/logout', [AuthController::class, 'logOut']);
     });
     Route::middleware(['auth:sanctum', ApiJsonResponseMiddleware::class])->group(function () {
