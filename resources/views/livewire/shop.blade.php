@@ -3,8 +3,8 @@
        @include('inc.shop-filters')
     </div>
     <div>
-        <div class="flex justify-between">
-            <div class="drawer drawer-end lg:hidden md:hidden sm:block xs:block">
+        <div class="lg:flex-row md:flex-row sm:flex-col xs:flex-col justify-between">
+            <div class="drawer drawer-end lg:hidden md:hidden sm:block xs:block lg:mb-0 md:mb-0 sm:mb-5 xs:mb-5">
                 <input id="shop-mobile-filter" type="checkbox" class="drawer-toggle" />
                 <div class="drawer-content mt-3 cursor-pointer">
                     <label for="shop-mobile-filter"
@@ -25,7 +25,7 @@
                 </div>
             </div>
             {{ $products->links() }}
-            <select wire:model="sort_by" wire:change="updateSortBy($event.target.value)" name="sort_by" class="px-10 block text-sm  border border-secondary   dark:bg-black dark:text-white dark:border-slate-800">
+            <select wire:model="sort_by" wire:change="updateSortBy($event.target.value)" name="sort_by" class="px-10 block text-sm  border border-secondary   dark:bg-black dark:text-white dark:border-slate-800 lg:mt-0 md:mt-0 sm:mt-5 xs:mt-5">
                 <option value="">Sort by</option>
                 <option value="new">New</option>
                 <option value="featured">Featured</option>
