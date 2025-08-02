@@ -4,7 +4,7 @@
     </div>
     <div>
         <div class="lg:flex-row md:flex-row sm:flex-col xs:flex-col justify-between">
-            <div class="drawer drawer-end lg:hidden md:hidden sm:block xs:block lg:mb-0 md:mb-0 sm:mb-5 xs:mb-5">
+            <div class="drawer drawer-end lg:hidden md:hidden sm:block xs:block lg:mb-0 md:mb-0 sm:mb-5 xs:mb-5 z-50">
                 <input id="shop-mobile-filter" type="checkbox" class="drawer-toggle" />
                 <div class="drawer-content mt-3 cursor-pointer">
                     <label for="shop-mobile-filter"
@@ -17,10 +17,10 @@
                 <div class="drawer-side text-black">
                     <label for="shop-mobile-filter" aria-label="close sidebar" class="drawer-overlay"></label>
                     <div class="menu  bg-white dark:bg-black min-h-full w-1/2 p-4 text-start">
-                        <div class="border-b border-b-secondary dark:border-b-slate-800">
-                            <h1 class="uppercase text-1xl dark:text-white font-semibold pb-1">Shop Filters</h1>
+                        <div class="border-b border-b-secondary dark:border-b-slate-800 mb-1">
+                            <h1 class="uppercase text-1xl dark:text-white font-semibold pb-1">Filters</h1>
+                        </div>    
                             @include('inc.shop-filters')
-                        </div>           
                     </div>
                 </div>
             </div>
