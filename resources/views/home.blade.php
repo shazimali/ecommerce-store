@@ -45,9 +45,9 @@
        @include('inc.product_box', ['product' => $featured_product])
     @endforeach
     </div>
-{{-- <div class="flex text-center justify-center pt-5">
-    <a class="bg-primary text-white py-2 px-4" href="">Show More</a>
-</div> --}}
+<div class="flex text-center justify-center pt-5">
+    <a class="bg-primary text-white py-2 px-4" href="{{ url('shop?sort_by=featured') }}">Show More</a>
+</div>
 @endif
     <div class="bg-secondary text-center mt-16 py-10">
         <h1 class="text-4xl py-5 font-bold">Recommended Products</h1>
@@ -75,9 +75,9 @@
     @include('inc.product_box', ['product' => $new_product])
     @endforeach
 </div>
-{{-- <div class="flex text-center justify-center pt-5">
-    <a class="bg-primary text-white py-2 px-4" href="">Show More</a>
-</div> --}}
+<div class="flex text-center justify-center pt-5">
+    <a class="bg-primary text-white py-2 px-4" href="{{ url('shop?sort_by=new') }}">Show More</a>
+</div>
 @endif
 </section>
 

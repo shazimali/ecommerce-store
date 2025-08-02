@@ -11,8 +11,8 @@ class HomeController extends Controller
     function index()
     {
         return view('home', [
-            'new_products' => ProductHead::active()->new()->orderBy('order')->get(),
-            'featured_products' => ProductHead::active()->featured()->orderBy('order')->get(),
+            'new_products' => ProductHead::active()->new()->orderBy('order')->paginate(8),
+            'featured_products' => ProductHead::active()->featured()->orderBy('order')->paginate(8),
         ]);
     }
 }
