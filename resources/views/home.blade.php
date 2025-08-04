@@ -4,7 +4,7 @@
 
 <section class="bg-white dark:bg-black text-black dark:text-secondary">
     @if(count(facilities()))
-    <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
+    <div class="lg:block md:block sm:block xs:hidden grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
         @foreach (facilities() as $facility)
         <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
             <span><i class="{{ $facility->class }} text-primary text-5xl"></i></span>
@@ -13,14 +13,20 @@
         @endforeach    
     </div>
     @endif
-    @if(count(website()->categories)) 
+    @if(count($trending_products))
+      <div class="mt-16 text-center">
+        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary uppercase">trending products</h1>
+    </div>
+    @include('inc.trending_slider')
+    @endif
+    {{-- @if(count(website()->categories)) 
     <div class="mt-16 text-center">
         <h1 class="font-bold text-4xl dark:text-secondary">Categories</h1>
     </div>
         <div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 lg:px-8 md:px-8 sm:px-2 xs:px-2 gap-5">
             @foreach (website()->categories as $category)
                 <a href="{{ route('categories',['slug' => $category->slug]) }}" class="border border-secondary dark:border-slate-800">
-                    {{-- <div class="text-gray-500 text-end">{{ $category->subCategories->count() }}  Sub Categories</div> --}}
+                    <div class="text-gray-500 text-end">{{ $category->subCategories->count() }}  Sub Categories</div>
                     <div class="w-full relative overflow-hidden bg-cover bg-no-repeat">
                         <img
                             src="{{ asset('storage/'.$category->image) }}"
@@ -32,9 +38,9 @@
             @endforeach
             
         </div>
-    @endif
+    @endif --}}
     <div class="mt-16 text-center">
-        <h1 class="font-bold lg:text-4xl md:text-4xl xs:text-3xl dark:text-secondary">Sub Catgories Collection</h1>
+        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
     </div>
     @include('inc.SubCategoriesSlider')
 @if(count($featured_products))

@@ -24,6 +24,7 @@ class ProductHead extends Model
         'seo_desc',
         'status',
         'is_new',
+        'is_trending',
         'is_featured',
         'coming_soon',
         'nav_image',
@@ -56,6 +57,11 @@ class ProductHead extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', 1);
+    }
+
+    public function scopeTrending($query)
+    {
+        return $query->where('is_trending', 1);
     }
 
     public function scopeNew($query)
