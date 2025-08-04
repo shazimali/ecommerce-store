@@ -17,7 +17,7 @@
     @endif
     @if(count($trending_products))
       <div class="mt-16 text-center">
-        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary uppercase">trending products</h1>
+        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Trending Products</h1>
     </div>
     @include('inc.trending_slider')
     @endif
