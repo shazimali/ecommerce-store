@@ -12,6 +12,7 @@ class HomeController extends Controller
     {
         return view('home', [
             'new_products' => ProductHead::active()->new()->orderBy('order')->paginate(8),
+            'trending_products' => ProductHead::active()->trending()->orderBy('order')->paginate(8),
             'featured_products' => ProductHead::active()->featured()->orderBy('order')->paginate(8),
         ]);
     }

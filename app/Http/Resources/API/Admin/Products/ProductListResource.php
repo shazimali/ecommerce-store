@@ -33,6 +33,7 @@ class ProductListResource extends JsonResource
             'seo_desc' => $this->seo_desc,
             'status' => $this->status,
             'is_new' => $this->is_new,
+            'is_trending' => $this->is_trending,
             'is_featured' => $this->is_featured,
             'coming_soon' => $this->coming_soon,
             'nav_image' => $this->nav_image,

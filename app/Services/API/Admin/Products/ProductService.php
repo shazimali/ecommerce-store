@@ -43,6 +43,7 @@ class ProductService implements ProductInterface
     {
         $data = $request->except(['sub_categories']);
         $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
+        $data['is_trending'] = $data['is_trending'] ==  true ? 1 : 0;
         $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
         $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
         if ($request->hasFile('image')) {
@@ -98,6 +99,7 @@ class ProductService implements ProductInterface
 
         $data['is_new'] = $request->is_new == 'true' ? 1 : 0;
         $data['is_featured'] = $request->is_featured == 'true' ? 1 : 0;
+        $data['is_trending'] = $request->is_trending == 'true' ? 1 : 0;
         $data['coming_soon'] = $request->coming_soon == 'true' ? 1 : 0;
 
         if ($request->hasFile('image')) {

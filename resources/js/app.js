@@ -47,6 +47,9 @@ const swiper = new Swiper('.swiper-container', {
   },
   breakpoints: {
     // Responsive design, changing slidesPerView based on screen
+     380: {
+      slidesPerView: 1.2,
+    },
     640: {
       slidesPerView: 1.4,
     },
@@ -63,7 +66,43 @@ const swiper = new Swiper('.swiper-container', {
 
 });
 
+const trending_swiper = new Swiper('.trending-swiper-container', {
+  // configure Swiper to use modules
+  modules: [Navigation, Pagination, Autoplay],
 
+  slidesPerView: 1, // Number of slides visible
+  centeredSlides: true, // Center the active slide
+  spaceBetween: 30, // Space between slides
+  // slidesPerGroup:3,
+  loop: true, // Enable looping
+  autoplay: {
+    delay: 2500,
+    disableOnInteraction: false,
+  },
+  navigation: {
+    nextEl: ".custom-next-btn",
+    prevEl: ".custom-prev-btn",
+  },
+  breakpoints: {
+    // Responsive design, changing slidesPerView based on screen
+    380: {
+      slidesPerView: 1.2,
+    },
+    640: {
+      slidesPerView: 4.4,
+    },
+    768: {
+      slidesPerView: 2.4,
+    },
+    1024: {
+      slidesPerView: 5.5,
+    },
+    1280: {
+      slidesPerView: 4.2,
+    },
+  },
+
+});
 
 const swiperSlider = new Swiper(".mySwiper", {
   modules: [Navigation, Pagination, Autoplay],

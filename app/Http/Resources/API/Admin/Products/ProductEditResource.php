@@ -33,6 +33,7 @@ class ProductEditResource extends JsonResource
             'sub_categories' => $this->sub_categories,
             'is_new' => $this->is_new == 1 ? true : false,
             'is_featured' => $this->is_featured == 1 ? true : false,
+            'is_trending' => $this->is_trending == 1 ? true : false,
             'coming_soon' => $this->coming_soon == 1 ? true : false,
             'nav_image' => $this->nav_image,
             'mobile_image' => $this->mobile_image,
