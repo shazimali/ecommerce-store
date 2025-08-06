@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
@@ -35,6 +36,8 @@ Route::get('reviews', [DashboardController::class, 'reviews'])->name('dashboard.
 
 Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_us');
 Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('contact_us.post');
+
+Route::get('/collections/{slug}', CollectionsController::class)->name('collections');
 
 Route::middleware('guest')->group(function () {
 
