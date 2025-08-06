@@ -70,6 +70,7 @@
     <a class="bg-primary text-white py-2 px-4" href="{{ url('shop?sort_by=featured') }}">Show More</a>
 </div>
 @endif
+@if($bottom_collection)
     <div class="py-10">
         <a href="{{ route('collections',['slug' => $bottom_collection->slug]) }}" class="lg:block md:block sm:block xs:hidden w-full relative overflow-hidden bg-cover bg-no-repeat">
             <img src="{{ asset('storage/'.$bottom_collection->image) }}"
@@ -82,6 +83,7 @@
                 alt="{{ $bottom_collection->title }}" />
         </a>
     </div>
+@endif
     @if(count($new_products))
 <div class="text-center">
     <h1 class="font-bold text-4xl dark:text-secondary">Just Arrived</h1>
