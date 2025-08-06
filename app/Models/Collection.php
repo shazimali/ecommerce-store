@@ -28,4 +28,24 @@ class Collection extends Model
     {
         return $this->belongsToMany(ProductHead::class, 'collection_product_head', 'collection_id', 'product_head_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'ACTIVE');
+    }
+
+    public function scopeTop($query)
+    {
+        return $query->where('position', 'TOP');
+    }
+
+    public function scopeStart($query)
+    {
+        return $query->where('position', 'START');
+    }
+
+    public function scopeBottom($query)
+    {
+        return $query->where('position', 'BOTTOM');
+    }
 }

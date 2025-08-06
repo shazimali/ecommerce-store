@@ -15,6 +15,11 @@ class Website extends Model
         return $this->belongsToMany(Category::class, 'category_website', 'website_id', 'category_id');
     }
 
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class, 'collection_website', 'website_id', 'collection_id');
+    }
+
     public function banners(): BelongsToMany
     {
         return $this->belongsToMany(Banner::class, 'banner_website', 'website_id', 'banner_id');

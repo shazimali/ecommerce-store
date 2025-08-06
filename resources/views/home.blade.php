@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title','Home')
 @section('content')
-
 <section class="bg-white dark:bg-black text-black dark:text-secondary">
     @if(count(facilities()))
     <div class="lg:block md:block sm:block xs:hidden">
@@ -41,6 +40,19 @@
             
         </div>
     @endif --}}
+        @if(count($collections)) 
+        <div class="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-16 lg:px-8 md:px-8 sm:px-2 xs:px-2 gap-5">
+            @foreach ($collections as $collection)
+                <a  href="{{ route('collections',['slug' => $collection->slug]) }}" class="border border-secondary dark:border-slate-800">
+                    <div class="w-full relative overflow-hidden bg-cover bg-no-repeat">
+                        <img src="{{ asset('storage/'.$collection->image) }}"
+                            class="transition duration-300 ease-in-out hover:scale-110"
+                            alt="{{ $collection->title }}" />
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    @endif
     <div class="mt-16 text-center">
         <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
     </div>
@@ -53,30 +65,25 @@
     @foreach ($featured_products as $featured_product)
        @include('inc.product_box', ['product' => $featured_product])
     @endforeach
-    </div>
+</div>
 <div class="flex text-center justify-center pt-5">
     <a class="bg-primary text-white py-2 px-4" href="{{ url('shop?sort_by=featured') }}">Show More</a>
 </div>
 @endif
-    <div class="bg-secondary text-center mt-16 py-10">
-        <h1 class="text-4xl py-5 font-bold">Recommended Products</h1>
-        <p class="text-gray-500 max-w-xl mx-auto">Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam
-            labore at justo ipsum eirmod duo labore labore.</p>
-        <div class="mx-auto">
-            <label for="hs-trailing-button-add-on-multiple-add-ons" class="sr-only">Label</label>
-            <div class="flex justify-center mt-5">
-                <input type="text" id="hs-trailing-button-add-on-multiple-add-ons" placeholder="Email goes here"
-                    name="hs-trailing-button-add-on-multiple-add-ons"
-                    class="py-3 px-4 block text-sm border border-secondary">
-                <button type="button"
-                    class="py-3 px-4 items-center gap-x-2 text-sm font-semibold bg-primary text-white disabled:opacity-50 disabled:pointer-events-none">
-                    Subscribe
-                </button>
-            </div>
-        </div>
+    <div class="py-10">
+        <a href="{{ route('collections',['slug' => $bottom_collection->slug]) }}" class="lg:block md:block sm:block xs:hidden w-full relative overflow-hidden bg-cover bg-no-repeat">
+            <img src="{{ asset('storage/'.$bottom_collection->image) }}"
+                class="transition duration-300 ease-in-out hover:scale-110"
+                alt="{{ $bottom_collection->title }}" />
+        </a>
+        <a href="{{ route('collections',['slug' => $bottom_collection->slug]) }}" class="lg:hidden md:hidden sm:hidden xs:block w-full relative overflow-hidden bg-cover bg-no-repeat">
+            <img src="{{ asset('storage/'.$bottom_collection->mob_image) }}"
+                class="transition duration-300 ease-in-out hover:scale-110"
+                alt="{{ $bottom_collection->title }}" />
+        </a>
     </div>
     @if(count($new_products))
-<div class="mt-16 text-center">
+<div class="text-center">
     <h1 class="font-bold text-4xl dark:text-secondary">Just Arrived</h1>
 </div>
 <div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2">

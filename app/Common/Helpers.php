@@ -14,7 +14,7 @@ function website()
 
     if ($domain) {
         return  Website::active()->where('domain', $domain)
-            ->with('categories', 'banners', 'social_medias')
+            ->with('categories', 'banners', 'social_medias', 'collections')
             ->first();
     }
 
