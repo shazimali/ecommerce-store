@@ -22,8 +22,8 @@ class BannerEditResource extends JsonResource
             'sub_heading' => $this->sub_heading,
             'btn_text' => $this->btn_text,
             'btn_link' => $this->btn_link,
-            'image_src' => $this->image ? Env('APP_URL') . Storage::url($this->image) : '',
-            'mob_image_src' => $this->mob_image ? Env('APP_URL') . Storage::url($this->mob_image) : '',
+            'image_src' => $this->image ? getWebsiteUrl() . Storage::url($this->image) : '',
+            'mob_image_src' => $this->mob_image ? getWebsiteUrl() . Storage::url($this->mob_image) : '',
             'order' => $this->order,
             'websites' =>  $this->websites
         ];

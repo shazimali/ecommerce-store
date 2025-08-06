@@ -27,6 +27,7 @@ class StoreBannerRequest extends JsonFormRequest
             'image' => 'required|image|max:500',
             'mob_image' => 'required|image|max:500',
             'order' => 'required',
+            'btn_link' => 'required|url',
             // 'websites' => 'required|array'
         ];
     }

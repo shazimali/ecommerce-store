@@ -26,6 +26,7 @@ class UpdateBannerRequest extends FormRequest
             'image' => 'nullable|image|max:500',
             'mob_image' => 'nullable|image|max:500',
             'order' => 'required',
+            'btn_link' => 'required|url'
         ];
     }
 }

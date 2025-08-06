@@ -2,9 +2,9 @@
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             @foreach (website()->banners as $banner)
-            <div class="swiper-slide">
+            <a href="{{ $banner->btn_link }}" class="swiper-slide">
                 <img src="{{ asset('storage/'.$banner->image) }}" alt="{{ $banner->title }}">
-            </div> 
+            </a> 
             @endforeach
         </div>
         <div class="swiper-pagination"></div>
@@ -15,9 +15,9 @@
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             @foreach (website()->banners as $banner)
-            <div class="swiper-slide">
+            <a href="{{ $banner->btn_link }}" class="swiper-slide">
                 <img src="{{ asset('storage/'.$banner->mob_image) }}" alt="{{ $banner->title }}">
-            </div> 
+            </a> 
             @endforeach
         </div>
         <div class="swiper-pagination"></div>
