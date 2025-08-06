@@ -29,7 +29,10 @@ function newArrivals()
 }
 
 
-
+function getWebsiteUrl()
+{
+    return  Env('HTTP') . website()->domain;
+}
 function getLocation()
 {
     $country = Country::whereId(167)->first(); // default country

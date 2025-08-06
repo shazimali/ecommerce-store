@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Admin\Banners\BannersController;
 use App\Http\Controllers\API\Admin\Blogs\BlogsController;
 use App\Http\Controllers\API\Admin\Categories\CategoryController;
 use App\Http\Controllers\API\Admin\COD\CODController;
+use App\Http\Controllers\API\Admin\Collections\CollectionsController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Customers\CustomersController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
@@ -77,6 +78,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [WebsitesController::class, 'edit']);
             Route::put('/update/{id}', [WebsitesController::class, 'update']);
             Route::delete('/delete/{id}', [WebsitesController::class, 'destroy']);
+        });
+
+        //Collections
+        Route::prefix('/collections')->group(function () {
+            Route::get('/', [CollectionsController::class, 'index']);
+            Route::get('/get-all-extra', [CollectionsController::class, 'getAllExtra']);
+            Route::post('/store', [CollectionsController::class, 'store']);
+            Route::get('/edit/{id}', [CollectionsController::class, 'edit']);
+            Route::post('/update/{id}', [CollectionsController::class, 'update']);
+            Route::delete('/delete/{id}', [CollectionsController::class, 'destroy']);
         });
 
         //Categories
