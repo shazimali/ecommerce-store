@@ -3,7 +3,7 @@
     <div
       class="container xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 mx-auto sm:px-6"
     >
-      <div class="mb-16">
+      {{-- <div class="mb-16">
         <div
           class="flex justify-end items-center gap-4 mt-6 md:flex-row flex-col text-center sm:text-left"
           data-aos="fade-up"
@@ -67,15 +67,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
     <!-- Swiper -->
     <div class="trending-swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
       <div class="swiper-wrapper">
-        @foreach ($trending_products as $product)
-        <div class="swiper-slide">
-             <div class="bg-white dark:bg-black">
-                @include('inc.product_box')
-             </div>
+        @foreach ($trending_products as $pr)
+        <div class="swiper-slide bg-white dark:bg-black absolute py-10 px-10">  
+            @include('inc.product_box_trending')
         </div>
       @endforeach
       </div>

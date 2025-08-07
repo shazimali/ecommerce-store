@@ -35,7 +35,7 @@ swiper-slide {
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #D19C97;
+  /* background: #D19C97; */
   display: flex;
   justify-content: center;
   align-items: center;
