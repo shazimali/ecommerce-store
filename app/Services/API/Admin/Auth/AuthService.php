@@ -4,8 +4,11 @@ namespace App\Services\API\Admin\Auth;
 
 use App\Http\Requests\API\Admin\Auth\ForgotPasswordRequest;
 use App\Http\Requests\API\Admin\Auth\TokenRequest;
+use App\Http\Resources\API\Admin\Auth\Notifications\NotificationsListResource;
 use App\Interfaces\API\Admin\Auth\AuthInterface;
+use App\Models\AdminNotification;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 
@@ -79,5 +82,41 @@ class AuthService implements AuthInterface
         } else {
             return response()->json(__($status), 201);
         }
+    }
+
+    public function getNotifications()
+    {
+        return response()->json([
+            'notifications' => AdminNotification::orderBy('created_at', 'DESC')->get(),
+            'unread_notifications' =>  AdminNotification::unread()->count()
+        ], 200);
+    }
+
+    public function setToReadNotification(int $id)
+    {
+        AdminNotification::where('id', $id)->update(['is_read' => true]);
+
+        return response()->json([
+            'notifications' => AdminNotification::orderBy('created_at', 'DESC')->get(),
+            'unread_notifications' =>  AdminNotification::unread()->count()
+        ], 200);
+    }
+
+    public function newNotification(Request $request)
+    {
+        AdminNotification::create($request->except('token'));
+        return response()->json([
+            'notifications' => AdminNotification::orderBy('created_at', 'DESC')->get(),
+            'unread_notifications' =>  AdminNotification::unread()->count()
+        ], 200);
+    }
+
+    public function destroyAllNotifications()
+    {
+        AdminNotification::truncate();
+        return response()->json([
+            'notifications' => AdminNotification::orderBy('created_at', 'DESC')->get(),
+            'unread_notifications' =>  AdminNotification::unread()->count()
+        ], 200);
     }
 }

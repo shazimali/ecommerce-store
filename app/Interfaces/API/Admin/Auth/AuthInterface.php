@@ -11,4 +11,5 @@ interface AuthInterface
     public function getAuthToken(TokenRequest $request);
     public function forgotPassword(ForgotPasswordRequest $request);
     public function logOut(int $id);
+    public function getNotifications();
 }

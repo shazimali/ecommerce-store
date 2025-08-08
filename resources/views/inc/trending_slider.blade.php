@@ -72,7 +72,7 @@
     <div class="trending-swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
       <div class="swiper-wrapper">
         @foreach ($trending_products as $pr)
-        <div class="swiper-slide bg-white dark:bg-black absolute py-10 px-10">  
+        <div class="swiper-slide bg-white dark:bg-black absolute py-10">  
             @include('inc.product_box_trending')
         </div>
       @endforeach
