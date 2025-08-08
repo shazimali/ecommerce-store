@@ -3,22 +3,18 @@
 namespace App\Livewire;
 
 use App\Events\AdminNotification;
-use App\Events\NewNotification;
 use App\Mail\OrderPlacedEmail;
 use App\Mail\UserRegisterEmail;
-use App\Models\CashOnDelivery;
 use App\Models\City;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductColor;
 use App\Models\ProductHead;
-use App\Models\ShipmentAddress;
 use App\Models\User;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
-use Faker\Core\Color;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -201,7 +197,7 @@ class Checkout extends Component
             ->send(new OrderPlacedEmail($email_data));
 
         $this->order_completed = true;
-        event(new AdminNotification('You have a new order' . 'ED#' . $order->id));
+        event(new AdminNotification('You have a new order ' . 'ED#' . $order->id));
         CartManagementService::clearCartItems();
         $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
         $this->dispatch('update-cart', data: $data);

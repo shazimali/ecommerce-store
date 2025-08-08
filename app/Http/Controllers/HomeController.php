@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     function index()
     {
-        event(new AdminNotification('You have a new order' . 'ED#' . rand(1, 200)));
+        event(new AdminNotification('Test Notification'));
         $collections = Collection::active()->top()->with(['websites' => function ($q) {
             $q->where('website_id', website()->id);
         }])->get();
