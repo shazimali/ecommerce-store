@@ -73,7 +73,7 @@ const trending_swiper = new Swiper('.trending-swiper-container', {
   slidesPerView: 1, // Number of slides visible
   centeredSlides: true, // Center the active slide
   spaceBetween: 30, // Space between slides
-  // slidesPerGroup:3,
+  // slidesPerGroup:2,
   loop: true, // Enable looping
   autoplay: {
     delay: 2500,
