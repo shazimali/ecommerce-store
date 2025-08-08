@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminNotification;
+use App\Events\NewNotification;
 use App\Models\Collection;
 use App\Models\Country;
 use App\Models\Facility;

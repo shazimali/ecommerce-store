@@ -39,6 +39,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/token', [AuthController::class, 'token']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/logout', [AuthController::class, 'logOut']);
+        Route::get('/notifications', [AuthController::class, 'getNotifications']);
+        Route::post('/notifications/new', [AuthController::class, 'newNotification']);
+        Route::post('/notifications/{id}', [AuthController::class, 'setToReadNotification']);
+        Route::post('/notifications-destroy', [AuthController::class, 'destroyAllNotifications']);
     });
     Route::middleware(['auth:sanctum', ApiJsonResponseMiddleware::class])->group(function () {
 

@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Events\AdminNotification;
+use App\Events\NewNotification;
 use App\Mail\OrderPlacedEmail;
 use App\Mail\UserRegisterEmail;
 use App\Models\CashOnDelivery;
@@ -199,6 +201,7 @@ class Checkout extends Component
             ->send(new OrderPlacedEmail($email_data));
 
         $this->order_completed = true;
+        event(new AdminNotification('You have a new order' . 'ED#' . $order->id));
         CartManagementService::clearCartItems();
         $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
         $this->dispatch('update-cart', data: $data);
