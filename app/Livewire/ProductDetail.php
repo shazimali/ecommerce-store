@@ -5,7 +5,7 @@ namespace App\Livewire;
 use App\Models\ProductHead;
 use App\Models\ProductReview;
 use App\Services\CartManagementService;
-use App\services\ProductService;
+use App\Services\ProductService;
 use Livewire\Component;
 
 class ProductDetail extends Component
