@@ -9,7 +9,7 @@
             <div class="flex justify-center mt-2">
                 @foreach ($images as $media)
                     @if ($media)
-                        <img class="border border-solid h-16 w-16 mx-auto cursor-pointer" src="{{ $media }}"
+                        <img class="border border-solid dark:border-slate-800 h-16 w-16 mx-auto cursor-pointer" src="{{ $media }}"
                             wire:click="changeActiveImage('{{ $media }}')" />
                     @endif
                 @endforeach
