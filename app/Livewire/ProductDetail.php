@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\ProductHead;
 use App\Models\ProductReview;
 use App\Services\CartManagementService;
+use App\services\ProductService;
 use Livewire\Component;
 
 class ProductDetail extends Component
@@ -22,29 +23,20 @@ class ProductDetail extends Component
 
     public function mount()
     {
-        $this->product = ProductHead::where('slug', $this->slug)->with('stocks')->first();
-        $this->reviews = ProductReview::Where('product_id', $this->product->id)->get();
+        $this->product = ProductService::getProductDetailBySlug($this->slug);
+        $this->reviews = ProductService::getProductReviews($this->product->id);
 
-        $this->activeImage = env('APP_URL') . '/storage/' . $this->product->image;
+        $this->activeImage = getWebsiteUrl() . '/storage/' . $this->product->image;
         $this->colors = $this->product->colors->isNotEmpty() ? $this->product->colors : [];
         $this->current_color = $this->colors ? $this->colors->first()->color_name : '';
-        if ($this->colors) {
-            $this->images = [
-                $this->colors->first()->image1 ? env('APP_URL') . '/storage/' . $this->colors->first()->image1  : '',
-                $this->colors->first()->image2 ? env('APP_URL') . '/storage/' . $this->colors->first()->image2  : '',
-                $this->colors->first()->image3 ? env('APP_URL') . '/storage/' . $this->colors->first()->image3  : '',
-                $this->colors->first()->image4 ? env('APP_URL') . '/storage/' . $this->colors->first()->image4  : '',
-                $this->colors->first()->image5 ? env('APP_URL') . '/storage/' . $this->colors->first()->image5  : '',
-            ];
-        } else {
-            $this->images = [
-                $this->product->image1 ? env('APP_URL') . '/storage/' . $this->product->image1  : '',
-                $this->product->image2 ? env('APP_URL') . '/storage/' . $this->product->image2  : '',
-                $this->product->image3 ? env('APP_URL') . '/storage/' . $this->product->image3  : '',
-                $this->product->image4 ? env('APP_URL') . '/storage/' . $this->product->image4  : '',
-                $this->product->image5 ? env('APP_URL') . '/storage/' . $this->product->image5  : '',
-            ];
-        }
+
+        $this->images = [
+            $this->product->image1 ? getWebsiteUrl() . '/storage/' . $this->product->image1  : '',
+            $this->product->image2 ? getWebsiteUrl() . '/storage/' . $this->product->image2  : '',
+            $this->product->image3 ? getWebsiteUrl() . '/storage/' . $this->product->image3  : '',
+            $this->product->image4 ? getWebsiteUrl() . '/storage/' . $this->product->image4  : '',
+            $this->product->image5 ? getWebsiteUrl() . '/storage/' . $this->product->image5  : '',
+        ];
     }
 
     public function changeActiveImage($image)
@@ -57,13 +49,13 @@ class ProductDetail extends Component
         $color_info = $this->colors->where('id', $id)->first();
         $this->current_color = $name;
         $this->add_to_cart_active = true;
-        $this->activeImage =  env('APP_URL') . '/storage/' . $color_info->image1;
+        $this->activeImage =  getWebsiteUrl() . '/storage/' . $color_info->image1;
         $this->images = [
-            $color_info->image1 ? env('APP_URL') . '/storage/' . $color_info->image1  : '',
-            $color_info->image2 ? env('APP_URL') . '/storage/' . $color_info->image2  : '',
-            $color_info->image3 ? env('APP_URL') . '/storage/' . $color_info->image3  : '',
-            $color_info->image4 ? env('APP_URL') . '/storage/' . $color_info->image4  : '',
-            $color_info->image5 ? env('APP_URL') . '/storage/' . $color_info->image5  : '',
+            $color_info->image1 ? getWebsiteUrl() . '/storage/' . $color_info->image1  : '',
+            $color_info->image2 ? getWebsiteUrl() . '/storage/' . $color_info->image2  : '',
+            $color_info->image3 ? getWebsiteUrl() . '/storage/' . $color_info->image3  : '',
+            $color_info->image4 ? getWebsiteUrl() . '/storage/' . $color_info->image4  : '',
+            $color_info->image5 ? getWebsiteUrl() . '/storage/' . $color_info->image5  : '',
         ];
     }
 
