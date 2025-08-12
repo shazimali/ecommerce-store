@@ -44,7 +44,7 @@
                         wire:key="{{ $sub_cat->slug }}"
                         {{ $category == $sub_cat->slug ? 'checked' : '' }}
                         value="{{ $sub_cat->slug }}">
-                        <label class="lg:text-sm md:text-sm sm:text-xs xs:text-xs pl-2 font-semibold">{{ $sub_cat->title }}</label>
+                        <label class="lg:text-sm md:text-sm sm:text-xs dark:text-white xs:text-xs pl-2 font-semibold">{{ $sub_cat->title }}</label>
                     </li>
                     @endforeach
                 </ul>
@@ -61,7 +61,6 @@
                             focus:ring-primary border-gray-500 dark:text-white" 
                             type="radio"
                             wire:click="updateFilter('color','{{ $clr->color_name }}')"
-                            id="{{ $clr->id }}"
                             name="color"
                             type="radio"
                             wire:key="{{ $clr->color_name }}"

@@ -24,11 +24,11 @@
                     </div>
                 </div>
             </div>
-            {{ $products->links() }}
             <select wire:model="sort_by" wire:change="updateSortBy($event.target.value)" name="sort_by" class="px-10 block text-sm  border border-secondary   dark:bg-black dark:text-white dark:border-slate-800 lg:mt-0 md:mt-0 sm:mt-5 xs:mt-5">
                 <option value="">Sort by</option>
                 <option value="new">New</option>
                 <option value="featured">Featured</option>
+                <option value="trending">Trending</option>
             </select>
         </div>
         <div class="mt-5 grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 gap-5">
@@ -36,6 +36,10 @@
             @include('inc.product_box')
             @endforeach
         </div>
+        <div class="py-2">
+            {{ $products->links() }}
+        </div>
+
     </div>
 </div>
 

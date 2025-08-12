@@ -92,8 +92,9 @@ class Shop extends Component
             });
         }
         if ($this->color) {
+
             $current_color = $this->color;
-            return $query->whereHas('colors', function ($q) use ($current_color) {
+            $query->whereHas('colors', function ($q) use ($current_color) {
                 $q->where('color_name', $current_color);
             });
         }
@@ -115,6 +116,13 @@ class Shop extends Component
             }
             if ($this->sort_by == 'new') {
                 $query->new();
+            }
+            if ($this->sort_by == 'trending') {
+                $query->trending();
+            }
+
+            if ($this->sort_by == 'sale') {
+                $query->trending();
             }
         }
 
