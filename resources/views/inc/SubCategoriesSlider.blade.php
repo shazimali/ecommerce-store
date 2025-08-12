@@ -1,6 +1,6 @@
- <!-- Slider Section -->
+<!-- Slider Section -->
  <section class="overflow-hidden">
-    <div
+    {{-- <div
       class="container xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 mx-auto sm:px-6"
     >
       <div class="mb-16">
@@ -67,12 +67,12 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
     <!-- Swiper -->
     <div class="swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
       <div class="swiper-wrapper">
         @foreach (website()->categories as $category)
-        @foreach ($category->sub_categories as $sub_cat)
+        @foreach ($category->front_sub_categories as $sub_cat)
         <div class="swiper-slide">
           <div
             class="bg-white dark:bg-black border border-secondary overflow-hidden cursor-pointer group px-[12px] pt-[12px] pb-[32px]"

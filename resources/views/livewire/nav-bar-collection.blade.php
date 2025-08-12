@@ -24,7 +24,7 @@
                 <div class="float-end inline-block pr-5">
                     <i class="fa-solid fa-caret-right"></i>
                 </div>
-                @if (count($category->sub_categories))
+                @if (count($category->front_sub_categories))
                     <div
                     x-show="sideBarOpen"
                     x-transition.duration.300ms
@@ -36,7 +36,7 @@
                         <div>
                             <h1 class="uppercase font-bold">Categories</h1>
                             <ul class="mt-2">
-                                @foreach ($category->sub_categories as $sub_cat)
+                                @foreach ($category->front_sub_categories as $sub_cat)
                                     <li 
                                     x-on:mouseover="selectedImage = `{{ asset('storage/'.$sub_cat->image) }}`"
                                     x-on:mouseout="selectedImage = `{{ asset('storage/'.$category->image) }}`"

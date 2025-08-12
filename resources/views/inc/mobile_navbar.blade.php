@@ -82,9 +82,9 @@
                                     <div class="font-semibold">
                                         {{ $category->title }}
                                     </div>
-                                    @if(count($category->sub_categories))
-                                    @foreach ($category->sub_categories as $sub_cat)
-                                        <a class="underline" href="{{ route('sub-categories',['slug' => $sub_cat->slug ]) }}">{{ $sub_cat->title }}</a>
+                                    @if(count($category->front_sub_categories))
+                                    @foreach ($category->front_sub_categories as $sub_cat)
+                                        <a class="underline text-xs" href="{{ route('sub-categories',['slug' => $sub_cat->slug ]) }}">{{ $sub_cat->title }}</a>
                                     @endforeach
                                     @endif
                                 </div>

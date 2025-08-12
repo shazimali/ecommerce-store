@@ -24,4 +24,9 @@ class Category extends Model
     {
         return $this->belongsToMany(SubCategory::class, 'category_sub_category', 'category_id', 'sub_category_id');
     }
+
+    public function front_sub_categories(): BelongsToMany
+    {
+        return $this->belongsToMany(SubCategory::class, 'category_sub_category', 'sub_category_id', 'category_id');
+    }
 }
