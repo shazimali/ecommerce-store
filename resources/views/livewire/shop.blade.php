@@ -29,6 +29,7 @@
                 <option value="new">New</option>
                 <option value="featured">Featured</option>
                 <option value="trending">Trending</option>
+                <option value="sale">Sale</option>
             </select>
         </div>
         <div class="mt-5 grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 gap-5">

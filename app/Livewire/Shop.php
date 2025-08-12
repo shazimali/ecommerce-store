@@ -7,6 +7,7 @@ use App\Models\ProductColor;
 use App\Models\ProductHead;
 use App\Models\SubCategory;
 use App\Services\CartManagementService;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -122,7 +123,10 @@ class Shop extends Component
             }
 
             if ($this->sort_by == 'sale') {
-                $query->trending();
+                $query->whereHas('price_detail', function ($q) {
+                    $q->WhereDate('discount_from', '<=', Carbon::today());
+                    $q->WhereDate('discount_to', '>=', Carbon::today());
+                });
             }
         }
 
