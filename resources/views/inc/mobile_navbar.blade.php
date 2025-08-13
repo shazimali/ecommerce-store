@@ -36,7 +36,7 @@
                             class="bg-white dark:bg-black mt-5 z-50 block">
                             @foreach (newArrivals() as $new_pr)
                             <div class="text-center dark:text-white px-5 py-5 relative">
-                                @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
                                 <div class="absolute right-5  top-5 w-auto px-1 py-1 bg-green-600 text-white text-[8px] text-center">{{ $new_pr->price_detail->discount}} % off</div>
                                 @endif
                                     <img
@@ -48,7 +48,7 @@
                                     @if ($new_pr->coming_soon)
                                     <p class="text-primary text-xs text-center"><b>Coming Soon</b></p>    
                                     @else 
-                                        @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() || $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                        @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
                                             <div class="pt-2 overflow-hidden  text-xs truncate text-center">
                                                 <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount)),2 ) }}
                                                 <del class="text-gray-500">
