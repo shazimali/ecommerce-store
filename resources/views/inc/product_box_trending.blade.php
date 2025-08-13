@@ -3,8 +3,7 @@
     @if (
         $pr->price_detail &&
             $pr->price_detail->discount > 0 &&
-            ($pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() ||
-                $pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+            (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to))
         <div
             class="absolute right-0 top-0 w-auto px-2  py-1 bg-green-600 text-white text-center text-1xl font-extrabold">
             - {{ $pr->price_detail->discount }} %
@@ -18,11 +17,7 @@
     @if ($pr->coming_soon)
         <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>
     @else
-        @if (
-            $pr->price_detail &&
-                $pr->price_detail->discount > 0 &&
-                ($pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() ||
-                    $pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+        @if ($pr->price_detail && $pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to))
             <div class="text-xs text-left">
                 <b>{{ $pr->price_detail->country->currency }}</b>
                 {{ number_format(round($pr->price_detail->price - ($pr->price_detail->price / 100) * $pr->price_detail->discount), 2) }}

@@ -127,8 +127,7 @@
                         @if (
                             $new_pr->price_detail &&
                                 $new_pr->price_detail->discount > 0 &&
-                                ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() ||
-                                    $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
                             <div
                                 class="absolute right-0 top-0 w-auto px-2  py-1 bg-green-600 text-white text-center text-1xl font-extrabold">
                                 - {{ $new_pr->price_detail->discount }} %
@@ -145,8 +144,7 @@
                             @if (
                                 $new_pr->price_detail &&
                                     $new_pr->price_detail->discount > 0 &&
-                                    ($new_pr->price_detail->discount_from >= Carbon\Carbon::today()->toDateString() ||
-                                        $new_pr->price_detail->discount_to >= Carbon\Carbon::today()->toDateString()))
+                                    (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
                                 <div class="text-xs text-left">
                                     <b>{{ $new_pr->price_detail->country->currency }}</b>
                                     {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price / 100) * $new_pr->price_detail->discount), 2) }}
