@@ -7,7 +7,7 @@
         @foreach ($category->front_sub_categories as $sub_cat)
         <div class="swiper-slide">
           <div
-            class="bg-white overflow-hidden cursor-pointer group px-[12px] pt-[12px] pb-[32px]"
+            class="bg-white dark:bg-black overflow-hidden cursor-pointer group px-[12px] pt-[12px] pb-[32px]"
           >
             <div class="aspect-w-16 aspect-h-9 relative">
               <img
