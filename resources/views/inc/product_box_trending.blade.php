@@ -12,7 +12,7 @@
     <img src="{{ asset('storage/' . $pr->image) }}" {{-- class=" max-h-52" --}}
         alt="{{ $pr->title }}" />
     <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">
-        {{ $pr->short_desc }}
+        {{ $pr->title }}
     </div>
     @if ($pr->coming_soon)
         <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>
