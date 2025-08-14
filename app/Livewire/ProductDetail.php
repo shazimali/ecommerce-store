@@ -31,6 +31,7 @@ class ProductDetail extends Component
         $this->current_color = $this->colors ? $this->colors->first()->color_name : '';
 
         $this->images = [
+            $this->product->image ? getWebsiteUrl() . '/storage/' . $this->product->image  : '',
             $this->product->image1 ? getWebsiteUrl() . '/storage/' . $this->product->image1  : '',
             $this->product->image2 ? getWebsiteUrl() . '/storage/' . $this->product->image2  : '',
             $this->product->image3 ? getWebsiteUrl() . '/storage/' . $this->product->image3  : '',
