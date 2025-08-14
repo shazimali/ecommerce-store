@@ -1,7 +1,7 @@
 <div>
     <div
-        class="grid lg:grid-cols-[40%_60%] md:grid-cols-[40%_60%] sm:grid-cols-[40%_60%] xs:grid-cols-[100%] px-8 py-10 text-black">
-        <div class="px-2">
+        class="grid lg:grid-cols-[40%_60%] md:grid-cols-[40%_60%] sm:grid-cols-[40%_60%] xs:grid-cols-[100%] px-8 lg:py-10 md:py-10 sm:py-10 xs:py-8 text-black">
+        <div class="px-2 lg:block md:block sm:block xs:hidden">
             <div class="border border-secondary dark:border-slate-800  relative overflow-hidden">
                 <img class="transition duration-300 ease-in-out hover:scale-110" src="{{ $activeImage }}"
                     alt="{{ $product['title'] }}" />
@@ -13,6 +13,15 @@
                             wire:click="changeActiveImage('{{ $media }}')" />
                     @endif
                 @endforeach
+            </div>
+        </div>
+        <div class="lg:hidden md:hidden sm:hidden xs:block">
+            <div class="carousel carousel-vertical rounded-box">
+                <div class="carousel-item h-full">
+                    @foreach ($images as $media)
+                    <img src="{{ $media }}" />
+                    @endforeach
+                </div>
             </div>
         </div>
         <div>
