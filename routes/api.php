@@ -9,6 +9,8 @@ use App\Http\Controllers\API\Admin\Collections\CollectionsController;
 use App\Http\Controllers\API\Admin\Coupons\CouponsController;
 use App\Http\Controllers\API\Admin\Customers\CustomersController;
 use App\Http\Controllers\API\Admin\Facilities\FacilitiesController;
+use App\Http\Controllers\API\Admin\Notification\NotificationController;
+use App\Http\Controllers\API\Admin\Notifications\NotificationsController;
 use App\Http\Controllers\API\Admin\Orders\OrdersController;
 use App\Http\Controllers\API\Admin\Pages\PagesController;
 use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
@@ -39,10 +41,14 @@ Route::prefix('admin')->group(function () {
         Route::post('/token', [AuthController::class, 'token']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/logout', [AuthController::class, 'logOut']);
-        Route::get('/notifications', [AuthController::class, 'getNotifications']);
-        Route::post('/notifications/new', [AuthController::class, 'newNotification']);
-        Route::post('/notifications/{id}', [AuthController::class, 'setToReadNotification']);
-        Route::post('/notifications-destroy', [AuthController::class, 'destroyAllNotifications']);
+    });
+
+    //Notification
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'getNotifications']);
+        Route::post('/store', [NotificationController::class, 'newNotification']);
+        Route::post('/update/{id}', [NotificationController::class, 'setToReadNotification']);
+        Route::post('/destroy', [NotificationController::class, 'destroyAllNotifications']);
     });
     Route::middleware(['auth:sanctum', ApiJsonResponseMiddleware::class])->group(function () {
 

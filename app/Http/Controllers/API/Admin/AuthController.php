@@ -28,26 +28,6 @@ class AuthController extends Controller
         return $this->authService->logOut($id);
     }
 
-    public function getNotifications()
-    {
-        return $this->authService->getNotifications();
-    }
-
-    public function setToReadNotification(int $id)
-    {
-        return $this->authService->setToReadNotification($id);
-    }
-
-    public function newNotification(Request $request)
-    {
-        return $this->authService->newNotification($request);
-    }
-
-    public function destroyAllNotifications()
-    {
-        return $this->authService->destroyAllNotifications();
-    }
-
     public function forgotPassword(ForgotPasswordRequest $request)
     {
 
