@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@section('title','Account')
-@section('content')
-@livewire('account')
+@extends('dashboard.layouts')
+@section('title', 'Account')
+@section('dashboard-content')
+    @livewire('account')
 @endsection

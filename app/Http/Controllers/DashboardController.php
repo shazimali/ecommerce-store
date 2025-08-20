@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class DashboardController extends Controller
 {
-    function index()
-    {
-        return view('dashboard');
-    }
+
 
     function account()
     {
