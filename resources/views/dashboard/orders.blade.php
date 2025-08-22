@@ -12,33 +12,34 @@
                         <div class="flex justify-between">
                             <h2 class="card-title">ED#{{ $order->id }}</h2>
                             @if ($order->status == 'PLACED')
-                                <div class="badge badge-warning">{{ $order->status }}</div>
+                                <div class="badge badge-warning text-white">{{ $order->status }}</div>
                             @elseif($order->status == 'IN_TRANSIT')
-                                <div class="badge badge-info">{{ $order->status }}</div>
+                                <div class="badge badge-info text-white">{{ $order->status }}</div>
                             @elseif($order->status == 'DELIVERED')
-                                <div class="badge badge-success">{{ $order->status }}</div>
+                                <div class="badge badge-success text-white">{{ $order->status }}</div>
                             @endif
                         </div>
                         @foreach ($order->detail as $item)
-                            <div class="item-center">
-                                <a href="">
-                                    <img class="h-30 w-30 inline-block" src="{{ asset('storage/' . $item->product->image) }}"
-                                        alt="{{ $item->product->title }}">
-                                </a>
-                                <div>
-                                    <div class="py-1 text-xs max-w-60"><b>{{ $item->product->title }}</b></div>
-                                    <div class="py-1 text-xs"> {{ $item->currency }}
-                                        {{ number_format($item->unit_amount, 2) }}</div>
-                                    <div class="py-1 flex text-xs">
-
-                                        Color:
-                                        {{ $item->color_id && $item->color_id != 0 ? $item->color->color_name : 'N/A' }}
-                                    </div>
-                                    <div class="py-1 flex text-xs">
-                                        Qty: {{ $item->quantity }}
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-[20%_80%] gap-5 border-b-2 py-2">
+                            <div>
+                                <img class="h-30 w-30 inline-block" src="{{ asset('storage/' . $item->product->image) }}" alt="{{$item->product->title}}">
                             </div>
+                            <div>
+                                <div class="py-1 text-xs max-w-60"><b>{{ $item->product->title }}</b></div> 
+                                <div class="py-1 text-xs"> {{ $item->currency }} {{ number_format($item->unit_amount, 2) }}</div> 
+                                @if ($item->color_id != 0)
+                                <div class="py-1 flex text-xs">
+                                            Color:
+                                    {{ $item->color_id && $item->color_id != 0 ? $item->color->color_name : 'N/A' }}
+                                </div>
+                                @endif
+                                <div class="pr-6">
+                                    <div class="flex py-1">
+                                            Qty: {{ $item->quantity }}
+                                    </div>                                    
+                                </div>            
+                            </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>

@@ -1,53 +1,40 @@
 <div class="px-8 py-10 text-black dark:text-white">
     <div class="flex justify-center">
-        <h3 class="text-2xl font-semibold py-2">Review</h3>
+        <h3 class="text-2xl font-semibold py-2">Reviews</h3>
     </div>
-    <form wire:submit.prevent="saveReview">
+    <div class="grid grid-cols-2">
+             <div class="grid grid-cols-[20%_80%] gap-5 border-b-2 py-2">
+                @foreach ($forms as $index => $item)
+                        <img class="h-30 w-30 inline-block" src="{{ asset('storage/' . $item['image']) }}" alt="{{$item['image']}}">
+                        <div>
+                            <div class="py-1 text-xs max-w-60"><b>{{ $item['title'] }}</b></div>    
+                            <form wire:submit.prevent="saveReview">
         <div>
             <div>
-                <label class="block mb-1" for="review">
-                    Review:
-                </label>
-                <textarea wire:model="review" rows="4" cols="4" name="review"
+                <textarea wire:model="forms.{{ $index }}.review" rows="4" cols="4" name="review"
                     class="w-full border p-2 rounded mb-3 border-secondary dark:bg-black dark:border-slate-800"
-                    placeholder="Write your review..."></textarea>
-                @error('review')
-                    <p class="text-red-500 text-xs">{{ $message }}</p>
-                @enderror
-
+                    placeholder="Write your review..." ></textarea>
+                    @error('forms.'.$index.'.review')
+                <span class="text-red-600 text-sm">{{ $message }}</span>
+            @enderror
             </div>
 
-            <div>
+            {{-- <div>
                 <label class="block mb-2" for="images">
                     Images:
                 </label>
 
                 <input type="file" id="images" multiple wire:model="images"
                     class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800">
-            </div>
-            @error('images.*')
-                <span class="text-red-500 text-xs">{{ $message }}</span>
-            @enderror
-
-            @if ($previewImages)
-                <div class="flex gap-2 flex-wrap mb-3">
-                    @foreach ($previewImages as $value)
-                        <img src="{{ $value }}" class="w-20 h-20 object-cover rounded border">
-                    @endforeach
-                </div>
-            @endif
-
-
-
-
+            </div> --}}
 
             <label class="my-9" for="rating">
                 Rating:
             </label>
             <div class="flex items-center mt-2">
                 @for ($i = 1; $i <= 5; $i++)
-                    <svg wire:click="setRating({{ $i }})"
-                        class="w-8 h-8 cursor-pointer  {{ $i <= $rating ? 'text-yellow-400' : 'text-gray-300' }}"
+                    <svg wire:click="setRating({{ $i }},{{ $index }})"
+                        class="w-8 h-8 cursor-pointer  {{ $i <= $rating ? 'text-primary' : 'text-gray-300' }}"
                         fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.197 3.67a1
                          1 0 00.95.69h3.862c.969 0 1.371
@@ -60,7 +47,7 @@
                     </svg>
                 @endfor
             </div>
-            @error('rating')
+            @error('forms.{{ $index }}.rating')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror
             <div>
@@ -90,7 +77,14 @@
         @if (session()->has('success'))
             <p class="text-green-500 text-xs">{{ session('success') }}</p>
         @endif
+    </div>    
+                        </div>
+                @endforeach
+            </div>
+
+            <div></div>
     </div>
+    
 
 
 </div>
