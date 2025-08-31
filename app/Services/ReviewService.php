@@ -25,6 +25,15 @@ class ReviewService
 
     static public function getReviewsHistory()
     {
-        return [];
+
+        $orders = Order::where('user_id', Auth::id())->get();
+        $orderDetails = OrderDetail::whereIn('order_id', $orders->pluck('id'))->get();
+        $productIds = $orderDetails->pluck('product_id');
+        $reviews = ProductReview::with('product')
+            ->where('user_id', Auth::id())
+            ->whereIn('product_id', $productIds)->get();
+
+
+        return $reviews;
     }
 }
