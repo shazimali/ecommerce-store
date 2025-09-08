@@ -6,7 +6,6 @@ use App\Models\ProductReview;
 use App\services\ReviewService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -25,7 +24,7 @@ class Review extends Component
     public $previewImages = [];
 
 
-
+    #[On('update-reviews')]
     public function mount()
     {
         foreach (ReviewService::getToBeReviews() as $key => $form) {
@@ -37,7 +36,6 @@ class Review extends Component
             // $this->forms[$key]['product_id'] =  Auth::id();
             $this->forms[$key]['product_id'] = $form->id;
             $this->forms[$key]['status'] =  'INACTIVE';
-            $this->loadHistory();
         }
         $this->history = ReviewService::getReviewsHistory();
     }
@@ -91,23 +89,17 @@ class Review extends Component
         // $this->forms[$index]['rating'] = null;
         // $this->images[$index] = [];
 
-        $this->loadHistory();
 
-        $data = ['type' => 'success', 'title' => 'Review Submitted Successfully!'];
-        $this->dispatch('alert', data: $data);
 
-        $this->dispatch('review-refresh');
+
+        $data = ['type' => 'success', 'message' => 'Review Submitted Successfully!'];
+        $this->dispatch(
+            'alert',
+            type: $data['type'],
+            title: $data['message'],
+        );
+        $this->dispatch('update-reviews');
     }
-
-    public function loadHistory()
-    {
-        $this->history = ProductReview::with('product')
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
-    }
-
-
     public function render()
     {
         return view('livewire.review');
