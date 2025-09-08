@@ -30,9 +30,11 @@ Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('order/{id}', [CheckoutController::class, 'orderDetail'])->name('checkout.order-detail');
 
 // Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.basic');
-Route::get('account', [DashboardController::class, 'account'])->name('dashboard.account')->middleware('auth.basic');
-Route::get('orders', [DashboardController::class, 'orders'])->name('dashboard.orders')->middleware('auth.basic');
-Route::get('reviews', [DashboardController::class, 'reviews'])->name('dashboard.reviews')->middleware('auth.basic');
+Route::prefix('dashboard')->middleware('auth.basic')->group(function () {
+    Route::get('/account', [DashboardController::class, 'account'])->name('dashboard.account');
+    Route::get('/orders', [DashboardController::class, 'orders'])->name('dashboard.orders');
+    Route::get('/reviews', [DashboardController::class, 'reviews'])->name('dashboard.reviews');
+});
 
 Route::get('contact-us', [ContactUsController::class, 'index'])->name('contact_us');
 Route::post('contact-us', [ContactUsController::class, 'sendEmail'])->name('contact_us.post');

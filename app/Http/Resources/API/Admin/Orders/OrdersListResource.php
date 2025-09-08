@@ -29,8 +29,8 @@ class OrdersListResource extends JsonResource
             'created_at' => $this->created_at->toDateString(),
             'status' => $this->status,
             'slip_link' => $this->slip_link,
-            'customer_name' => $this->user->name,
-            'customer_email' => $this->user->email,
+            'customer_name' => $this->user ? $this->user->name : '',
+            'customer_email' => $this->user ? $this->user->email : '',
         ];
     }
 }
