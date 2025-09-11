@@ -2,9 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Events\AdminNotification;
+use App\Mail\ProductReviewEmail;
 use App\Models\ProductReview;
+use App\Models\User;
 use App\services\ReviewService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -68,13 +72,16 @@ class Review extends Component
 
         ]);
 
+
+
+
         // Store images
         $storedImages = [];
         foreach ($this->images as  $image) {
             $storedImages[] = $image->store('reviews', 'public');
         }
 
-        ProductReview::create([
+        $review = ProductReview::create([
             'product_id' =>  $this->forms[$index]['product_id'],
             'user_id' => Auth::id(),
             'rating' => $this->forms[$index]['rating'],
@@ -82,7 +89,7 @@ class Review extends Component
             'image1' => $storedImages[0] ?? null,
             'image2' => $storedImages[1] ?? null,
             'image3' => $storedImages[2] ?? null,
-            'status' => 'active',
+            'status' => 'inactive',
         ]);
         // Reset this specific form
         $this->forms[$index]['review'] = '';
@@ -90,7 +97,10 @@ class Review extends Component
         // $this->images[$index] = [];
 
 
+        Mail::to('abidranaabid90@gmail.com')->send(new ProductReviewEmail($review));
 
+
+        event(new AdminNotification('You have a new review for Product#' . $review->product_id));
 
         $data = ['type' => 'success', 'message' => 'Review Submitted Successfully!'];
         $this->dispatch(

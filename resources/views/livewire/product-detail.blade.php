@@ -9,8 +9,8 @@
             <div class="flex justify-center mt-2">
                 @foreach ($images as $media)
                     @if ($media)
-                        <img class="border border-solid dark:border-slate-800 h-16 w-16 mx-auto cursor-pointer" src="{{ $media }}"
-                            wire:click="changeActiveImage('{{ $media }}')" />
+                        <img class="border border-solid dark:border-slate-800 h-16 w-16 mx-auto cursor-pointer"
+                            src="{{ $media }}" wire:click="changeActiveImage('{{ $media }}')" />
                     @endif
                 @endforeach
             </div>
@@ -19,7 +19,7 @@
             <div class="carousel carousel-vertical rounded-box">
                 <div class="carousel-item h-full">
                     @foreach ($images as $media)
-                    <img src="{{ $media }}" />
+                        <img src="{{ $media }}" />
                     @endforeach
                 </div>
             </div>
@@ -28,7 +28,7 @@
             <h2 class="text-2xl font-semibold py-2 dark:text-white">{{ $product->title }}</h2>
             <div class="inline-flex text-sm py-2 dark:text-white">
                 @php
-                    $review_mean = $reviews->count() > 0 ? $reviews->sum('rating') / $reviews->count(): 0;
+                    $review_mean = $reviews->count() > 0 ? $reviews->sum('rating') / $reviews->count() : 0;
                 @endphp
                 @for ($i = 0; $i < $review_mean; $i++)
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -62,7 +62,8 @@
                 <div class="text-2xl font-semibold text-primary py-2">
                     @if (
                         $product->price_detail->discount > 0 &&
-                            (Carbon\Carbon::today()->toDateString() >= $product->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $product->price_detail->discount_to))
+                            (Carbon\Carbon::today()->toDateString() >= $product->price_detail->discount_from &&
+                                Carbon\Carbon::today()->toDateString() <= $product->price_detail->discount_to))
                         <b>{{ $product->price_detail->country->currency }}</b>{{ number_format(round($product->price_detail->price - ($product->price_detail->price / 100) * $product->price_detail->discount), 2) }}
                         <del class="text-gray-500 text-xs">
                             {{ number_format($product->price_detail->price, 2) }}
@@ -100,7 +101,8 @@
             @endif
             @if (!$product->coming_soon && $product->stocks->count() > 0)
                 <div class="grid lg:grid-cols-[25%_75%] md:grid-cols-[25%_75%] sm:grid-cols-1 xs:grid-cols-1 py-2">
-                    <div class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1  lg:mb-0 md:mb-0 sm:mb-2 xs:mb-2">
+                    <div
+                        class="flex lg:flex-col md:flex-col sm:flex-col lg:gap-1 md:gap-1 sm:gap-1  lg:mb-0 md:mb-0 sm:mb-2 xs:mb-2">
                         <div @dblclick.prevent class="flex items-center">
                             <button wire:click="decrementQty({{ $qty - 1 }})"
                                 class="flex h-10 items-center justify-center  px-4 py-2 bg-primary text-white"
@@ -192,7 +194,7 @@
                                 @endfor
                             @endif
                         </div>
-                        <div class="text-xs text-gray-500">Test User</div>
+                        <div class="text-xs text-gray-500"> {{ $review->user->name }} </div>
                         <div>{{ $review->review }}</div>
                         <div class="flex mt-1">
                             @if ($review->image1)

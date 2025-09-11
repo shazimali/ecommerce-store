@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductReview extends Model
@@ -18,4 +19,14 @@ class ProductReview extends Model
     {
         return $this->hasOne(ProductHead::class, 'id', 'product_id');
     }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    // public function order(): HasOne
+    // {
+    //     return $this->hasOne(Order::class, 'id', 'order_id');
+    // }
 }
