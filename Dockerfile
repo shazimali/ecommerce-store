@@ -1,57 +1,43 @@
-FROM php:8.2-apache-bookworm
+# Use official PHP with Apache
+FROM php:8.2-apache
 
-LABEL maintainer="Everyday Shops DevOps <devops@everydayshops>"
+# Set working directory
+WORKDIR /var/www/html
 
-# Non-interactive installation
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=UTC
-
-# ---------------------------------------------------------
-# System dependencies
-# ---------------------------------------------------------
-RUN apt-get update --fix-missing \
-    && apt-get install -y --no-install-recommends \
-    apt-utils ca-certificates curl wget git unzip zip vim nano locales gnupg2 \
-    libpng-dev libjpeg62-turbo-dev libfreetype6-dev libzip-dev libxml2-dev libicu-dev \
+# Install required system packages and PHP extensions
+RUN apt-get update && apt-get install -y \
+    git unzip zip vim nano wget \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    libzip-dev libxml2-dev libicu-dev libonig-dev locales \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring bcmath zip intl \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
-# ---------------------------------------------------------
+# Copy application source
+COPY . /var/www/html
+
+# Set correct permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Install Composer
-# ---------------------------------------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ---------------------------------------------------------
-# Work directory
-# ---------------------------------------------------------
-WORKDIR /var/www/html
-
-# ---------------------------------------------------------
-# Copy app files
-# ---------------------------------------------------------
-COPY . .
-
-# ---------------------------------------------------------
 # Install PHP dependencies
-# ---------------------------------------------------------
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader || true
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# ---------------------------------------------------------
-# Laravel setup (safe mode)
-# ---------------------------------------------------------
-RUN php artisan key:generate --force || true \
-    && php artisan migrate --force || true \
-    && php artisan config:clear || true \
-    && php artisan cache:clear || true \
-    && php artisan route:clear || true \
-    && php artisan view:clear || true \
-    && php artisan config:cache || true \
-    && php artisan route:cache || true \
-    && php artisan view:cache || true
+# Clear caches and optimize Laravel
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear \
+    && php artisan optimize
 
-# ---------------------------------------------------------
-# Fix permissions
-# ---------------------------------------------------------
-RUN chown -R www-data:www-d
+# Run database migrations automatically (optional — can be disabled if needed)
+RUN php artisan migrate --force || true
+
+# Expose Apache port
+EXPOSE 80
+
+# Start Apache server
+CMD ["apache2-foreground"]
