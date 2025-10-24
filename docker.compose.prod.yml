@@ -1,0 +1,112 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: everyday_shops_traefik
+    restart: unless-stopped
+    command:
+      - --log.level=INFO
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --certificatesresolvers.myresolver.acme.email=shazimali03@gmail.com
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_data:/letsencrypt
+    networks:
+      - web
+
+  app:
+    # For first manual deploy build on VPS, uncomment the 'build' block and remove 'image'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: ghcr.io/<GITHUB_OWNER>/everyday_shops_app:latest
+    container_name: everyday_shops_app
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: https://everydayplastic.co
+      DB_HOST: mysql
+      DB_DATABASE: everyday_shops
+      DB_USERNAME: everyday_user
+      DB_PASSWORD: Root@admin!!1
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+    volumes:
+      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.everyday_shops.rule=Host(`everydayplastic.co`,`everydaysanitary.co`,`everydayfurniture.co`,`everydayhomeappliances.co`)"
+      - "traefik.http.routers.everyday_shops.entrypoints=websecure"
+      - "traefik.http.routers.everyday_shops.tls.certresolver=myresolver"
+      - "traefik.http.services.everyday_shops.loadbalancer.server.port=80"
+    networks:
+      - web
+      - internal
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: everyday_shops_worker
+    restart: unless-stopped
+    command: bash -lc "php artisan queue:work --sleep=3 --tries=3 --timeout=90"
+    environment:
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      DB_HOST: mysql
+      DB_DATABASE: everyday_shops
+      DB_USERNAME: everyday_user
+      DB_PASSWORD: Root@admin!!1
+    depends_on:
+      - redis
+      - mysql
+    networks:
+      - internal
+
+  mysql:
+    image: mysql:8.0
+    container_name: everyday_shops_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Root@admin!!1
+      MYSQL_DATABASE: everyday_shops
+      MYSQL_USER: everyday_user
+      MYSQL_PASSWORD: Root@admin!!1
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - internal
+
+  redis:
+    image: redis:7
+    container_name: everyday_shops_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+
+volumes:
+  db_data:
+  redis_data:
+  traefik_data:
+
+networks:
+  web:
+  internal:
+    internal: true
