@@ -1,5 +1,5 @@
 # =========================
-# 1️⃣ Frontend build stage (Vite)
+# 1️⃣ Frontend build (Vite)
 # =========================
 FROM node:20 AS frontend
 
@@ -11,47 +11,43 @@ RUN npm run build
 
 
 # =========================
-# 2️⃣ PHP + Apache stage
+# 2️⃣ PHP + Apache (Laravel)
 # =========================
-FROM php:8.2-apache
+FROM php:8.2-apache-bullseye
 
-# Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
 
-# Install system dependencies
+# --- Fix for some VPS DNS/mirror issues ---
+RUN apt-get update --fix-missing \
+    && apt-get install -y apt-transport-https ca-certificates gnupg lsb-release curl
+
+# --- Install all system dependencies ---
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    zip \
-    curl \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libzip-dev \
-    libxml2-dev \
-    locales \
+    git unzip zip vim nano curl wget \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    libzip-dev libxml2-dev locales libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo_mysql mbstring bcmath zip intl \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring bcmath zip intl \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# --- Set working directory ---
 WORKDIR /var/www/html
 
-# Copy Composer from official image
+# --- Copy Composer ---
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy app code
+# --- Copy app code ---
 COPY . .
 
-# Copy built frontend assets from Node stage
+# --- Copy built frontend assets ---
 COPY --from=frontend /app/public/build ./public/build
 
-# Install PHP dependencies
+# --- Install PHP dependencies ---
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Laravel optimization & migrations
+# --- Laravel cache & migrations ---
 RUN php artisan config:clear || true \
     && php artisan cache:clear || true \
     && php artisan route:clear || true \
@@ -62,10 +58,8 @@ RUN php artisan config:clear || true \
     && php artisan route:cache || true \
     && php artisan view:cache || true
 
-# Fix permissions
+# --- Fix permissions ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose Apache
 EXPOSE 80
-
 CMD ["apache2-foreground"]
