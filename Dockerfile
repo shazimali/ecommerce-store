@@ -1,24 +1,20 @@
 # =========================
-# 1️⃣ Build Frontend Assets
+# 1️⃣ Frontend build stage
 # =========================
 FROM node:20 AS frontend
 
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install
-
 COPY . .
-
 RUN npm run build
 
 
 # =========================
-# 2️⃣ Build Laravel (PHP + Apache)
+# 2️⃣ PHP + Apache stage
 # =========================
 FROM php:8.2-apache
 
-# Install system dependencies & PHP extensions
 RUN apt-get update && apt-get install -y \
     git unzip zip curl \
     libpng-dev libjpeg-dev libfreetype6-dev \
@@ -30,21 +26,19 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
-# Copy Composer
+# Copy composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy project files
+# Copy Laravel project files
 COPY . .
 
-# Copy built frontend assets from Node stage
+# Copy built frontend assets (Vite)
 COPY --from=frontend /app/public/build ./public/build
-COPY --from=frontend /app/public/js ./public/js
-COPY --from=frontend /app/public/css ./public/css
 
-# Install PHP dependencies
+# Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Laravel setup (cache clear, migrate, key:generate)
+# Laravel setup
 RUN php artisan config:clear || true \
     && php artisan cache:clear || true \
     && php artisan route:clear || true \
