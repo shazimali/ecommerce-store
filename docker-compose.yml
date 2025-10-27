@@ -2,14 +2,13 @@ version: "3.9"
 
 services:
   everyday_shop_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: shazimali/everyday-shop:latest
     container_name: everyday_shop_app
+    restart: always
     ports:
-      - "8080:80"
-    volumes:
-      - .:/var/www/html
+      - "80:80"
+    env_file:
+      - .env
     depends_on:
       - everyday_shop_mysql
     networks:
@@ -22,8 +21,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: everyday_shop
-    ports:
-      - "3307:3306"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
       - everyday_shop_mysql_data:/var/lib/mysql
     networks:
