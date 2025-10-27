@@ -1,47 +1,40 @@
-name: CI/CD → Docker Hub → VPS (cached)
-
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
           extensions: mbstring, pdo_mysql, gd, zip, intl
 
-      - name: Cache composer
-        id: composer-cache
+      - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}
+          path: |
+            ~/.composer/cache
           key: composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: composer-
+          restore-keys: |
+            composer-
 
-      - name: Install composer & set cache dir
-        run: |
-          composer config cache-files-dir $HOME/.composer/cache
-          echo "COMPOSER_CACHE_DIR=$HOME/.composer/cache" >> $GITHUB_ENV
-          composer install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: npm-
-
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-
 
       - name: Build frontend
         run: |
@@ -65,29 +58,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/everyday-shop:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/everyday-shop:${{ github.sha }}
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_SSH_PORT || '22' }}
-          script: |
-            APP_PATH=${{ secrets.VPS_APP_PATH || '/var/www/everyday_shop' }}
-            mkdir -p $APP_PATH
-            cd $APP_PATH
-
-            # write .env if provided (optional)
-            if [ -n "${{ secrets.VPS_DOTENV }}" ]; then
-              echo "${{ secrets.VPS_DOTENV }}" > .env
-            fi
-
-            docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/everyday-shop:latest
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
-            docker image prune -f || true
