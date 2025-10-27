@@ -1,92 +1,44 @@
-name: 🚀 Build & Deploy Everyday Shop
+name: Deploy Laravel Livewire App
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 env:
-  REGISTRY: docker.io
   IMAGE_NAME: shazimali/everyday-shop
-  PHP_VERSION: 8.2
 
 jobs:
-  build-and-push:
-    name: 🏗️ Build & Push Docker Image
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: ⚡ Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: composer-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-      - name: 🐳 Log in to Docker Hub
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container  # ✅ fix for caching issue
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: 🏷️ Generate image tags
-        id: tags
-        run: |
-          echo "IMAGE_TAG=sha-${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "LATEST_TAG=latest" >> $GITHUB_ENV
+      - name: Set image tag
+        run: echo "IMAGE_TAG=sha-${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      - name: 🛠️ Build and push Docker images
+      - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.IMAGE_NAME }}:${{ env.LATEST_TAG }}
-          file: ./Dockerfile
-          context: .
+            ${{ env.IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  deploy:
-    name: 🚀 Deploy to VPS (with rollback)
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    steps:
-      - name: 🔑 SSH into VPS & deploy
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script_stop: false
-          script: |
-            cd /var/www/everyday-shop
-
-            echo "Pulling new image: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
-            docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} || exit 1
-
-            echo "Tagging current running image as 'previous'"
-            CURRENT_IMAGE=$(docker ps --filter "name=everyday_shop_app" --format "{{.Image}}")
-            if [ ! -z "$CURRENT_IMAGE" ]; then
-              docker tag $CURRENT_IMAGE ${{ env.IMAGE_NAME }}:previous
-            fi
-
-            echo "Deploying new image..."
-            sed -i "s|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|g" docker-compose.yml
-            docker compose down
-            if docker compose up -d --remove-orphans; then
-              echo "✅ New image deployed successfully"
-              docker image prune -f
-            else
-              echo "❌ Deployment failed! Rolling back..."
-              sed -i "s|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:previous|g" docker-compose.yml
-              docker compose down
-              docker compose up -d --remove-orphans
-              echo "🔁 Rolled back to previous version."
-            fi
