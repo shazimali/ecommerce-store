@@ -1,4 +1,4 @@
-name: Deploy Laravel Livewire App
+name: CI/CD – Everyday Shop with Rollback
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
 
 env:
   IMAGE_NAME: shazimali/everyday-shop
+  CONTAINER_NAME: everyday_shop_app
+  VPS_PATH: /var/www/everyday_shops
 
 jobs:
   build-and-deploy:
@@ -16,13 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          driver: docker-container  # ✅ fix for caching issue
+          driver: docker-container
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -30,15 +29,47 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Set image tag
-        run: echo "IMAGE_TAG=sha-${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-      - name: Build and push Docker image
+      - name: Build and push image
+        id: build
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_NAME }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Deploy to VPS
+        id: deploy
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "🚀 Pulling latest image..."
+            cd ${{ env.VPS_PATH }}
+            docker compose pull app
+
+            echo "🧹 Backing up previous container image tag..."
+            PREV_IMAGE=$(docker inspect --format='{{index .Config.Image}}' ${{ env.CONTAINER_NAME }} || echo "none")
+            echo "Previous image: $PREV_IMAGE"
+
+            echo "🛑 Stopping current container..."
+            docker compose down
+
+            echo "🆕 Starting new version..."
+            if docker compose up -d; then
+              echo "✅ New version deployed successfully."
+            else
+              echo "❌ Deployment failed. Rolling back..."
+              if [ "$PREV_IMAGE" != "none" ]; then
+                docker run -d --name rollback_container -p 80:80 $PREV_IMAGE
+                echo "🔙 Rolled back to $PREV_IMAGE"
+              else
+                echo "⚠️ No previous image found, rollback not possible."
+              fi
+              exit 1
+            fi

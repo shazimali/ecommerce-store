@@ -8,15 +8,11 @@ until php -r "try {
     echo '✅ Database ready'; } catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
 
 echo "🚀 Running Laravel optimizations..."
-if [ -f artisan ]; then
-    php artisan migrate --force || true
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-    php artisan optimize
-else
-    echo "❌ artisan not found in current directory"
-fi
+php artisan migrate --force || true
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
+php artisan optimize || true
 
 echo "✅ Starting Apache server..."
-exec apache2-foreground
+apache2-foreground
