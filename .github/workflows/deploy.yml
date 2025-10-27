@@ -1,4 +1,4 @@
-name: CI/CD – Everyday Shop with Rollback
+name: 🚀 Deploy Everyday Shop (Docker Hub → VPS)
 
 on:
   push:
@@ -7,40 +7,50 @@ on:
 
 env:
   IMAGE_NAME: shazimali/everyday-shop
-  CONTAINER_NAME: everyday_shop_app
-  VPS_PATH: /var/www/everyday_shops
+  IMAGE_TAG: latest
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # 🧱 Checkout repository
+      - name: 🧱 Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      # 🔧 Set up Docker Buildx
+      - name: 🔧 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          driver: docker-container
 
-      - name: Login to Docker Hub
+      # 🔑 Login to Docker Hub
+      - name: 🔑 Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build and push image
-        id: build
+      # 🏗️ Build and Push Docker Image to Docker Hub
+      - name: 🏗️ Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
 
-      - name: Deploy to VPS
-        id: deploy
+      # 🧪 Test SSH connection before deploy
+      - name: 🧪 Test SSH connection to VPS
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "✅ SSH connection successful."
+            docker --version || echo "⚠️ Docker not found on VPS."
+
+      # 🚀 Deploy new image on VPS
+      - name: 🚀 Deploy new image on VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -48,28 +58,30 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
+            cd /var/www/everyday_shops
 
-            echo "🚀 Pulling latest image..."
-            cd ${{ env.VPS_PATH }}
-            docker compose pull app
+            echo "📦 Pulling latest image..."
+            docker pull shazimali/everyday-shop:latest
 
-            echo "🧹 Backing up previous container image tag..."
-            PREV_IMAGE=$(docker inspect --format='{{index .Config.Image}}' ${{ env.CONTAINER_NAME }} || echo "none")
-            echo "Previous image: $PREV_IMAGE"
+            echo "📋 Backing up current image tag for rollback..."
+            docker inspect shazimali/everyday-shop:latest > previous_image.json || true
 
-            echo "🛑 Stopping current container..."
+            echo "🧹 Stopping and removing old containers..."
             docker compose down
 
-            echo "🆕 Starting new version..."
-            if docker compose up -d; then
-              echo "✅ New version deployed successfully."
+            echo "🚀 Starting new deployment..."
+            if docker compose up -d --build; then
+              echo "✅ Deployment successful!"
             else
               echo "❌ Deployment failed. Rolling back..."
-              if [ "$PREV_IMAGE" != "none" ]; then
-                docker run -d --name rollback_container -p 80:80 $PREV_IMAGE
-                echo "🔙 Rolled back to $PREV_IMAGE"
+              if [ -f previous_image.json ]; then
+                PREVIOUS_IMAGE=$(jq -r '.[0].RepoTags[0]' previous_image.json)
+                echo "🔙 Rolling back to $PREVIOUS_IMAGE ..."
+                docker pull $PREVIOUS_IMAGE || true
+                docker compose down
+                sed -i "s|shazimali/everyday-shop:latest|$PREVIOUS_IMAGE|g" docker-compose.yml
+                docker compose up -d --build
               else
-                echo "⚠️ No previous image found, rollback not possible."
+                echo "⚠️ No previous image info found, manual rollback required!"
               fi
-              exit 1
             fi
