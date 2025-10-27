@@ -1,51 +1,36 @@
 version: "3.9"
-
 services:
-  everyday_shop_app:
+  app:
     image: shazimali/everyday-shop:latest
     container_name: everyday_shop_app
     restart: always
-    ports:
-      - "80:80"
     env_file:
       - .env
+    ports:
+      - "80:80"
     depends_on:
-      - everyday_shop_mysql
-    networks:
-      - everyday_shop_network
+      - db
 
-  everyday_shop_mysql:
+  db:
     image: mysql:8.0
     container_name: everyday_shop_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: everyday_shop
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     volumes:
       - everyday_shop_mysql_data:/var/lib/mysql
-    networks:
-      - everyday_shop_network
 
-  everyday_shop_phpmyadmin:
+  phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: everyday_shop_phpmyadmin
     restart: always
     environment:
-      PMA_HOST: everyday_shop_mysql
+      PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: root
     ports:
       - "8081:80"
-    depends_on:
-      - everyday_shop_mysql
-    networks:
-      - everyday_shop_network
-
-networks:
-  everyday_shop_network:
-    driver: bridge
 
 volumes:
   everyday_shop_mysql_data:
