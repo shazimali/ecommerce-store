@@ -2,7 +2,7 @@ services:
   everyday_shop_app:
     image: shazimali/everyday-shop:latest
     container_name: everyday_shop_app
-    restart: always
+    restart: no
     env_file:
       - .env
     ports:
