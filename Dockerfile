@@ -3,8 +3,18 @@
 # ============================================
 FROM composer:2 AS vendor
 WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Copy only composer.json first
+COPY composer.json ./
+
+# If composer.lock exists, use it; otherwise, generate it
+RUN if [ -f composer.lock ]; then \
+    composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist; \
+    else \
+    composer update --lock --no-interaction; \
+    composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist; \
+    fi
+
+# Copy the rest of the application
 COPY . .
 
 # ============================================
