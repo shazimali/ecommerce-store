@@ -1,8 +1,7 @@
 version: "3.9"
-
 services:
   everyday_shop_app:
-    image: shazimali/everyday-shop:latest
+    build: .
     container_name: everyday_shop_app
     restart: always
     env_file:
@@ -11,11 +10,6 @@ services:
       - "80:80"
     depends_on:
       - everyday_shop_mysql
-    volumes:
-      # Laravel storage persistence
-      - everyday_shop_storage:/var/www/everyday_shops/storage
-      # Optional: custom Apache virtual host if you want to override
-      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
 
   everyday_shop_mysql:
     image: mysql:8.0
@@ -23,7 +17,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: Root@!!1
-      MYSQL_ROOT_USER: everyday_shop_user
       MYSQL_DATABASE: everyday_shop_db
     volumes:
       - everyday_shop_data:/var/lib/mysql
@@ -36,13 +29,9 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: everyday_shop_mysql
-      PMA_USER: everyday_shop_user
+      PMA_USER: root
       PMA_PASSWORD: Root@!!1
       UPLOAD_LIMIT: 300M
-      PMA_ABSOLUTE_URI: http://localhost:8081/
-      PMA_AUTH_TYPE: cookie # forces login every session
-      PMA_SESSION_LIFETIME: 1800 # session lifetime in seconds (30 min)
 
 volumes:
   everyday_shop_data:
-  everyday_shop_storage:
