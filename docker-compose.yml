@@ -36,7 +36,6 @@ services:
       PMA_USER: root
       PMA_PASSWORD: Root@!!1
       UPLOAD_LIMIT: 300M
-
 volumes:
   everyday_shop_data:
   everyday_shop_storage:
