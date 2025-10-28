@@ -4,19 +4,15 @@
 FROM composer:2 AS vendor
 WORKDIR /app
 
-# Copy only composer.json first
-COPY composer.json ./
+# Copy composer files
+COPY composer.json composer.lock ./
 
-# Create composer.lock if not exists, then install
-RUN if [ -f composer.lock ]; then \
-    composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist; \
-    else \
-    composer update --lock --no-interaction; \
-    composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist; \
-    fi
+# Install dependencies (assumes composer.lock exists)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Copy full application for next stages
+# Copy full application
 COPY . .
+
 
 # ============================================
 # Stage 2: Frontend Build (Laravel Livewire)
