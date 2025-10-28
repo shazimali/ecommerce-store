@@ -3,9 +3,9 @@ set -e
 
 echo "⏳ Waiting for database connection..."
 until php -r "try {
-    new PDO('mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-    echo '✅ Database ready';
-} catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
+    new PDO('mysql:host='.getenv('DB_HOST').';dbname='.getenv('DB_DATABASE'),
+    getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+    echo '✅ Database ready'; } catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
 
 echo "🚀 Running Laravel optimizations..."
 php artisan migrate --force || true
