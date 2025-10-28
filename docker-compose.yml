@@ -23,7 +23,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: Root@!!1
-      MYSQL_DATABASE: everyday_shop
+      MYSQL_ROOT_USER: everyday_shop_user
+      MYSQL_DATABASE: everyday_shop_db
     volumes:
       - everyday_shop_data:/var/lib/mysql
 
@@ -35,7 +36,7 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: everyday_shop_mysql
-      PMA_USER: root
+      PMA_USER: everyday_shop_user
       PMA_PASSWORD: Root@!!1
       UPLOAD_LIMIT: 300M
       PMA_ABSOLUTE_URI: http://localhost:8081/
