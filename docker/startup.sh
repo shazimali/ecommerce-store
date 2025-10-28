@@ -1,50 +1,46 @@
 #!/bin/bash
 set -e
 
-echo "⏳ Waiting for database connection..."
-until php -r "try {
-    new PDO(getenv('DB_CONNECTION').':host='.getenv('DB_HOST').';dbname='.getenv('DB_DATABASE'),
-    getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
-    echo '✅ Database ready'; } catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
+echo "🚀 Starting Everyday Shop container setup..."
 
-echo "🚀 Running Laravel optimizations..."
-if [ -f artisan ]; then
-    php artisan migrate --force || true
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-    php artisan optimize
-else
-    echo "⚠️ artisan not found — skipping Laravel optimizations."
+# Wait for MySQL to become available (if used via docker-compose)
+if [ -n "$DB_HOST" ]; then
+  echo "⏳ Waiting for database connection ($DB_HOST:$DB_PORT)..."
+  until nc -z "$DB_HOST" "$DB_PORT"; do
+    sleep 2
+    echo "."
+  done
+  echo "✅ Database connection established."
 fi
 
-# ==================================================
-# SSL Configuration
-# ==================================================
-SSL_CERT_PATH="/etc/ssl/certs/apache-selfsigned.crt"
-SSL_KEY_PATH="/etc/ssl/private/apache-selfsigned.key"
+# Set correct permissions for Laravel
+echo "🔧 Setting permissions..."
+mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-if [ "$ENABLE_HTTPS" = "true" ]; then
-    echo "🔒 Enabling HTTPS mode..."
-
-    # Generate self-signed cert if missing
-    if [ ! -f "$SSL_CERT_PATH" ] || [ ! -f "$SSL_KEY_PATH" ]; then
-        echo "🧾 Generating self-signed SSL certificate..."
-        mkdir -p /etc/ssl/certs /etc/ssl/private
-        openssl req -x509 -nodes -days 365 \
-            -subj "/C=PK/ST=Sindh/L=Karachi/O=EverydayShop/CN=everydayplastic.co" \
-            -newkey rsa:2048 \
-            -keyout "$SSL_KEY_PATH" \
-            -out "$SSL_CERT_PATH"
-    else
-        echo "✅ SSL certificate already exists."
-    fi
-
-    a2enmod ssl
-    service apache2 reload
-else
-    echo "🌐 Running in HTTP mode."
+# Ensure environment file exists
+if [ ! -f /var/www/html/.env ]; then
+  echo "⚠️ .env file not found! Copying from .env.example..."
+  cp /var/www/html/.env.example /var/www/html/.env
 fi
 
-echo "✅ Starting Apache server..."
-apache2-foreground
+# Optimize Laravel for production
+echo "⚙️ Running Laravel optimizations..."
+cd /var/www/html
+
+# Run Artisan commands safely
+php artisan key:generate --force || true
+php artisan migrate --force || true
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
+
+echo "✅ Laravel is optimized and ready."
+
+# Enable Apache rewrite module (in case not active)
+a2enmod rewrite headers > /dev/null 2>&1
+
+# Restart Apache gracefully
+echo "🌐 Starting Apache with virtual host configuration..."
+apachectl -D FOREGROUND
