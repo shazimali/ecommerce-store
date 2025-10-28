@@ -1,46 +1,18 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Everyday Shop container setup..."
+echo "⏳ Waiting for database connection..."
+until php -r "try {
+    new PDO('mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+    echo '✅ Database ready';
+} catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
 
-# Wait for MySQL to become available (if used via docker-compose)
-if [ -n "$DB_HOST" ]; then
-  echo "⏳ Waiting for database connection ($DB_HOST:$DB_PORT)..."
-  until nc -z "$DB_HOST" "$DB_PORT"; do
-    sleep 2
-    echo "."
-  done
-  echo "✅ Database connection established."
-fi
-
-# Set correct permissions for Laravel
-echo "🔧 Setting permissions..."
-mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Ensure environment file exists
-if [ ! -f /var/www/html/.env ]; then
-  echo "⚠️ .env file not found! Copying from .env.example..."
-  cp /var/www/html/.env.example /var/www/html/.env
-fi
-
-# Optimize Laravel for production
-echo "⚙️ Running Laravel optimizations..."
-cd /var/www/html
-
-# Run Artisan commands safely
-php artisan key:generate --force || true
+echo "🚀 Running Laravel optimizations..."
 php artisan migrate --force || true
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
 
-echo "✅ Laravel is optimized and ready."
-
-# Enable Apache rewrite module (in case not active)
-a2enmod rewrite headers > /dev/null 2>&1
-
-# Restart Apache gracefully
-echo "🌐 Starting Apache with virtual host configuration..."
-apachectl -D FOREGROUND
+echo "✅ Starting Apache server..."
+apache2-foreground
