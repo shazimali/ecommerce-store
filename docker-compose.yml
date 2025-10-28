@@ -13,9 +13,12 @@ services:
     depends_on:
       - everyday_shop_mysql
     volumes:
+      # Laravel storage persistence
       - everyday_shop_storage:/var/www/html/storage
+      # Apache custom config
       - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
-      - ./docker/apache/ssl:/etc/apache2/ssl
+      # SSL certificates persistence (Let’s Encrypt)
+      - everyday_shop_certs:/etc/letsencrypt
 
   everyday_shop_mysql:
     image: mysql:8.0
@@ -42,3 +45,4 @@ services:
 volumes:
   everyday_shop_data:
   everyday_shop_storage:
+  everyday_shop_certs:
