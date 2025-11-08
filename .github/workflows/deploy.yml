@@ -75,6 +75,14 @@ jobs:
               -p 80:80 \
               ${{ env.IMAGE_NAME }}:latest; then
               echo "✅ Deployment successful!"
+               # 🔑 Ensure Laravel has a valid APP_KEY
+              docker exec everyday_shop_app bash -c '
+                if ! grep -q "APP_KEY=base64:" /var/www/everyday_shop/.env; then
+                  echo "⚙️ Generating new APP_KEY..."
+                  php artisan key:generate --force
+                else
+                  echo "✅ APP_KEY exists."
+                fi'
               docker rm -f everyday_shop_app_backup || true
             else
               echo "❌ Deployment failed. Rolling back..."
