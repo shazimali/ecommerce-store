@@ -71,6 +71,7 @@ jobs:
             if docker run -d \
               --name everyday_shop_app \
               --env-file /var/www/everyday_shop/.env \
+              --network global_network \
               -p 80:80 \
               ${{ env.IMAGE_NAME }}:latest; then
               echo "✅ Deployment successful!"
