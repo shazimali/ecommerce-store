@@ -6,15 +6,15 @@ services:
     container_name: everyday_shop_app
     restart: always
     env_file:
-      - .env
+      - /var/www/everyday_shop/.env # Your manually created .env
     ports:
       - "8080:80"
     networks:
       - global_network
     volumes:
-      # Persistent Laravel storage and cache
-      - everyday_shop_storage:/var/wwww/everyday_shop/storage
-      - everyday_shop_cache:/var/wwww/everyday_shop/bootstrap/cache
+      - everyday_shop_storage:/var/www/everyday_shop/storage
+      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
 
 networks:
   global_network:

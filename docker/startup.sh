@@ -15,9 +15,9 @@ php artisan view:cache
 php artisan optimize
 
 # Ensure correct permissions
-mkdir -p /var/wwww/everyday_shop/storage /var/wwww/everyday_shop/bootstrap/cache
-chown -R www-data:www-data /var/wwww/everyday_shop
-chmod -R 775 /var/wwww/everyday_shop/storage /var/wwww/everyday_shop/bootstrap/cache
+mkdir -p /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache
+chown -R www-data:www-data /var/www/everyday_shop
+chmod -R 775 /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache
 
 echo "✅ Starting Apache server..."
 apache2-foreground

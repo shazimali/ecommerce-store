@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite headers ssl \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/wwww/everyday_shop
+WORKDIR /var/www/everyday_shop
 
 # Copy Laravel app from previous stages
 COPY --from=vendor /app ./
@@ -41,9 +41,9 @@ COPY docker/startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
 # Ensure correct permissions
-RUN mkdir -p /var/wwww/everyday_shop/storage /var/wwww/everyday_shop/bootstrap/cache \
-    && chown -R www-data:www-data /var/wwww/everyday_shop \
-    && chmod -R 775 /var/wwww/everyday_shop/storage /var/wwww/everyday_shop/bootstrap/cache
+RUN mkdir -p /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/everyday_shop \
+    && chmod -R 775 /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache
 
 EXPOSE 80
 CMD ["startup.sh"]
