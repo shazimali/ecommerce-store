@@ -58,7 +58,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            cd /var/www/everyday_shops
+            cd /var/www/everyday_shop
 
             echo "📦 Pulling latest image..."
             docker pull ${{ env.IMAGE_NAME }}:latest
@@ -70,7 +70,7 @@ jobs:
             echo "🚀 Starting new container..."
             if docker run -d \
               --name everyday_shop_app \
-              --env-file /var/www/everyday_shops/.env \
+              --env-file /var/www/everyday_shop/.env \
               -p 80:80 \
               ${{ env.IMAGE_NAME }}:latest; then
               echo "✅ Deployment successful!"

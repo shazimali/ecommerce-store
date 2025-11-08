@@ -1,37 +1,25 @@
 version: "3.9"
+
 services:
   everyday_shop_app:
-    build: .
+    image: shazimali/everyday-shop:latest
     container_name: everyday_shop_app
     restart: always
     env_file:
       - .env
     ports:
-      - "80:80"
-    depends_on:
-      - everyday_shop_mysql
-
-  everyday_shop_mysql:
-    image: mysql:8.0
-    container_name: everyday_shop_mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: Root@!!1
-      MYSQL_DATABASE: everyday_shop_db
+      - "8080:80"
+    networks:
+      - global_network
     volumes:
-      - everyday_shop_data:/var/lib/mysql
+      # Persistent Laravel storage and cache
+      - everyday_shop_storage:/var/www/everyday_shop/storage
+      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
 
-  everyday_shop_phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: everyday_shop_phpmyadmin
-    restart: always
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: everyday_shop_mysql
-      PMA_USER: root
-      PMA_PASSWORD: Root@!!1
-      UPLOAD_LIMIT: 300M
+networks:
+  global_network:
+    external: true
 
 volumes:
-  everyday_shop_data:
+  everyday_shop_storage:
+  everyday_shop_cache:
