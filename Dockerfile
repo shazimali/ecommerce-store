@@ -30,6 +30,15 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite headers ssl \
     && rm -rf /var/lib/apt/lists/*
 
+# Enable Apache modules
+RUN a2enmod rewrite headers
+
+# 4️⃣ ✅ Add this line to fix FQDN warning
+RUN echo "ServerName everydayplastic.co" >> /etc/apache2/apache2.conf
+
+# 5️⃣ Copy Apache virtual host config
+COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
 WORKDIR /var/www/everyday_shop
 
 # Copy Laravel app from previous stages
