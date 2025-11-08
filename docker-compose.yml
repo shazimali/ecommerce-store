@@ -13,8 +13,8 @@ services:
       - global_network
     volumes:
       # Persistent Laravel storage and cache
-      - everyday_shop_storage:/var/www/everyday_shop/storage
-      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      - everyday_shop_storage:/var/wwww/everyday_shop/storage
+      - everyday_shop_cache:/var/wwww/everyday_shop/bootstrap/cache
 
 networks:
   global_network:
