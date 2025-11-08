@@ -61,11 +61,11 @@ jobs:
             cd /var/wwww/everyday_shop
 
             echo "📦 Pulling latest image..."
-            sudo docker pull ${{ env.IMAGE_NAME }}:latest
+            docker pull ${{ env.IMAGE_NAME }}:latest
 
             echo "📋 Backing up current container..."
-            sudo docker stop everyday_shop_app || true
-            sudo docker rename everyday_shop_app everyday_shop_app_backup || true
+            docker stop everyday_shop_app || true
+            docker rename everyday_shop_app everyday_shop_app_backup || true
 
             echo "🚀 Starting new container..."
             if docker run -d \
@@ -74,10 +74,10 @@ jobs:
               -p 80:80 \
               ${{ env.IMAGE_NAME }}:latest; then
               echo "✅ Deployment successful!"
-              sudo docker rm -f everyday_shop_app_backup || true
+              docker rm -f everyday_shop_app_backup || true
             else
               echo "❌ Deployment failed. Rolling back..."
-              sudo docker rm -f everyday_shop_app || true
-              sudo docker rename everyday_shop_app_backup everyday_shop_app || true
-              sudo docker start everyday_shop_app
+              docker rm -f everyday_shop_app || true
+              docker rename everyday_shop_app_backup everyday_shop_app || true
+              docker start everyday_shop_app
             fi
