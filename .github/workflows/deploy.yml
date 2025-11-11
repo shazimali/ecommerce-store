@@ -75,7 +75,7 @@ jobs:
               -v everyday_shop_storage:/var/www/everyday_shop/storage \
               -v everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache \
               --network global_network \
-              -p 80:80 \
+              -p 8080:80 \
               ${{ env.IMAGE_NAME }}:latest; then
 
               echo "✅ Deployment successful!"
