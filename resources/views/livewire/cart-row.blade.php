@@ -32,7 +32,7 @@
             </div>      
     </div>
     <div class="lg:hidden md:hidden sm:hidden xs:block">
-            <div class="py-2 border-b border-secondary dark:border-slate-800 dark:text-white mx-2 grid grid-cols-[20%_65%_10%] gap-2">
+            <div class="py-2 border-b border-secondary dark:border-slate-800 dark:text-white mx-2 grid grid-cols-[20%_65%_10%]  gap-2">
                     <div>
                             <img class="" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}"> 
                     </div>
@@ -54,7 +54,7 @@
                     <div>
                             <div class="flex flex-col">
                                     <button wire:click="decreaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-2 py-2">-</button>
-                                    <input type="text" value="{{ $crt['quantity'] }}" class="bg-secondary text-black text-xs border-none text-center w-10" readonly>
+                                    <input type="text" value="{{ $crt['quantity'] }}" class="bg-secondary text-black text-xs border-none text-center w-8" readonly>
                                     <button wire:click="increaseQty('{{ $crt['slug'] }}','{{ $crt['color'] }}')" wire:loading:attr="disabled" class="bg-primary text-white text-xs px-2 py-2">+</button>
                     
                             </div>

@@ -1,6 +1,6 @@
 <div class="py-5 px-8">
     <div class="text-2xl font-semibold dark:text-white">Your Cart</div>
-    <div class="grid grid-cols-[68%_30%] gap-5">
+    <div class="grid lg:grid-cols-[68%_30%] md:grid-cols-[68%_30%] sm:grid-cols-1 xs:grid-cols-1 gap-5">
             <div>
                     @if(count($cartItems))
                     @foreach ($cartItems as $crt)
