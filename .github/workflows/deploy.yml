@@ -94,6 +94,12 @@ jobs:
               echo "🔁 Running migrations..."
               docker exec everyday_shop_app php artisan migrate --force || true
 
+              echo "🔗 Fixing storage symlink..."
+              docker exec everyday_shop_app php artisan storage:link || true
+
+              echo "🧹 Clearing Laravel caches..."
+              docker exec everyday_shop_app php artisan optimize:clear || true
+
             else
               echo "❌ Deployment failed. Rolling back..."
               docker rm -f everyday_shop_app || true
