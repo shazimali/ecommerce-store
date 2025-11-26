@@ -20,7 +20,7 @@ class CollectionsListResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'image' => getWebsiteUrl() . Storage::url($this->image),
-            'mob_image' => getWebsiteUrl() . Storage::url($this->image),
+            'mob_image' => getWebsiteUrl() . Storage::url($this->mob_image),
             'order' => $this->order,
             'status' => $this->status,
             'position' => $this->position,
