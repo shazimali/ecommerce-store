@@ -1,7 +1,14 @@
 # ============================================
 # Stage 1: Composer dependencies
 # ============================================
-FROM composer:2 AS vendor
+FROM php:8.2-cli AS vendor
+
+RUN apt-get update && apt-get install -y \
+    git zip unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Composer from official composer image
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
