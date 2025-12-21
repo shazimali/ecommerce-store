@@ -32,12 +32,12 @@
                         <i class="fa-solid fa-phone text-primary"></i>
                         <a href="#" class="hover:text-primary">{{ website()->phone }}</a>
                     </div>
-                    {{-- @if (website()->phone1) --}}
+                    @if (website()->phone1)
                     <div class="mt-3">
                         <i class="fa-solid fa-phone text-primary"></i>
                         <a href="#" class="hover:text-primary">{{ website()->phone1 }}</a>
                     </div>
-                    {{-- @endif --}}
+                    @endif
                 </div>
                 <div>
                     <h1 class="font-bold text-2xl mb-3">Quick Links</h1>
