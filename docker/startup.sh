@@ -7,6 +7,9 @@ until php -r "try {
     getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
     echo '✅ Database ready'; } catch (Exception \$e) { echo '.'; sleep(3); }"; do :; done
 
+echo "🔗 Ensuring storage symlink..."
+php artisan storage:link || true
+
 echo "🚀 Running Laravel optimizations..."
 php artisan migrate --force || true
 php artisan config:cache
