@@ -1,7 +1,10 @@
-vendor
-node_modules
-.env
 .git
-storage/logs/*
-bootstrap/cache/*.php
-npm-debug.log
+.gitignore
+node_modules
+vendor
+storage/logs
+storage/framework
+.env
+tests
+README.md
+docker-compose.yml

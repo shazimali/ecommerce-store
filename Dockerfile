@@ -1,65 +1,79 @@
 # ============================================
-# Stage 1: Composer dependencies
+# Stage 1: Composer dependencies (CACHEABLE)
 # ============================================
-FROM php:8.2-cli AS vendor
+FROM composer:2 AS vendor
 
-RUN apt-get update && apt-get install -y \
-    git zip unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Composer from official composer image
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
-COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Copy ONLY composer files first
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts
+
+# Copy rest of PHP source
+COPY . .
 
 # ============================================
-# Stage 2: Node (for Livewire/Vite assets)
+# Stage 2: Frontend build (CACHEABLE)
 # ============================================
 FROM node:18-alpine AS frontend
-WORKDIR /app
-COPY . .
-RUN npm install && npm run build || echo "⚠️ Frontend build skipped (no build script found)"
 
+WORKDIR /app
+
+# Copy ONLY frontend dependency files first
+COPY package.json package-lock.json ./
+
+RUN npm ci --no-audit --no-fund || echo "⚠️ No frontend deps"
+
+# Copy rest of frontend files
+COPY . .
+
+RUN npm run build || echo "⚠️ Frontend build skipped"
 
 # ============================================
 # Stage 3: Final Laravel production image
 # ============================================
 FROM php:8.2-apache
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip vim nano libpng-dev libjpeg-dev libfreetype6-dev \
-    libzip-dev libxml2-dev libicu-dev libonig-dev certbot python3-certbot-apache \
+    git curl zip unzip \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev libxml2-dev libicu-dev libonig-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring bcmath gd zip intl \
-    && a2enmod rewrite headers ssl \
+    && docker-php-ext-install \
+    pdo_mysql \
+    mbstring \
+    bcmath \
+    gd \
+    zip \
+    intl \
+    && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable Apache modules
-RUN a2enmod rewrite headers
-
-# 4️⃣ ✅ Add this line to fix FQDN warning
 RUN echo "ServerName everydayplastic.co" >> /etc/apache2/apache2.conf
-
-# 5️⃣ Copy Apache virtual host config
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /var/www/everyday_shop
 
-# Copy Laravel app from previous stages
+# Copy backend + vendor
 COPY --from=vendor /app ./
+
+# Copy built frontend assets only
 COPY --from=frontend /app/public ./public
 
-# Copy startup script
 COPY docker/startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
-# Ensure correct permissions
-RUN mkdir -p /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache \
-    && chown -R www-data:www-data /var/www/everyday_shop \
-    && chmod -R 775 /var/www/everyday_shop/storage /var/www/everyday_shop/bootstrap/cache
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data . \
+    && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
 CMD ["startup.sh"]
