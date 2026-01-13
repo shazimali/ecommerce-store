@@ -11,9 +11,11 @@ function website()
 {
 
     $domain =  request()->headers->get('host');
+
     $website =  Website::active()->where('domain', $domain)
         ->with('categories', 'banners', 'social_medias', 'collections')
         ->first();
+
     if ($website) {
         return $website;
     }
