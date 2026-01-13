@@ -84,7 +84,6 @@ jobs:
             if docker run -d \
               --name everyday_shop_app \
               --env-file /var/www/everyday_shop/.env \
-              -v /var/www/everyday_shop/.env:/var/www/everyday_shop/.env \
               -v everyday_shop_storage:/var/www/everyday_shop/storage \
               -v everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache \
               --network global_network \
@@ -94,24 +93,21 @@ jobs:
               echo "✅ Deployment successful!"
               docker rm -f everyday_shop_app_backup || true
 
-              echo "🗝️ Checking APP_KEY..."
+              echo "🧹 Clearing Laravel caches..."
+              docker exec everyday_shop_app php artisan optimize:clear
+
+              echo "🗝️ Ensuring APP_KEY exists..."
               docker exec everyday_shop_app bash -c '
-                if ! grep -q "APP_KEY=base64:" /var/www/everyday_shop/.env; then
-                  echo "⚙️ Generating new APP_KEY..."
+                if [ -z "$APP_KEY" ]; then
+                  echo "⚙️ Generating APP_KEY..."
                   php artisan key:generate --force
                 else
                   echo "✅ APP_KEY already set."
                 fi
               '
 
-              # echo "🔁 Running migrations..."
-              # docker exec everyday_shop_app php artisan migrate --force || true
-
-              # echo "🔗 Fixing storage symlink..."
-              # docker exec everyday_shop_app php artisan storage:link || true
-
-              # echo "🧹 Clearing Laravel caches..."
-              # docker exec everyday_shop_app php artisan optimize:clear || true
+              echo "🔁 Restarting container to apply env..."
+              docker restart everyday_shop_app
 
             else
               echo "❌ Deployment failed. Rolling back..."
@@ -119,3 +115,5 @@ jobs:
               docker rename everyday_shop_app_backup everyday_shop_app || true
               docker start everyday_shop_app
             fi
+
+            
