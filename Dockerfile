@@ -30,12 +30,12 @@ WORKDIR /app
 # Copy ONLY frontend dependency files first
 COPY package.json package-lock.json ./
 
-RUN npm ci --no-audit --no-fund || echo "⚠️ No frontend deps"
+RUN npm ci --no-audit --no-fund
 
 # Copy rest of frontend files
 COPY . .
 
-RUN npm run build || echo "⚠️ Frontend build skipped"
+RUN npm run build
 
 # ============================================
 # Stage 3: Final Laravel production image
