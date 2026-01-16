@@ -33,7 +33,7 @@
 <section class="bg-white dark:bg-black text-black dark:text-secondary">
     @if(count(facilities()))
     <div class="lg:block md:block sm:block xs:hidden">
-        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-32 dark:text-secondary">
             @foreach (facilities() as $facility)
             <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
                 <span><i class="{{ $facility->class }} text-primary text-5xl"></i></span>
