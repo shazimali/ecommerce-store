@@ -76,31 +76,26 @@ jobs:
             echo "📦 Pulling latest image..."
             docker pull ${{ env.IMAGE_NAME }}:latest
 
-            echo "📋 Backing up current container..."
+            echo "🧹 Removing old backup container if exists..."
+            docker rm -f everyday_shop_app_backup || true
+
+            echo "🛑 Stopping current container..."
             docker stop everyday_shop_app || true
+
+            echo "📦 Creating backup of current container..."
             docker rename everyday_shop_app everyday_shop_app_backup || true
 
             echo "🚀 Starting new container..."
-
-            docker stop everyday_shop_app || true
-            docker rm everyday_shop_app || true
-            docker volume rm everyday_shop_cache || true
-
-            if docker run -d \
+            docker run -d \
               --name everyday_shop_app \
               --env-file /var/www/everyday_shop/.env \
               -v everyday_shop_storage:/var/www/everyday_shop/storage \
               --network global_network \
               -p 8080:80 \
-              ${{ env.IMAGE_NAME }}:latest; then
+              ${{ env.IMAGE_NAME }}:latest
 
-              echo "✅ Deployment successful!"
+            echo "🧹 Clearing Laravel cache..."
+            docker exec everyday_shop_app php artisan optimize:clear
 
-              echo "🧹 Clearing Laravel cache..."
-              docker exec everyday_shop_app php artisan optimize:clear
-
-            else
-              echo "❌ Deployment failed"
-              exit 1
-            fi
+            echo "✅ Deployment successful!"
 
