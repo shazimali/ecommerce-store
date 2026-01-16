@@ -42,6 +42,7 @@
             @endforeach    
         </div>
     </div>
+
     @endif
     @if(count($trending_products))
       <div class="mt-16 text-center">
