@@ -98,4 +98,5 @@ jobs:
             docker exec everyday_shop_app php artisan optimize:clear
 
             echo "✅ Deployment successful!"
+            
 
