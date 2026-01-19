@@ -9,6 +9,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Country extends Model
 {
 
+    protected $fillable = [
+        'name',
+        'iso',
+        'iso3',
+        'dial',
+        'currency',
+        'currency_name',
+        'created_at',
+        'updated_at'
+    ];
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_country', 'category_id', 'country_id');
