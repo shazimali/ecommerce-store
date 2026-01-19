@@ -37,7 +37,7 @@ function getWebsiteUrl()
 }
 function getLocation()
 {
-    $country = Country::whereId(167)->first(); // default country
+    $country = Country::where('iso', 'PK')->first(); // default country
     // if (Cache::has('countryCode')) {
     //     $country = Country::where('iso', Cache::get('countryCode'))->first();
     // } else {
