@@ -108,12 +108,24 @@ class CartManagementService
 
     static public function getCartItemsFromCookies()
     {
-        $cart_items = json_decode(Cookie::get('cart_items'), true);
-        if (!$cart_items) {
-            $cart_items = [];
+        // $cart_items = json_decode(Cookie::get('cart_items'), true);
+        // if (!$cart_items) {
+        //     $cart_items = [];
+        // }
+
+        // return $cart_items;
+
+        // 1. Try queued cookies (same request)
+        foreach (Cookie::getQueuedCookies() as $cookie) {
+            if ($cookie->getName() === 'cart_items') {
+                return json_decode($cookie->getValue(), true) ?? [];
+            }
         }
 
-        return $cart_items;
+        // 2. Fallback to request cookies
+        $cart_items = json_decode(Cookie::get('cart_items'), true);
+
+        return is_array($cart_items) ? $cart_items : [];
     }
 
     static public function clearCartItems()
