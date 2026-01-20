@@ -83,6 +83,7 @@
             @endforeach
         </div>
     @endif
+    
     <div class="mt-16 text-center">
         <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
     </div>
