@@ -17,8 +17,62 @@ env:
   IMAGE_NAME: shazimali/everyday-shop
   IMAGE_TAG: latest
 
+# ------------------------------------------------
+# 1️⃣ TEST JOB (BLOCKS DEPLOY ON FAILURE)
+# ------------------------------------------------
+
 jobs:
+  
+  test:
+    name: 🧪 Run Laravel Tests (MySQL)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: testing_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: 🧱 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, pdo, pdo_mysql
+          coverage: none
+
+      - name: 📦 Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: ⚙️ Prepare testing environment
+        run: |
+          cp .env.testing .env
+          php artisan key:generate
+          php artisan migrate:fresh --force
+
+      - name: 🧪 Run tests
+        run: php artisan test
+
+# ------------------------------------------------
+# 2️⃣ BUILD & DEPLOY JOB (ONLY IF TESTS PASS)
+# ------------------------------------------------
+
   build-and-deploy:
+    name: 🚀 Build & Deploy to VPS
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -98,5 +152,5 @@ jobs:
             docker exec everyday_shop_app php artisan optimize:clear
 
             echo "✅ Deployment successful!"
-            
+
 
