@@ -3,6 +3,7 @@
 @section('content')
 @if($start_collection)
 <div x-data="{ isOpen: true }">
+    
     <dialog id="dialog" 
             aria-labelledby="dialog-title" 
             class="fixed inset-0 m-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent p-0 backdrop:bg-transparent z-50"
@@ -83,7 +84,7 @@
             @endforeach
         </div>
     @endif
-    
+
     <div class="mt-16 text-center">
         <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
     </div>
