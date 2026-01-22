@@ -16,11 +16,12 @@ class PagesService implements PagesInterface
 {
     public function getAll(Request $request)
     {
-        $page  = Page::paginate($request->item_per_page);
+        $query = Page::query();
         if ($request->search) {
-            $page->where('name', 'like', "%{$request->search}%")
+            $query->where('name', 'like', "%{$request->search}%")
                 ->orWhere('id', 'like', "%{$request->search}%");
         }
+        $page = $query->paginate($request->item_per_page);
         if ($page) {
             return PagesListResource::collection($page);
         }
