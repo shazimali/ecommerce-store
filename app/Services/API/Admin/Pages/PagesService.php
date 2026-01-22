@@ -18,7 +18,7 @@ class PagesService implements PagesInterface
     {
         $query = Page::query();
         if ($request->search) {
-            $query->where('name', 'like', "%{$request->search}%")
+            $query->where('title', 'like', "%{$request->search}%")
                 ->orWhere('id', 'like', "%{$request->search}%");
         }
         $page = $query->paginate($request->item_per_page);
