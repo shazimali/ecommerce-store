@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class subCategoryService implements subCategoryInterface
 {
+    use \App\Traits\FileUploadTrait;
     public function getAll(Request $request)
     {
         $search = $request->search;
@@ -81,10 +82,8 @@ class subCategoryService implements subCategoryInterface
                 'order' => $request->order,
             ];
             if ($request->hasFile('image')) {
-                if (Storage::exists($subCategory->image)) {
-                    Storage::delete($subCategory->image);
-                }
-                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+                $this->deleteFile($subCategory->image);
+                $data['image'] = $this->uploadFile($request->file('image'));
             }
             $subCategory->update($data);
             $subCategory->categories()->sync($request->categories);
@@ -100,9 +99,7 @@ class subCategoryService implements subCategoryInterface
 
         if ($subCategory) {
 
-            if (Storage::exists($subCategory->image)) {
-                Storage::delete($subCategory->image);
-            }
+            $this->deleteFile($subCategory->image);
             $subCategory->delete();
             return response()->json(['message' => 'SubCategory deleted successfully'], 200);
         } else {
