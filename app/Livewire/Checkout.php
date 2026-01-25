@@ -2,24 +2,13 @@
 
 namespace App\Livewire;
 
-use App\Events\AdminNotification;
-use App\Mail\OrderPlacedEmail;
-use App\Mail\UserRegisterEmail;
 use App\Models\City;
 use App\Models\Coupon;
-use App\Models\Order;
-use App\Models\OrderDetail;
-use App\Models\ProductColor;
-use App\Models\ProductHead;
-use App\Models\User;
 use App\Services\CartManagementService;
 use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Str;
 
 class Checkout extends Component
 {
@@ -37,7 +26,6 @@ class Checkout extends Component
     public $billing_address = '';
     public $city_id = '';
     public $lst_cod = [];
-    public $cities = [];
     public $country = 0;
     public $phone = '';
     public $postal_code = '';
@@ -74,8 +62,8 @@ class Checkout extends Component
             $this->billing_address = auth()->user()->billing_address;
             $this->city_id =  auth()->user()->city ? City::where('name', auth()->user()->city)->first()->id : null;
             $this->country = auth()->user()->country;
+            $this->country = auth()->user()->country;
         }
-        $this->cities = City::get();
         $this->cartItems = CartManagementService::getCartItemsFromCookies();
         $this->sub_total = CartManagementService::calculateGrandTotal($this->cartItems);
         $this->shipping_charges = getSettingVal('shipping_charges');
@@ -117,95 +105,45 @@ class Checkout extends Component
     //     $this->same_for_billing_address = !$this->same_for_billing_address;
     // }
 
-    public function completeOrder()
+    public function completeOrder(\App\Services\CheckoutService $checkoutService)
     {
         $this->validate($this->completeOrderRules);
-        $user = User::where('email', $this->email)->first();
 
-        if (!$user) {
-            $password = rand(10, 10000);
-            $user = User::create([
-                'email' => $this->email,
-                'name' => $this->first_name . ' ' . $this->last_name,
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'country' => getLocation()->id,
-                'type' => 'CUSTOMER',
-                'city_id' => $this->city_id,
-                'phone' => $this->phone,
-                'address' => $this->address,
-                'billing_address' => $this->same_for_billing_address ?  $this->address : $this->billing_address,
-                'password' => $password,
-            ]);
-
-            Mail::mailer('noreply')
-                ->to($this->email)
-                ->bcc(env('OWNER_EMAIL_ADDRESS'))
-                ->send(new UserRegisterEmail($this->email, $this->first_name, $password));
-        }
-        //placing order
-        $order = Order::create([
-            'user_id' => $user->id,
-            'order_id' => Order::get()->count() > 0 ? Order::latest()->first()->order_id + 1 : 1,
-            'order_status' => 'PLACED',
-            'sub_total' => $this->sub_total,
-            'total' => $this->total,
-            'shipping_charges' => $this->shipping_charges,
-            'free_shipping' => $this->is_shipping_free,
-            'coupon_id' => $this->coupon_id,
+        $validatedData = [
+            'email' => $this->email,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'address' => $this->address,
-            'billing_address' => $this->same_for_billing_address ?  $this->address : $this->billing_address,
-            'country_id' => getLocation()->id,
+            'phone' => $this->phone,
             'city_id' => $this->city_id,
-            'phone' => $this->phone
-        ]);
+            'resolved_billing_address' => $this->same_for_billing_address ?  $this->address : $this->billing_address,
+        ];
+        // try {
+            $checkoutService->processCheckout(
+                $validatedData,
+                $this->cartItems,
+                $this->sub_total,
+                $this->total,
+                $this->shipping_charges,
+                $this->is_shipping_free,
+                $this->coupon_id,
+                $this->coupon_discount
+            );
 
-
-        //storing order detail
-        foreach ($this->cartItems as $key => $cart_item) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'color_id' =>  ProductColor::where('color_name', $cart_item['color'])->first() ? ProductColor::where('color_name', $cart_item['color'])->first()->id : 0,
-                'product_id' => ProductHead::where('slug', $cart_item['slug'])->first()->id,
-                'currency' => $cart_item['currency'],
-                'quantity' => $cart_item['quantity'],
-                'unit_amount' => round($cart_item['unit_amount']),
-                'total_amount' => round($cart_item['total_amount']),
-            ]);
-        }
-
-        //storing shipment address
-        // $shipment = ShipmentAddress::create([
-        //     'user_id' => $user->id,
-        //     'country_id' => getLocation()->id,
-        //     'city_id' => $this->city_id,
-        //     'address' => $this->address,
-        //     'postal_code' => $this->postal_code,
-        //     'phone' => $this->phone
-        // ]);
-
-        $email_data['order'] = Order::where('id', $order->id)->first();
-        $email_data['order_detail'] = OrderDetail::where('order_id', $order->id)->get();
-        $email_data['user_detail'] = $user;
-        $email_data['coupon_discount_amount'] = $email_data['order']->sub_total / 100 * $this->coupon_discount;
-        $email_data['coupon_discount'] = $this->coupon_discount;
-
-        Mail::mailer('noreply')
-            ->to($this->email)
-            ->bcc(env('OWNER_EMAIL_ADDRESS'))
-            ->send(new OrderPlacedEmail($email_data));
-
-        $this->order_completed = true;
-        event(new AdminNotification('You have a new order ' . 'ED#' . $order->id));
-        CartManagementService::clearCartItems();
-        $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
-        $this->dispatch('update-cart', data: $data);
-        $this->dispatch('cart-refresh');
+            $this->order_completed = true;
+            $data = ['type' => 'success', 'message' => 'Order Placed successfully'];
+            $this->dispatch('update-cart', data: $data);
+            $this->dispatch('cart-refresh');
+        // } catch (\Exception $e) {
+        //     // Log error or handle it. For now, maybe flash error?
+        //     session()->flash('error', 'Something went wrong. Please try again.');
+        // }
     }
 
     public function render()
     {
-        return view('livewire.checkout');
+        return view('livewire.checkout', [
+            'cities' => City::get()
+        ]);
     }
 }
