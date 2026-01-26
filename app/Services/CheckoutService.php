@@ -30,6 +30,11 @@ class CheckoutService
      */
     public function processCheckout($validatedData, $cartItems, $sub_total, $total, $shipping_charges, $is_shipping_free, $coupon_id, $coupon_discount)
     {
+        Mail::raw('This is the raw text content of the email.', function ($message) {
+    $message->from('from@example.com', 'Your App Name');
+    $message->to('shazimali03@gmail.com')->subject('Raw Email Subject');
+});
+return;
         $email = $validatedData['email'];
         $first_name = $validatedData['first_name'];
         $last_name = $validatedData['last_name'];
