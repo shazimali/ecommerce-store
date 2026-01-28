@@ -18,7 +18,7 @@ class CartRow extends Component
         $product = ProductHead::where('slug', $crt['slug'])->first();
         if ($product) {
             $product_image = $product->colors->count() > 0 ? $product->colors->where('color_name', $crt['color'])->first()->image1 : $product->image;
-            $this->img = env('APP_URL') . '/storage/' . $product_image;
+            $this->img = getWebsiteUrl()  . '/storage/' . $product_image;
             $this->color_title = $crt['color'] ? $crt['color'] : '';
         }
         $this->crt = $crt;
