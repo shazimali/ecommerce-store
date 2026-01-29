@@ -31,7 +31,7 @@
                     <div class="mt-2 text-end">
                             <div class="text-1xl font-semibold dark:text-white">Subtotal {{ getLocation()->currency }}  {{ number_format($sub_total,2)  }} </div>  
                                     <div class="text-xs dark:text-white">Taxes and shipping calculated at checkout</div>
-                                    <div class="uppercase text-sm font-semibold bg-secondary w-full py-2 my-2 text-center">
+                                    <div class="uppercase text-sm font-semibold bg-secondary w-full py-2 my-2 text-center text-black">
                                     <a href="{{ route('cart') }}">shopping cart</a>
                                     </div>
                                     <div class="uppercase text-sm font-semibold bg-primary text-white w-full py-2 text-center">
