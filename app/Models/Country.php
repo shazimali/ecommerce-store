@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Country extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     protected $fillable = [
         'name',
