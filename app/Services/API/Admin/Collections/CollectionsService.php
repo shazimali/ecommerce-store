@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Storage;
 
 class CollectionsService implements CollectionInterface
 {
+    use \App\Traits\FileUploadTrait;
+
     public function getAll(Request $request)
     {
         $search = $request->search;
@@ -50,10 +52,10 @@ class CollectionsService implements CollectionInterface
     {
         $data = $request->all();
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+            $data['image'] = $this->uploadFile($request->file('image'), '/', 'public');
         }
         if ($request->hasFile('mob_image')) {
-            $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
+            $data['mob_image'] = $this->uploadFile($request->file('mob_image'), '/', 'public');
         }
 
         $collection = Collection::create($data);
@@ -87,15 +89,15 @@ class CollectionsService implements CollectionInterface
             ];
             if ($request->hasFile('image')) {
                 if (!is_null($collection->image)) {
-                    Storage::disk('public')->delete($collection->image);
+                    $this->deleteFile($collection->image, 'public');
                 }
-                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+                $data['image'] = $this->uploadFile($request->file('image'), '/', 'public');
             }
             if ($request->hasFile('mob_image')) {
                 if (!is_null($collection->mob_image)) {
-                    Storage::disk('public')->delete($collection->mob_image);
+                    $this->deleteFile($collection->mob_image, 'public');
                 }
-                $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
+                $data['mob_image'] = $this->uploadFile($request->file('mob_image'), '/', 'public');
             }
             $collection->update($data);
             $collection->websites()->sync($request->websites);
@@ -112,10 +114,10 @@ class CollectionsService implements CollectionInterface
             $collection->websites()->sync([]);
             $collection->products()->sync([]);
             if (!is_null($collection->image)) {
-                Storage::disk('public')->delete($collection->image);
+                $this->deleteFile($collection->image, 'public');
             }
             if (!is_null($collection->mob_image)) {
-                Storage::disk('public')->delete($collection->mob_image);
+                $this->deleteFile($collection->mob_image, 'public');
             }
             $collection->delete();
             return  response()->json(['message' => 'Category deleted successfully.'], 200);
