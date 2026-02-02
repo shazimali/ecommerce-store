@@ -87,13 +87,13 @@ class CollectionsService implements CollectionInterface
             ];
             if ($request->hasFile('image')) {
                 if (!is_null($collection->image)) {
-                    Storage::delete($collection->image);
+                    Storage::disk('public')->delete($collection->image);
                 }
                 $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
             }
             if ($request->hasFile('mob_image')) {
                 if (!is_null($collection->mob_image)) {
-                    Storage::delete($collection->mob_image);
+                    Storage::disk('public')->delete($collection->mob_image);
                 }
                 $data['mob_image'] = Storage::disk('public')->put('/', $request->file('mob_image'));
             }
@@ -112,10 +112,10 @@ class CollectionsService implements CollectionInterface
             $collection->websites()->sync([]);
             $collection->products()->sync([]);
             if (!is_null($collection->image)) {
-                Storage::delete($collection->image);
+                Storage::disk('public')->delete($collection->image);
             }
             if (!is_null($collection->mob_image)) {
-                Storage::delete($collection->mob_image);
+                Storage::disk('public')->delete($collection->mob_image);
             }
             $collection->delete();
             return  response()->json(['message' => 'Category deleted successfully.'], 200);
