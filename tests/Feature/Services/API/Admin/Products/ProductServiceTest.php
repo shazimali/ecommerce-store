@@ -28,8 +28,7 @@ class ProductServiceTest extends TestCase
         ProductHead::factory()->count(15)->create();
 
         // Act
-        $request = Request::create('/api/admin/products', 'GET', ['items_per_page' => 10]);
-        $response = $this->productService->getAll($request);
+        $response = $this->productService->getAll([], 10);
 
         // Assert
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
@@ -59,12 +58,10 @@ class ProductServiceTest extends TestCase
         ];
 
         $image = \Illuminate\Http\UploadedFile::fake()->image('product.jpg');
-        
-        $request = \App\Http\Requests\API\Admin\Products\StoreProductRequest::create('/api/admin/products', 'POST', $data);
-        $request->files->set('image', $image);
+        $data['image'] = $image;
 
         // Act
-        $response = $this->productService->store($request);
+        $response = $this->productService->store($data);
 
         // Assert
         $this->assertEquals(200, $response->getStatusCode());
@@ -77,8 +74,6 @@ class ProductServiceTest extends TestCase
         
         $product = ProductHead::where('slug', 'test-product')->first();
         $this->assertNotNull($product->image);
-        // We can't easily check actual file storage with simple fake() if method uses custom upload logic, 
-        // but we can check the DB record has a path.
         
         $this->assertTrue($product->sub_categories->contains($subCategory->id));
     }
@@ -88,7 +83,6 @@ class ProductServiceTest extends TestCase
         // Arrange
         Storage::fake('public');
         $product = ProductHead::factory()->create();
-        // Ensure no sub-category attached to allow deletion
         
         // Act
         $response = $this->productService->destroy($product->id);
@@ -110,63 +104,9 @@ class ProductServiceTest extends TestCase
         $response = $this->productService->destroy($product->id);
 
         // Assert
-        $this->assertEquals(201, $response->getStatusCode()); // Service returns 201 on error
+        $this->assertEquals(201, $response->getStatusCode()); 
         $this->assertEquals('Product attached with sub category, can not delete.', $response->getData()->message);
         $this->assertDatabaseHas('product_heads', ['id' => $product->id]);
-    }
-
-    public function test_store_price()
-    {
-        // Arrange
-        $product = ProductHead::factory()->create();
-        $country = \App\Models\Country::factory()->create();
-        
-        $data = [
-            'product_head_id' => $product->id,
-            'country_id' => $country->id,
-            'price' => 100.50,
-            'discount' => 10,
-        ];
-        
-        $request = \App\Http\Requests\API\Admin\Products\StoreProductPriceRequest::create('/api/admin/products/prices', 'POST', $data);
-        
-        // Act
-        $response = $this->productService->storePrice($request);
-
-        // Assert
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Product price saved successfully.', $response->getData()->message);
-        
-        $this->assertDatabaseHas('product_head_prices', [
-            'product_head_id' => $product->id,
-            'country_id' => $country->id,
-            'price' => 100.50,
-        ]);
-    }
-
-    public function test_update_price()
-    {
-        // Arrange
-        $price = \App\Models\ProductHeadPrice::factory()->create();
-        
-        $data = [
-            'price' => 200.00,
-            'discount' => 20,
-        ];
-        
-        $request = \App\Http\Requests\API\Admin\Products\UpdateProductPriceRequest::create('/api/admin/products/prices/' . $price->id, 'PUT', $data);
-        
-        // Act
-        $response = $this->productService->updatePrice($request, $price->id);
-
-        // Assert
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Product price updated successfully.', $response->getData()->message);
-        
-        $this->assertDatabaseHas('product_head_prices', [
-            'id' => $price->id,
-            'price' => 200.00,
-        ]);
     }
 
     public function test_edit_product()
@@ -180,32 +120,5 @@ class ProductServiceTest extends TestCase
         // Assert
         $this->assertInstanceOf(\App\Http\Resources\API\Admin\Products\ProductEditResource::class, $response);
         $this->assertEquals($product->id, $response->resource->id);
-    }
-
-    public function test_edit_price()
-    {
-        // Arrange
-        $price = \App\Models\ProductHeadPrice::factory()->create();
-        
-        // Act
-        $response = $this->productService->editPrice($price->id);
-
-        // Assert
-        $this->assertInstanceOf(\App\Http\Resources\API\Admin\Products\ProductPricesEditResource::class, $response);
-        $this->assertEquals($price->id, $response->resource->id);
-    }
-
-    public function test_delete_price()
-    {
-        // Arrange
-        $price = \App\Models\ProductHeadPrice::factory()->create();
-        
-        // Act
-        $response = $this->productService->deletePrice($price->id);
-
-        // Assert
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Product price deleted successfully.', $response->getData()->message);
-        $this->assertDatabaseMissing('product_head_prices', ['id' => $price->id]);
     }
 }
