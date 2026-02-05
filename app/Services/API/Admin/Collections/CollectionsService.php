@@ -21,10 +21,10 @@ class CollectionsService implements CollectionInterface
 {
     use \App\Traits\FileUploadTrait;
 
-    public function getAll(Request $request)
+    public function getAll(array $filters, int $perPage)
     {
-        $search = $request->search;
-        $country_id = $request->country_id;
+        $search = $filters['search'] ?? null;
+        $country_id = $filters['country_id'] ?? null;
 
         $query = Collection::query();
 
@@ -39,90 +39,106 @@ class CollectionsService implements CollectionInterface
             });
         });
 
-        return CollectionsListResource::collection($query->paginate($request->item_per_page));
+        return $query->paginate($perPage);
     }
+
     public function getAllExtra()
     {
-        return response()->json([
+        return [
             'websites' => WebsiteListResource::collection(Website::active()->get()),
             'products' => ProductListResource::collection(ProductHead::active()->get())
-        ], 200);
+        ];
     }
-    public function store(StoreCollectionRequest $request)
+
+    public function store(array $data)
     {
-        $data = $request->all();
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->uploadFile($request->file('image'), '/', 'public');
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['image'] = $this->uploadFile($data['image'], '/', 'public');
         }
-        if ($request->hasFile('mob_image')) {
-            $data['mob_image'] = $this->uploadFile($request->file('mob_image'), '/', 'public');
+        if (isset($data['mob_image']) && $data['mob_image'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['mob_image'] = $this->uploadFile($data['mob_image'], '/', 'public');
         }
 
         $collection = Collection::create($data);
-        $collection->products()->attach($request->products);
-        $collection->websites()->attach($request->websites);
-        if ($collection) {
-            return response()->json(['message' => 'Collection Stored Successfully '], 200);
-        } else {
-            return response()->json(['message' => 'Collection Not Stored'], 201);
+        
+        if (isset($data['products'])) {
+            $collection->products()->attach($data['products']);
         }
+        
+        if (isset($data['websites'])) {
+            $collection->websites()->attach($data['websites']);
+        }
+
+        return $collection;
     }
+
     public function edit(int $id)
     {
-        $collection = Collection::find($id);
-        if ($collection) {
-            return new CollectionEditResource($collection);
-        } else {
-            return response()->json(['message', 'Collection does not exist'], 201);
-        }
+        return Collection::find($id);
     }
-    public function update(UpdateCollectionRequest $request, int $id)
+
+    public function update(int $id, array $data)
     {
         $collection = Collection::find($id);
-        if ($collection) {
-            $data = [
-                'title' => $request->title,
-                'slug' => $request->slug,
-                'order' => $request->order,
-                'status' => $request->status,
-                'position' => $request->position
-            ];
-            if ($request->hasFile('image')) {
-                if (!is_null($collection->image)) {
-                    $this->deleteFile($collection->image, 'public');
-                }
-                $data['image'] = $this->uploadFile($request->file('image'), '/', 'public');
-            }
-            if ($request->hasFile('mob_image')) {
-                if (!is_null($collection->mob_image)) {
-                    $this->deleteFile($collection->mob_image, 'public');
-                }
-                $data['mob_image'] = $this->uploadFile($request->file('mob_image'), '/', 'public');
-            }
-            $collection->update($data);
-            $collection->websites()->sync($request->websites);
-            $collection->products()->sync($request->products);
-            return  response()->json(['message' => 'Collection updated successfully.'], 200);
-        } else {
-            return response()->json(['message' => 'Collection not found'], 201);
+        
+        if (!$collection) {
+            return null;
         }
-    }
-    public function destroy(int $id)
-    {
-        $collection = Collection::with('websites')->whereId($id)->first();
-        if ($collection) {
-            $collection->websites()->sync([]);
-            $collection->products()->sync([]);
+
+        $updateData = [
+            'title' => $data['title'],
+            'slug' => $data['slug'],
+            'order' => $data['order'],
+            'status' => $data['status'],
+            'position' => $data['position']
+        ];
+
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             if (!is_null($collection->image)) {
                 $this->deleteFile($collection->image, 'public');
             }
+            $updateData['image'] = $this->uploadFile($data['image'], '/', 'public');
+        }
+
+        if (isset($data['mob_image']) && $data['mob_image'] instanceof \Illuminate\Http\UploadedFile) {
             if (!is_null($collection->mob_image)) {
                 $this->deleteFile($collection->mob_image, 'public');
             }
-            $collection->delete();
-            return  response()->json(['message' => 'Category deleted successfully.'], 200);
-        } else {
-            return response()->json(['message' => 'Category not found'], 201);
+            $updateData['mob_image'] = $this->uploadFile($data['mob_image'], '/', 'public');
         }
+
+        $collection->update($updateData);
+
+        if (isset($data['websites'])) {
+            $collection->websites()->sync($data['websites']);
+        }
+        
+        if (isset($data['products'])) {
+            $collection->products()->sync($data['products']);
+        }
+
+        return $collection;
+    }
+
+    public function destroy(int $id)
+    {
+        $collection = Collection::with('websites')->whereId($id)->first();
+        
+        if (!$collection) {
+            return false;
+        }
+
+        $collection->websites()->sync([]);
+        $collection->products()->sync([]);
+        
+        if (!is_null($collection->image)) {
+            $this->deleteFile($collection->image, 'public');
+        }
+        
+        if (!is_null($collection->mob_image)) {
+            $this->deleteFile($collection->mob_image, 'public');
+        }
+        
+        return $collection->delete();
     }
 }

@@ -49,13 +49,13 @@ class CollectionsServiceTest extends TestCase
             'mob_image' => 'images/collection2_mob.jpg'
         ]);
 
-        $request = new Request([
-            'item_per_page' => 10
-        ]);
+        $filters = [];
+        $perPage = 10;
 
-        $result = $this->service->getAll($request);
+        $result = $this->service->getAll($filters, $perPage);
 
-        $this->assertEquals(2, $result->resource->count());
+        $this->assertInstanceOf(\Illuminate\Contracts\Pagination\LengthAwarePaginator::class, $result);
+        $this->assertEquals(2, $result->count());
     }
 
     public function test_store_creates_collection_with_relationships_and_images()
@@ -83,21 +83,14 @@ class CollectionsServiceTest extends TestCase
             'products' => [$product->id]
         ];
 
-        $request = new StoreCollectionRequest($data);
-        
-        $request->setMethod('POST');
-        $request->files->set('image', $data['image']);
-        $request->files->set('mob_image', $data['mob_image']);
+        $collection = $this->service->store($data);
 
-        $response = $this->service->store($request);
-
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertInstanceOf(Collection::class, $collection);
         $this->assertDatabaseHas('collections', [
             'title' => 'New Collection',
             'slug' => 'new-collection'
         ]);
         
-        $collection = Collection::where('slug', 'new-collection')->first();
         $this->assertCount(1, $collection->websites);
         $this->assertCount(1, $collection->products);
         
@@ -105,7 +98,7 @@ class CollectionsServiceTest extends TestCase
         Storage::disk('public')->assertExists($collection->mob_image);
     }
 
-    public function test_edit_returns_collection_resource()
+    public function test_edit_returns_collection_model()
     {
         $collection = Collection::create([
             'title' => 'Collection 1',
@@ -119,8 +112,8 @@ class CollectionsServiceTest extends TestCase
 
         $result = $this->service->edit($collection->id);
 
-        $this->assertInstanceOf(\App\Http\Resources\API\Admin\Collections\CollectionEditResource::class, $result);
-        $this->assertEquals($collection->id, $result->resource->id);
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEquals($collection->id, $result->id);
     }
 
     public function test_update_modifies_collection_and_relationships()
@@ -147,7 +140,6 @@ class CollectionsServiceTest extends TestCase
         $product = ProductHead::factory()->create();
 
         $data = [
-            'id' => $collection->id,
             'title' => 'Updated Title',
             'slug' => 'updated-slug',
             'status' => 'INACTIVE',
@@ -159,14 +151,9 @@ class CollectionsServiceTest extends TestCase
             'mob_image' => UploadedFile::fake()->image('new_mob.jpg')
         ];
 
-        $request = new UpdateCollectionRequest($data);
-        $request->setMethod('PUT');
-        $request->files->set('image', $data['image']);
-        $request->files->set('mob_image', $data['mob_image']);
+        $updatedCollection = $this->service->update($collection->id, $data);
 
-        $response = $this->service->update($request, $collection->id);
-
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertInstanceOf(Collection::class, $updatedCollection);
         $this->assertDatabaseHas('collections', [
             'id' => $collection->id,
             'title' => 'Updated Title',
@@ -208,9 +195,9 @@ class CollectionsServiceTest extends TestCase
 
         $collection->websites()->attach($website);
 
-        $response = $this->service->destroy($collection->id);
+        $result = $this->service->destroy($collection->id);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($result);
         $this->assertDatabaseMissing('collections', ['id' => $collection->id]);
         $this->assertDatabaseMissing('collection_website', [
             'collection_id' => $collection->id,
