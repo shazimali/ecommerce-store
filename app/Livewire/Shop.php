@@ -2,137 +2,120 @@
 
 namespace App\Livewire;
 
-use App\Models\Category;
-use App\Models\ProductColor;
-use App\Models\ProductHead;
-use App\Models\SubCategory;
 use App\Services\CartManagementService;
-use Carbon\Carbon;
+use App\Services\ShopService;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Shop extends Component
 {
-
     use WithPagination;
+
     public $categories;
     public $colors;
     public $category;
     public $sub_category;
     public $color;
-    public $price;
     public $sort_by;
     public $price_from;
     public $price_to;
     public $rating;
-    protected $queryString = ['category', 'sub_category', 'color', 'price', 'search', 'rating', 'sort_by', 'price_from'];
+    public $search;
 
-    public function mount()
+    protected $queryString = [
+        'category' => ['except' => ''],
+        'sub_category' => ['except' => ''],
+        'color' => ['except' => ''],
+        'search' => ['except' => ''],
+        'rating' => ['except' => ''],
+        'sort_by' => ['except' => ''],
+        'price_from' => ['except' => ''],
+        'price_to' => ['except' => ''],
+    ];
+
+    /**
+     * Initialize component and load initial filter data.
+     */
+    public function mount(ShopService $shopService)
     {
-        $this->categories = Category::get();
-        $this->colors = ProductColor::distinct()->select('color_name')->get();
-        $this->price_from = getSettingVal('shop_filter_price_from');
-        $this->price_to = getSettingVal('shop_filter_price_to');
+        $filterData = $shopService->getFilterData();
+        $this->categories = $filterData['categories'];
+        $this->colors = $filterData['colors'];
+        
+        $this->price_from = $this->price_from ?: getSettingVal('shop_filter_price_from');
+        $this->price_to = $this->price_to ?: getSettingVal('shop_filter_price_to');
     }
 
-
+    /**
+     * Add product to cart.
+     */
     public function addToCart($slug)
     {
         CartManagementService::addCartItems($slug, '');
-        $data = ['type' => 'success', 'message' => 'Item added successfully.'];
-        $this->dispatch('update-cart', data: $data);
+        
+        $this->dispatch('update-cart', data: [
+            'type' => 'success', 
+            'message' => 'Item added successfully.'
+        ]);
     }
 
-
+    /**
+     * Update filter values and reset pagination.
+     */
     public function updateFilter($type, $val)
     {
-        if ($type == 'category_type') {
-            $this->category = $val;
-            $this->sub_category = '';
+        switch ($type) {
+            case 'category_type':
+                $this->category = $val;
+                $this->sub_category = '';
+                break;
+            case 'sub_category_type':
+                $this->sub_category = $val;
+                break;
+            case 'color':
+                $this->color = $val;
+                break;
+            case 'rating':
+                $this->rating = $val;
+                break;
+            case 'price_from':
+                $this->price_from = $val;
+                break;
+            case 'price_to':
+                $this->price_to = $val;
+                break;
         }
-        if ($type == 'sub_category_type') {
-            $this->sub_category = $val;
-        }
-        if ($type == 'color') {
-            $this->color = $val;
-        }
-        if ($type == 'rating') {
-            $this->rating = $val;
-        }
-        if ($type == 'price') {
-            $this->price_from = $val;
-        }
+
+        $this->resetPage();
     }
 
+    /**
+     * Update sorting value and reset pagination.
+     */
     public function updateSortBy($val)
     {
         $this->sort_by = $val;
+        $this->resetPage();
     }
 
-    public function render()
+    /**
+     * Render the component with filtered products.
+     */
+    public function render(ShopService $shopService)
     {
-
-        $this->colors = ProductColor::distinct()->select('color_name')->get();
-
-        $query = ProductHead::query();
-
-        $query->active()->orderBy('order', 'ASC');
-
-        if (!empty($this->category) && $this->category != 'all') {
-
-            $sub_cat_ids = Category::where('slug', $this->category)->with('sub_categories')->first()->sub_categories->pluck('id');
-            $query->whereHas('sub_categories', function ($q) use ($sub_cat_ids) {
-                $q->whereIn('sub_category_id', $sub_cat_ids);
-            });
-        }
-        if ($this->sub_category) {
-
-            $sub_cat_id = SubCategory::where('slug', $this->sub_category)->first();
-            $query->whereHas('sub_categories', function ($q) use ($sub_cat_id) {
-                $q->where('sub_category_id', $sub_cat_id->id);
-            });
-        }
-        if ($this->color) {
-
-            $current_color = $this->color;
-            $query->whereHas('colors', function ($q) use ($current_color) {
-                $q->where('color_name', $current_color);
-            });
-        }
-        if ($this->rating) {
-            // $review_ids = Review::where('rating',$this->rating)->get()->pluck('id');
-            // $query->whereIn('id',$review_ids);
-        }
-
-        // if($this->price_from){
-
-        //     $query->whereHas('countries',function($q){
-        //         $q->where('price',$this->price_from);
-        //     });
-        // }
-
-        if ($this->sort_by) {
-            if ($this->sort_by == 'featured') {
-                $query->featured();
-            }
-            if ($this->sort_by == 'new') {
-                $query->new();
-            }
-            if ($this->sort_by == 'trending') {
-                $query->trending();
-            }
-
-            if ($this->sort_by == 'sale') {
-                $query->whereHas('price_detail', function ($q) {
-                    $q->WhereDate('discount_from', '<=', Carbon::today());
-                    $q->WhereDate('discount_to', '>=', Carbon::today());
-                });
-            }
-        }
-
+        $filters = [
+            'category' => $this->category,
+            'sub_category' => $this->sub_category,
+            'color' => $this->color,
+            'rating' => $this->rating,
+            'sort_by' => $this->sort_by,
+            'price_from' => $this->price_from,
+            'price_to' => $this->price_to,
+            'search' => $this->search,
+        ];
 
         return view('livewire.shop', [
-            'products' => $query->paginate(6)
+            'products' => $shopService->getProducts($filters)
         ]);
     }
 }

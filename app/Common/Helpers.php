@@ -38,56 +38,47 @@ function getWebsiteUrl()
 function getLocation()
 {
     $country = Country::where('iso', 'PK')->first(); // default country
-    // if (Cache::has('countryCode')) {
-    //     $country = Country::where('iso', Cache::get('countryCode'))->first();
-    // } else {
-    //     $loc =   Location::get(request()->ip());
-    //     if ($loc) {
-    //         Cache::put('countryCode', $loc->countryCode);
-    //         $country = Country::where('iso', $loc->countryCode)->first();
-    //     }
-    // }
+    
+    // Fallback if PK not found
+    if (!$country) {
+        $country = Country::first();
+    }
+    
     return $country;
 }
 
 function facilities()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->facilities()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+    
+    return $location->facilities()->get();
 }
 
 function header_pages()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->pages()->active()->header()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+
+    return $location->pages()->active()->header()->get();
 }
 
 function footer_pages()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->pages()->active()->footer()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+
+    return $location->pages()->active()->footer()->get();
 }
 
 function getSettingVal($key)
 {
-    $setting = Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
-    if ($setting) {
-        return $setting;
-    } else {
-        return 0;
-    }
+    $location = getLocation();
+    if (!$location) return 0;
+
+    $setting = Setting::where('country_id', $location->id)->where('key', $key)->first();
+    
+    return $setting ? $setting->value : 0;
 }
 
 function new_products() {}
