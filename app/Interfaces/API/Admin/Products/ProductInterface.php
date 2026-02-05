@@ -10,14 +10,10 @@ use Illuminate\Http\Request;
 
 interface ProductInterface
 {
-    public function getAll(Request $request);
-    public function store(StoreProductRequest $request);
+    public function getAll(array $filters, int $perPage);
+    public function store(array $data);
     public function edit(int $id);
-    public function update(UpdateProductRequest $request, int $id);
+    public function update(int $id, array $data);
     public function destroy(int $id);
-    public function getPricesByProductID(int $id);
-    public function storePrice(StoreProductPriceRequest $request);
-    public function updatePrice(UpdateProductPriceRequest $request, int $id);
-    public function deletePrice(int $id);
     public function getAllSubCategories();
 }
