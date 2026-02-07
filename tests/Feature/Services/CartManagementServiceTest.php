@@ -34,7 +34,7 @@ class CartManagementServiceTest extends TestCase
         ]);
 
         // Set location in session (in case getLocation uses session)
-        session(['country_id' => $this->testCountry->id]);
+        session(['country_id' => $this->testCountry->id, 'country_code' => 'PK']);
         session()->save();
     }
 
