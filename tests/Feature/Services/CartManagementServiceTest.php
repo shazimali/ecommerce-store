@@ -105,7 +105,7 @@ class CartManagementServiceTest extends TestCase
         // Remove Red
         $cart = CartManagementService::removeCartItem('test-product', 'Red');
         $this->assertCount(1, $cart);
-        $this->assertEquals('Blue', $cart[1]['color']);
+        $this->assertEquals('Blue', $cart[0]['color']);
     }
 
     public function test_it_can_clear_entire_cart()
