@@ -24,9 +24,9 @@ class CartManagementService
 
         if ($existing_items !== null) {
             $cart_items[$existing_items]['quantity']++;
-            $cart_items[$existing_items]['total_amount'] = $cart_items[$existing_items]['quantity'] * $cart_items[$existing_items]['unit_amount'];
+            $cart_items[$existing_items]['total_amount'] = round($cart_items[$existing_items]['quantity'] * $cart_items[$existing_items]['unit_amount']);
         } else {
-            $product = ProductHead::where('slug', $slug)->with(['price_detail', 'colors'])->first();
+            $product = ProductHead::where('slug', $slug)->with(['price_detail', 'price_detail.country', 'colors'])->first();
             
             if (!$product || !$product->price_detail) {
                 return count($cart_items);
@@ -134,17 +134,18 @@ class CartManagementService
 
     static public function getCartItemsFromCookies()
     {
-        // $cart_items = json_decode(Cookie::get('cart_items'), true);
-        // if (!$cart_items) {
-        //     $cart_items = [];
-        // }
-
-        // return $cart_items;
-
         // 1. Try queued cookies (same request)
+        $queued = Cookie::queued('cart_items');
+        if ($queued) {
+            $cart_items = json_decode($queued->getValue(), true);
+            return is_array($cart_items) ? $cart_items : [];
+        }
+
+        // Fallback for older versions or different implementations
         foreach (Cookie::getQueuedCookies() as $cookie) {
             if ($cookie->getName() === 'cart_items') {
-                return json_decode($cookie->getValue(), true) ?? [];
+                $cart_items = json_decode($cookie->getValue(), true);
+                return is_array($cart_items) ? $cart_items : [];
             }
         }
 
