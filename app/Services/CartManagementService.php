@@ -26,18 +26,30 @@ class CartManagementService
             $cart_items[$existing_items]['quantity']++;
             $cart_items[$existing_items]['total_amount'] = $cart_items[$existing_items]['quantity'] * $cart_items[$existing_items]['unit_amount'];
         } else {
-            $product = ProductHead::where('slug', $slug)->first();
+            $product = ProductHead::where('slug', $slug)->with(['price_detail', 'colors'])->first();
+            
+            if (!$product || !$product->price_detail) {
+                return count($cart_items);
+            }
+
             $price = $product->price_detail->price;
-            if ($product->price_detail->discount > 0 &&  ($product->price_detail->discount_from >= Carbon::today()->toDateString() || $product->price_detail->discount_to >= Carbon::today()->toDateString())) {
+            $today = Carbon::today()->toDateString();
+            
+            if ($product->price_detail->discount > 0 && 
+                $product->price_detail->discount_from <= $today && 
+                $product->price_detail->discount_to >= $today) {
                 $price = $product->price_detail->price - ($product->price_detail->price / 100 * $product->price_detail->discount);
             }
 
+            $productColor = $color ? $product->colors->where('color_name', $color)->first() : null;
+            $image = $productColor ? $productColor->image1 : $product->image;
+
             $cart_items[] = [
                 'slug' => $product->slug,
-                'color' => $color ? $color : '',
+                'color' => $color ?: '',
                 'title' => $product->title,
-                'currency' => $product->price_detail->country->currency,
-                'image' => $product->colors->count() > 0 ? $product->colors->where('color_name', $color)->first()->image1 : $product->image,
+                'currency' => $product->price_detail->country->currency ?? '',
+                'image' => $image,
                 'quantity' => 1,
                 'unit_amount' => $price,
                 'total_amount' => $price

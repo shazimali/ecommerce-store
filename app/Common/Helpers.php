@@ -37,57 +37,83 @@ function getWebsiteUrl()
 }
 function getLocation()
 {
-    $country = Country::where('iso', 'PK')->first(); // default country
-    // if (Cache::has('countryCode')) {
-    //     $country = Country::where('iso', Cache::get('countryCode'))->first();
-    // } else {
-    //     $loc =   Location::get(request()->ip());
-    //     if ($loc) {
-    //         Cache::put('countryCode', $loc->countryCode);
-    //         $country = Country::where('iso', $loc->countryCode)->first();
-    //     }
-    // }
-    return $country;
+    static $currentCountry = null;
+
+    if ($currentCountry) {
+        return $currentCountry;
+    }
+
+    // 1. Check for immediate sources (Headers & Sessions) - 0 latency
+    $countryCode = request()->header('CF-IPCountry') // Cloudflare
+                ?? request()->header('X-Appengine-Country') // Google App Engine
+                ?? request()->header('CloudFront-Viewer-Country') // CloudFront
+                ?? session('country_code');
+
+    if ($countryCode) {
+        $currentCountry = Country::where('iso', $countryCode)->first();
+        if ($currentCountry) return $currentCountry;
+    }
+
+    // 2. Check for Cookie - ~0.05ms
+    $cookieCode = request()->cookie('country_code');
+    if ($cookieCode) {
+        $currentCountry = Country::where('iso', $cookieCode)->first();
+        if ($currentCountry) {
+            session(['country_code' => $cookieCode]);
+            return $currentCountry;
+        }
+    }
+
+    // 3. One-time Detection per IP with Cache - Extremely fast after 1st lookup
+    $ip = request()->ip();
+    $cacheKey = 'country_code_' . $ip;
+    
+    $countryCode = Cache::remember($cacheKey, now()->addDays(30), function () use ($ip) {
+        $loc = Location::get($ip);
+        return $loc ? $loc->countryCode : 'PK';
+    });
+
+    session(['country_code' => $countryCode]);
+    
+    $currentCountry = Country::where('iso', $countryCode)->first() 
+                   ?? Country::where('iso', 'PK')->first() 
+                   ?? Country::first();
+
+    return $currentCountry;
 }
 
 function facilities()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->facilities()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+    
+    return $location->facilities()->get();
 }
 
 function header_pages()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->pages()->active()->header()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+
+    return $location->pages()->active()->header()->get();
 }
 
 function footer_pages()
 {
-    // $loc = Location::get(request()->ip());
-    $country = Country::whereId(getLocation()->id)->first(); // default country
-    // if ($loc) {
-    //     $country = Country::where('iso', $loc->countryCode)->first();
-    // }
-    return $country->pages()->active()->footer()->get();
+    $location = getLocation();
+    if (!$location) return collect();
+
+    return $location->pages()->active()->footer()->get();
 }
 
 function getSettingVal($key)
 {
-    $setting = Setting::where('country_id', getLocation()->id)->where('key', $key)->first()->value;
-    if ($setting) {
-        return $setting;
-    } else {
-        return 0;
-    }
+    $location = getLocation();
+    if (!$location) return 0;
+
+    $setting = Setting::where('country_id', $location->id)->where('key', $key)->first();
+    
+    return $setting ? $setting->value : 0;
 }
 
 function new_products() {}
