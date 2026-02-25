@@ -37,7 +37,6 @@ function getWebsiteUrl()
 }
 function getLocation()
 {
-<<<<<<< HEAD
     static $currentCountry = null;
 
     if ($currentCountry) {
@@ -81,22 +80,6 @@ function getLocation()
                    ?? Country::first();
 
     return $currentCountry;
-=======
-    $country = Country::where('iso', 'PK')->first(); // default country
-
-
-    
-    // if (Cache::has('countryCode')) {
-    //     $country = Country::where('iso', Cache::get('countryCode'))->first();
-    // } else {
-    //     $loc =   Location::get(request()->ip());
-    //     if ($loc) {
-    //         Cache::put('countryCode', $loc->countryCode);
-    //         $country = Country::where('iso', $loc->countryCode)->first();
-    //     }
-    // }
-    return $country;
->>>>>>> e903174 (update)
 }
 
 function facilities()
