@@ -3,12 +3,10 @@
 @section('content')
 @if($start_collection)
 <div x-data="{ isOpen: true }">
-    
     <dialog id="dialog" 
             aria-labelledby="dialog-title" 
             class="fixed inset-0 m-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent p-0 backdrop:bg-transparent z-50"
             :open="isOpen"> 
-        
         <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"></el-dialog-backdrop>
 
         <div tabindex="0" class="flex items-end justify-center p-4 text-center focus:outline focus:outline-0 sm:items-center sm:p-0">
