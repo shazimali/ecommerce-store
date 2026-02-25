@@ -20,7 +20,7 @@ services:
     image: shazimali/everyday-shop:latest
     container_name: everyday_shop_worker
     restart: always
-    entrypoint: ["sh", "-lc", "php artisan queue:work --tries=3 --timeout=90"]
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
     env_file:
       - /var/www/everyday_shop/.env
     networks:
