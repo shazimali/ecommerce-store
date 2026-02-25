@@ -13,7 +13,7 @@ services:
       - global_network
     volumes:
       - everyday_shop_storage:/var/www/everyday_shop/storage
-      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      # - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
 
   everyday_shop_worker:
@@ -27,7 +27,7 @@ services:
       - global_network
     volumes:
       - everyday_shop_storage:/var/www/everyday_shop/storage
-      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      # - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
     depends_on:
       - everyday_shop_app
@@ -38,4 +38,4 @@ networks:
 
 volumes:
   everyday_shop_storage:
-  everyday_shop_cache:
+  # everyday_shop_cache:
