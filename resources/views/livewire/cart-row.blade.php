@@ -5,7 +5,7 @@
                     'border-b border-secondary text-black dark:text-white dark:border-slate-800' => true
                     ])>
                     <div class="grid grid-cols-[20%_80%] gap-2">
-                            <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
+                            <img class="h-50 w-50 inline-block" src="{{ getWebsiteUrl().'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
                             <div>
                                     <div class="py-1 text-sm"><b>{{ $crt['title'] }}</b></div> 
                                     <div class="py-1 text-sm">{{ $crt['currency'] }} {{ number_format($crt['unit_amount'],2)  }}</div> 
@@ -34,7 +34,7 @@
     <div class="lg:hidden md:hidden sm:hidden xs:block">
             <div class="py-2 border-b border-secondary dark:border-slate-800 dark:text-white mx-2 grid grid-cols-[20%_65%_10%]  gap-2">
                     <div>
-                            <img class="" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}"> 
+                            <img class="" src="{{ getWebsiteUrl().'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}"> 
                     </div>
                     <div>
                             <div class="py-1 text-xs"><b>{{ $crt['title'] }}</b></div> 
