@@ -12,7 +12,6 @@ services:
     networks:
       - global_network
     volumes:
-      - /var/www/everyday_shop:/var/www/everyday_shop
       - everyday_shop_storage:/var/www/everyday_shop/storage
       - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
@@ -27,7 +26,6 @@ services:
     networks:
       - global_network
     volumes:
-      - /var/www/everyday_shop:/var/www/everyday_shop
       - everyday_shop_storage:/var/www/everyday_shop/storage
       - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
