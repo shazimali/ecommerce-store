@@ -1,5 +1,5 @@
 <div class="py-5 px-8">
-    <div class="text-2xl font-semibold dark:text-white">Your Cart</div>
+    <div class="text-2xl font-semibold text-black dark:text-white">Your Cart</div>
     <div class="grid lg:grid-cols-[68%_30%] md:grid-cols-[68%_30%] sm:grid-cols-1 xs:grid-cols-1 gap-5">
             <div>
                     @if(count($cartItems))
@@ -7,7 +7,7 @@
                     <livewire:cart-row :$crt :key="time().$crt['slug'].$crt['color']" />
                     @endforeach
                     @else
-                    <h3 class=" dark:text-white">Your cart is currently empty.</h3>
+                    <h3 class="text-black dark:text-white">Your cart is currently empty.</h3>
                     @endif
             </div>
             @if(count($cartItems))
@@ -29,8 +29,8 @@
                             </button>  
                     </div>
                     <div class="mt-2 text-end">
-                            <div class="text-1xl font-semibold dark:text-white">Subtotal {{ getLocation()->currency }}  {{ number_format($sub_total,2)  }} </div>  
-                                    <div class="text-xs dark:text-white">Taxes and shipping calculated at checkout</div>
+                            <div class="text-1xl font-semibold text-black dark:text-white">Subtotal {{ getLocation()->currency }}  {{ number_format($sub_total,2)  }} </div>  
+                                    <div class="text-xs text-black dark:text-white">Taxes and shipping calculated at checkout</div>
                                     <div class="uppercase text-sm font-semibold bg-secondary w-full py-2 my-2 text-center text-black">
                                     <a href="{{ route('cart') }}">shopping cart</a>
                                     </div>

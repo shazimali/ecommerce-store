@@ -2,7 +2,7 @@
     <div class="lg:block md:block sm:block xs:hidden">
             <div @class([
                     'grid grid-cols-[70%_30%] py-2' => true,
-                    'border-b border-secondary dark:text-white dark:border-slate-800' => true
+                    'border-b border-secondary text-black dark:text-white dark:border-slate-800' => true
                     ])>
                     <div class="grid grid-cols-[20%_80%] gap-2">
                             <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$crt['image'] }}" alt="{{ $crt['title'] }}">
