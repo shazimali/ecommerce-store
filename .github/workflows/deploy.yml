@@ -12,6 +12,7 @@ on:
       - 'package-lock.json'
       - 'Dockerfile'
       - 'docker/**'
+      - 'docker-compose.yml'
 
 env:
   IMAGE_NAME: shazimali/everyday-shop
@@ -104,7 +105,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-
       # 5️⃣ Test SSH connection to VPS
       - name: 🧪 Test SSH connection
         uses: appleboy/ssh-action@v1.1.0
@@ -116,7 +116,17 @@ jobs:
             echo "✅ SSH connection successful."
             docker --version || echo "⚠️ Docker not installed!"
 
-      # 6️⃣ Deploy new image on VPS (rollback + APP_KEY fix)
+      # 6️⃣ Copy docker-compose.yml to VPS
+      - name: 📋 Copy docker-compose.yml to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/var/www/everyday_shop/"
+
+      # 7️⃣ Deploy on VPS
       - name: 🚀 Deploy on VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -130,28 +140,19 @@ jobs:
             echo "📦 Pulling latest image..."
             docker pull ${{ env.IMAGE_NAME }}:latest
 
-            echo "🧹 Removing old backup container if exists..."
-            docker rm -f everyday_shop_app_backup || true
+            echo "🛑 Stopping old containers..."
+            docker compose down
 
-            echo "🛑 Stopping current container..."
-            docker stop everyday_shop_app || true
+            echo "🗑️ Removing stale cache volume..."
+            docker volume rm everyday_shop_everyday_shop_cache || true
 
-            echo "📦 Creating backup of current container..."
-            docker rename everyday_shop_app everyday_shop_app_backup || true
+            echo "🚀 Starting all containers..."
+            docker compose up -d
 
-            echo "🚀 Starting new container..."
-            docker run -d \
-              --name everyday_shop_app \
-              --restart unless-stopped \
-              --env-file /var/www/everyday_shop/.env \
-              -v everyday_shop_storage:/var/www/everyday_shop/storage \
-              --network global_network \
-              -p 8080:80 \
-              ${{ env.IMAGE_NAME }}:latest
+            echo "⏳ Waiting for app to be ready..."
+            sleep 5
 
             echo "🧹 Clearing Laravel cache..."
             docker exec everyday_shop_app php artisan optimize:clear
 
             echo "✅ Deployment successful!"
-
-
