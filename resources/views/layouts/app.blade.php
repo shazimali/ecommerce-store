@@ -5,6 +5,11 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        if (localStorage.getItem('_x_darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <!-- Add these to <head> -->
     <title>Everyday Plastic - Quality Plastic Homeware & Kitchen Storage Solutions in Pakistan</title>
     <meta name="description" content="Shop premium plastic kitchen storage, baby furniture, shoe racks & home organizers. Free delivery on orders above Rs. 3,999. Quality products for Pakistani homes.">
