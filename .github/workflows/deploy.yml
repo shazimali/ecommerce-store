@@ -125,6 +125,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "docker-compose.yml"
           target: "/var/www/everyday_shop/"
+          overwrite: true
 
       # 7️⃣ Deploy on VPS
       - name: 🚀 Deploy on VPS
