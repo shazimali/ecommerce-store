@@ -20,13 +20,13 @@ class OrderDetail extends Model
     }
 
     /**
-     * Get the user associated with the OrderDetail
+     * Get the color associated with the OrderDetail
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function color(): HasOne
+    public function color(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(ProductColor::class, 'id', 'color_id');
+        return $this->belongsTo(ProductColor::class, 'color_id', 'id');
     }
 
     public function coupon(): HasOne

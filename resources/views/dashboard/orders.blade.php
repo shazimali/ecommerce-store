@@ -30,7 +30,7 @@
                                 @if ($item->color_id != 0)
                                 <div class="py-1 flex text-xs">
                                             Color:
-                                    {{ $item->color_id && $item->color_id != 0 ? $item->color->color_name : 'N/A' }}
+                                    {{ $item->color ? $item->color->color_name : 'N/A' }}
                                 </div>
                                 @endif
                                 <div class="pr-6">
