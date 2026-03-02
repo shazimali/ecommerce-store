@@ -4,7 +4,7 @@ services:
     container_name: everyday_shop_app
     restart: always
     env_file:
-      - /var/www/everyday_shop/.env 
+      - /var/www/everyday_shop/.env
     ports:
       - "8080:80"
     networks:
@@ -37,6 +37,6 @@ networks:
 volumes:
   everyday_shop_storage:
     external: true
-    name: everyday_shop_storage
+    name: everyday_shop_storage      # ← forces exact volume name, no prefix
   everyday_shop_cache:
-    name: everyday_shop_cache
+    name: everyday_shop_cache        # ← forces exact volume name, no prefix
