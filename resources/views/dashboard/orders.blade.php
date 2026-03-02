@@ -24,6 +24,7 @@
                             <div>
                                 <img class="h-30 w-30 inline-block" src="{{ asset('storage/' . $item->product->image) }}" alt="{{$item->product->title}}">
                             </div>
+                            
                             <div>
                                 <div class="py-1 text-xs max-w-60"><b>{{ $item->product->title }}</b></div> 
                                 <div class="py-1 text-xs"> {{ $item->currency }} {{ number_format($item->unit_amount, 2) }}</div> 
