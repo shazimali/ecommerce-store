@@ -107,7 +107,7 @@
                             </a>
                             </li>
                             <li><a href="{{ route('dashboard.orders') }}">Orders</a></li>
-                            <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li>
+                            <!-- <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li> -->
                             <li>
                                 <form method="post" action="{{ route('logout') }}">
                                     @csrf
