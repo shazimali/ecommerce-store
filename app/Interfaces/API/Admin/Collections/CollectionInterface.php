@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 interface CollectionInterface
 {
-    public function getAll(Request $request);
+    public function getAll(array $filters, int $perPage);
     public function getAllExtra();
-    public function store(StoreCollectionRequest $request);
+    public function store(array $data);
     public function edit(int $id);
-    public function update(UpdateCollectionRequest $request, int $id);
+    public function update(int $id, array $data);
     public function destroy(int $id);
 }

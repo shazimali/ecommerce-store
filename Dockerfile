@@ -30,12 +30,12 @@ WORKDIR /app
 # Copy ONLY frontend dependency files first
 COPY package.json package-lock.json ./
 
-RUN npm ci --no-audit --no-fund || echo "⚠️ No frontend deps"
+RUN npm ci --no-audit --no-fund
 
 # Copy rest of frontend files
 COPY . .
 
-RUN npm run build || echo "⚠️ Frontend build skipped"
+RUN npm run build
 
 # ============================================
 # Stage 3: Final Laravel production image
@@ -54,11 +54,18 @@ RUN apt-get update && apt-get install -y \
     gd \
     zip \
     intl \
-    && a2enmod rewrite headers \
+    && a2enmod rewrite headers ssl \
     && rm -rf /var/lib/apt/lists/*
 
+# Set main domain to avoid Apache warnings
 RUN echo "ServerName everydayplastic.co" >> /etc/apache2/apache2.conf
+
+# Copy updated Apache virtual host config
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN a2ensite 000-default.conf
+
+# Disable canonical name enforcement for multi-domain support
+RUN sed -i '/<\/VirtualHost>/i UseCanonicalName Off' /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /var/www/everyday_shop
 

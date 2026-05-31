@@ -2,36 +2,23 @@
 
 namespace App\Services\API\Admin\Products;
 
-use App\Http\Requests\API\Admin\Products\StoreProductPriceRequest;
-use App\Http\Requests\API\Admin\Products\StoreProductRequest;
-use App\Http\Requests\API\Admin\Products\UpdateProductPriceRequest;
-use App\Http\Requests\API\Admin\Products\UpdateProductRequest;
-use App\Http\Resources\API\Admin\Countries\CountryListResource;
 use App\Http\Resources\API\Admin\Products\ProductEditResource;
 use App\Http\Resources\API\Admin\Products\ProductListResource;
-use App\Http\Resources\API\Admin\Products\ProductPricesEditResource;
-use App\Http\Resources\API\Admin\Products\ProductPricesListResource;
 use App\Http\Resources\API\Admin\SubCategories\SubCategoryListResource;
 use App\Interfaces\API\Admin\Products\ProductInterface;
-use App\Models\Country;
 use App\Models\ProductColor;
 use App\Models\ProductHead;
 use App\Models\ProductHeadPrice;
 use App\Models\ProductHeadSubCategory;
 use App\Models\SubCategory;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Laravel\Facades\Image;
-
 
 class ProductService implements ProductInterface
 {
-    public function getAll(Request $request)
+    use \App\Traits\FileUploadTrait;
+
+    public function getAll(array $filters, int $perPage)
     {
-        $itemsPerPage = $request->get('items_per_page', 10);
-        $product = ProductHead::paginate($itemsPerPage);
+        $product = ProductHead::paginate($perPage);
         if ($product) {
             return ProductListResource::collection($product);
         } else {
@@ -39,42 +26,31 @@ class ProductService implements ProductInterface
         }
     }
 
-    public function store(StoreProductRequest $request)
+    public function store(array $data)
     {
-        $data = $request->except(['sub_categories']);
-        $data['is_new'] = $data['is_new'] ==  true ? 1 : 0;
-        $data['is_trending'] = $data['is_trending'] ==  true ? 1 : 0;
-        $data['is_featured'] = $data['is_featured'] == true ? 1 : 0;
-        $data['coming_soon'] = $data['coming_soon'] == true ? 1 : 0;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
-            //nav image
-            $imgManager = new ImageManager(new Driver());
-            $image_data = file_get_contents(env('APP_URL') . '/storage/' . $data['image']);
-            $nav_image_data = $imgManager->read($image_data);
-            $nav_image_data->resize(208, 208);
-            $nav_image_data->save(storage_path('app/public/' . $imageName));
-            $data['nav_image'] = $imageName;
+        $sub_categories = $data['sub_categories'] ?? [];
+        unset($data['sub_categories']);
+
+        $data['is_new'] = ($data['is_new'] ?? false) == true ? 1 : 0;
+        $data['is_trending'] = ($data['is_trending'] ?? false) == true ? 1 : 0;
+        $data['is_featured'] = ($data['is_featured'] ?? false) == true ? 1 : 0;
+        $data['coming_soon'] = ($data['coming_soon'] ?? false) == true ? 1 : 0;
+
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['image'] = $this->uploadFile($data['image']);
+            $data['nav_image'] = $this->createThumbnailFromPath($data['image'], 208, 208);
         }
-        if ($request->hasFile('image1')) {
-            $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
+        
+        foreach (range(1, 5) as $i) {
+            $key = "image$i";
+            if (isset($data[$key]) && $data[$key] instanceof \Illuminate\Http\UploadedFile) {
+                $data[$key] = $this->uploadFile($data[$key]);
+            }
         }
-        if ($request->hasFile('image2')) {
-            $data['image2'] = Storage::disk('public')->put('/', $request->file('image2'));
-        }
-        if ($request->hasFile('image3')) {
-            $data['image3'] = Storage::disk('public')->put('/', $request->file('image3'));
-        }
-        if ($request->hasFile('image4')) {
-            $data['image4'] = Storage::disk('public')->put('/', $request->file('image4'));
-        }
-        if ($request->hasFile('image5')) {
-            $data['image5'] = Storage::disk('public')->put('/', $request->file('image5'));
-        }
+
         $product = ProductHead::create($data);
-        $product->sub_categories()->attach($request->sub_categories);
+        $product->sub_categories()->attach($sub_categories);
+        
         if ($product) {
             return response()->json(['message' => 'Product Stored Successfully '], 200);
         } else {
@@ -92,72 +68,41 @@ class ProductService implements ProductInterface
         }
     }
 
-    public function update(UpdateProductRequest $request, int $id)
+    public function update(int $id, array $data)
     {
         $product = ProductHead::find($id);
-        $data = $request->except(['sub_categories']);
-
-        $data['is_new'] = $request->is_new == 'true' ? 1 : 0;
-        $data['is_featured'] = $request->is_featured == 'true' ? 1 : 0;
-        $data['is_trending'] = $request->is_trending == 'true' ? 1 : 0;
-        $data['coming_soon'] = $request->coming_soon == 'true' ? 1 : 0;
-
-        if ($request->hasFile('image')) {
-            if (!is_null($product->image)) {
-                Storage::delete($product->image);
-            }
-            if (!is_null($product->nav_image)) {
-                Storage::delete($product->nav_image);
-            }
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
-            //nav image
-            $imgManager = new ImageManager(new Driver());
-            $image_data = file_get_contents(env('APP_URL') . '/storage/' . $data['image']);
-            $nav_image_data = $imgManager->read($image_data);
-            $nav_image_data->resize(208, 208);
-            $nav_image_data->save(storage_path('app/public/' . $imageName));
-            $data['nav_image'] = $imageName;
-        }
-        if ($request->hasFile('image1')) {
-            if (!is_null($product->image1)) {
-                Storage::delete($product->image1);
-            }
-            $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
-        }
-        if ($request->hasFile('image2')) {
-            if (!is_null($product->image2)) {
-                Storage::delete($product->image2);
-            }
-            $data['image2'] = Storage::disk('public')->put('/', $request->file('image2'));
-        }
-        if ($request->hasFile('image3')) {
-            if (!is_null($product->image3)) {
-                Storage::delete($product->image3);
-            }
-            $data['image3'] = Storage::disk('public')->put('/', $request->file('image3'));
-        }
-        if ($request->hasFile('image4')) {
-            if (!is_null($product->image4)) {
-                Storage::delete($product->image4);
-            }
-            $data['image4'] = Storage::disk('public')->put('/', $request->file('image4'));
-        }
-        if ($request->hasFile('image5')) {
-            if (!is_null($product->image5)) {
-                Storage::delete($product->image5);
-            }
-            $data['image5'] = Storage::disk('public')->put('/', $request->file('image5'));
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 201);
         }
 
-        if ($product) {
-            $product->update($data);
-            $product->sub_categories()->sync($request->sub_categories);
-            return response()->json(['message' => 'Product Updated Successfully'], 200);
-        } else {
-            return response()->json(['message' =>  'Product Not Updated'], 201);
+        $sub_categories = $data['sub_categories'] ?? [];
+        unset($data['sub_categories']);
+
+        $data['is_new'] = ($data['is_new'] ?? 'false') == 'true' ? 1 : 0;
+        $data['is_featured'] = ($data['is_featured'] ?? 'false') == 'true' ? 1 : 0;
+        $data['is_trending'] = ($data['is_trending'] ?? 'false') == 'true' ? 1 : 0;
+        $data['coming_soon'] = ($data['coming_soon'] ?? 'false') == 'true' ? 1 : 0;
+
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+            $this->deleteFile($product->image);
+            $this->deleteFile($product->nav_image);
+
+            $data['image'] = $this->uploadFile($data['image']);
+            $data['nav_image'] = $this->createThumbnailFromPath($data['image'], 208, 208);
         }
+
+        foreach (range(1, 5) as $i) {
+            $key = "image$i";
+            if (isset($data[$key]) && $data[$key] instanceof \Illuminate\Http\UploadedFile) {
+                $this->deleteFile($product->$key);
+                $data[$key] = $this->uploadFile($data[$key]);
+            }
+        }
+
+        $product->update($data);
+        $product->sub_categories()->sync($sub_categories);
+        
+        return response()->json(['message' => 'Product Updated Successfully'], 200);
     }
 
     public function destroy(int $id)
@@ -168,46 +113,24 @@ class ProductService implements ProductInterface
             if ($is_sub_category_attached)
                 return  response()->json(['message' => 'Product attached with sub category, can not delete.'], 201);
 
-            if (!is_null($product->image)) {
-                Storage::delete($product->image);
-            }
-            if (!is_null($product->image1)) {
-                Storage::delete($product->image1);
-            }
-            if (!is_null($product->image2)) {
-                Storage::delete($product->image2);
-            }
-            if (!is_null($product->image3)) {
-                Storage::delete($product->image3);
-            }
-            if (!is_null($product->image4)) {
-                Storage::delete($product->image4);
-            }
-            if (!is_null($product->image5)) {
-                Storage::delete($product->image5);
-            }
+            $this->deleteFile($product->image);
+            $this->deleteFile($product->image1);
+            $this->deleteFile($product->image2);
+            $this->deleteFile($product->image3);
+            $this->deleteFile($product->image4);
+            $this->deleteFile($product->image5);
+            $this->deleteFile($product->nav_image);
+
             //Deleting related product colors
             $productColors = ProductColor::where('product_head_id', $id)->get();
             if (count($productColors)) {
                 foreach ($productColors  as $key => $product_color) {
-                    if (!is_null($product_color->color_image)) {
-                        Storage::delete($product_color->color_image);
-                    }
-                    if (!is_null($product_color->image1)) {
-                        Storage::delete($product_color->image1);
-                    }
-                    if (!is_null($product_color->image2)) {
-                        Storage::delete($product_color->image2);
-                    }
-                    if (!is_null($product_color->image3)) {
-                        Storage::delete($product_color->image3);
-                    }
-                    if (!is_null($product_color->image4)) {
-                        Storage::delete($product_color->image4);
-                    }
-                    if (!is_null($product_color->image5)) {
-                        Storage::delete($product_color->image5);
-                    }
+                    $this->deleteFile($product_color->color_image);
+                    $this->deleteFile($product_color->image1);
+                    $this->deleteFile($product_color->image2);
+                    $this->deleteFile($product_color->image3);
+                    $this->deleteFile($product_color->image4);
+                    $this->deleteFile($product_color->image5);
                 }
             }
             //Deleting related product prices
@@ -228,49 +151,5 @@ class ProductService implements ProductInterface
     public function getAllSubCategories()
     {
         return SubCategoryListResource::collection(SubCategory::all());
-    }
-
-    public function getPricesByProductID(int $id)
-    {
-        return response()->json([
-            'prices' => ProductPricesListResource::collection(ProductHeadPrice::where('product_head_id', $id)->with('product_head', 'country')->get()),
-            'countries' => CountryListResource::collection(Country::all())
-        ]);
-    }
-
-    public function storePrice(StoreProductPriceRequest $request)
-    {
-        ProductHeadPrice::create($request->all());
-        return response()->json(['message' => 'Product price saved successfully.'], 200);
-    }
-
-    public function editPrice(int $id)
-    {
-        $price = ProductHeadPrice::find($id);
-        if ($price) {
-            return new ProductPricesEditResource($price);
-        } else {
-            return response()->json(['message' => 'Product price notfound.'], 201);
-        }
-    }
-
-    public function updatePrice(UpdateProductPriceRequest $request, int $id)
-    {
-        $price = ProductHeadPrice::whereId($id)->first();
-        if ($price) {
-            $price->update($request->all());
-        }
-        return response()->json(['message' => 'Product price updated successfully.'], 200);
-    }
-
-    public function deletePrice(int $id)
-    {
-        $price = ProductHeadPrice::whereId($id)->first();
-        if ($price) {
-            $price->delete();
-            return response()->json(['message' => 'Product price deleted successfully.'], 200);
-        } else {
-            return response()->json(['message' => 'Product price can not delete.'], 201);
-        }
     }
 }

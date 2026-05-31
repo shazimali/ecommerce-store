@@ -14,7 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // $middleware->append(ApiJsonResponseMiddleware::class);
-        $middleware->trustHosts(at: ['everyday-shops.test']);
+        $trustedHosts = array_filter(
+            explode(',', env('TRUSTED_HOSTS', 'localhost'))
+        );
+
+        $middleware->trustHosts(at: $trustedHosts);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

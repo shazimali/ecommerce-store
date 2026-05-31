@@ -7,7 +7,6 @@
             aria-labelledby="dialog-title" 
             class="fixed inset-0 m-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent p-0 backdrop:bg-transparent z-50"
             :open="isOpen"> 
-        
         <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"></el-dialog-backdrop>
 
         <div tabindex="0" class="flex items-end justify-center p-4 text-center focus:outline focus:outline-0 sm:items-center sm:p-0">
@@ -33,7 +32,7 @@
 <section class="bg-white dark:bg-black text-black dark:text-secondary">
     @if(count(facilities()))
     <div class="lg:block md:block sm:block xs:hidden">
-        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-10 dark:text-secondary">
+        <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 gap-5 lg:px-8 md:px-8 xs:px-2 mt-32 dark:text-secondary">
             @foreach (facilities() as $facility)
             <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
                 <span><i class="{{ $facility->class }} text-primary text-5xl"></i></span>
@@ -42,6 +41,7 @@
             @endforeach    
         </div>
     </div>
+
     @endif
     @if(count($trending_products))
       <div class="mt-16 text-center">
@@ -82,6 +82,7 @@
             @endforeach
         </div>
     @endif
+
     <div class="mt-16 text-center">
         <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
     </div>

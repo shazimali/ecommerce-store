@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductColorsService implements ProductColorsInterface
 {
+    use \App\Traits\FileUploadTrait;
+
     public function getAll(int $id)
     {
         $productColor = ProductColor::where('product_head_id', $id)->get();
@@ -27,22 +29,22 @@ class ProductColorsService implements ProductColorsInterface
         $data['product_head_id'] = $request->product_head_id;
         $data['color_name'] = $request->color_name;
         if ($request->hasFile('color_image')) {
-            $data['color_image'] = Storage::disk('public')->put('/', $request->file('color_image'));
+            $data['color_image'] = $this->uploadFile($request->file('color_image'));
         }
         if ($request->hasFile('image1')) {
-            $data['image1'] = Storage::disk('public')->put('/', $request->file('image1'));
+            $data['image1'] = $this->uploadFile($request->file('image1'));
         }
         if ($request->hasFile('image2')) {
-            $data['image2'] = Storage::disk('public')->put('/', $request->file('image2'));
+            $data['image2'] = $this->uploadFile($request->file('image2'));
         }
         if ($request->hasFile('image3')) {
-            $data['image3'] = Storage::disk('public')->put('/', $request->file('image3'));
+            $data['image3'] = $this->uploadFile($request->file('image3'));
         }
         if ($request->hasFile('image4')) {
-            $data['image4'] = Storage::disk('public')->put('/', $request->file('image4'));
+            $data['image4'] = $this->uploadFile($request->file('image4'));
         }
         if ($request->hasFile('image5')) {
-            $data['image5'] = Storage::disk('public')->put('/', $request->file('image5'));
+            $data['image5'] = $this->uploadFile($request->file('image5'));
         }
         $productColor = ProductColor::create($data);
         if ($productColor) {
@@ -69,14 +71,33 @@ class ProductColorsService implements ProductColorsInterface
             $data = [
                 'product_head_id' => $request->product_head_id,
                 'color_name' => $request->color_name,
-                'color_image' => $request->color_image,
-                'image1' => $request->image1,
-                'image2' => $request->image2,
-                'image3' => $request->image3,
-                'image4' => $request->image4,
-                'image5' => $request->image5,
-
             ];
+
+            if ($request->hasFile('color_image')) {
+                $this->deleteFile($productColor->color_image);
+                $data['color_image'] = $this->uploadFile($request->file('color_image'));
+            }
+            if ($request->hasFile('image1')) {
+                $this->deleteFile($productColor->image1);
+                $data['image1'] = $this->uploadFile($request->file('image1'));
+            }
+            if ($request->hasFile('image2')) {
+                $this->deleteFile($productColor->image2);
+                $data['image2'] = $this->uploadFile($request->file('image2'));
+            }
+            if ($request->hasFile('image3')) {
+                $this->deleteFile($productColor->image3);
+                $data['image3'] = $this->uploadFile($request->file('image3'));
+            }
+            if ($request->hasFile('image4')) {
+                $this->deleteFile($productColor->image4);
+                $data['image4'] = $this->uploadFile($request->file('image4'));
+            }
+            if ($request->hasFile('image5')) {
+                $this->deleteFile($productColor->image5);
+                $data['image5'] = $this->uploadFile($request->file('image5'));
+            }
+
             $productColor->update($data);
             return  response()->json(['message' => 'Product Color updated successfully.'], 200);
         } else {
@@ -88,24 +109,13 @@ class ProductColorsService implements ProductColorsInterface
     {
         $productColor = ProductColor::find($id);
         if ($productColor) {
-            if (!is_null($productColor->color_image)) {
-                Storage::delete($productColor->color_image);
-            }
-            if (!is_null($productColor->image1)) {
-                Storage::delete($productColor->image1);
-            }
-            if (!is_null($productColor->image2)) {
-                Storage::delete($productColor->image2);
-            }
-            if (!is_null($productColor->image3)) {
-                Storage::delete($productColor->image3);
-            }
-            if (!is_null($productColor->image4)) {
-                Storage::delete($productColor->image4);
-            }
-            if (!is_null($productColor->image5)) {
-                Storage::delete($productColor->image5);
-            }
+            $this->deleteFile($productColor->color_image);
+            $this->deleteFile($productColor->image1);
+            $this->deleteFile($productColor->image2);
+            $this->deleteFile($productColor->image3);
+            $this->deleteFile($productColor->image4);
+            $this->deleteFile($productColor->image5);
+            
             $productColor->delete();
             return response()->json(['message' => 'Product Color Deleted Successfully'], 200);
         } else {

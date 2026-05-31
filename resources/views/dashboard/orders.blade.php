@@ -5,6 +5,7 @@
         <div class="flex justify-center">
             <h3 class="text-2xl font-semibold py-2">My Orders</h3>
         </div>
+        
         @if (count($orders))
             @foreach ($orders as $order)
                 <div class="card w-full card-xs shadow-sm my-2 bg-secondary text-black">
@@ -24,13 +25,14 @@
                             <div>
                                 <img class="h-30 w-30 inline-block" src="{{ asset('storage/' . $item->product->image) }}" alt="{{$item->product->title}}">
                             </div>
+                            
                             <div>
                                 <div class="py-1 text-xs max-w-60"><b>{{ $item->product->title }}</b></div> 
                                 <div class="py-1 text-xs"> {{ $item->currency }} {{ number_format($item->unit_amount, 2) }}</div> 
                                 @if ($item->color_id != 0)
                                 <div class="py-1 flex text-xs">
                                             Color:
-                                    {{ $item->color_id && $item->color_id != 0 ? $item->color->color_name : 'N/A' }}
+                                    {{ $item->color ? $item->color->color_name : 'N/A' }}
                                 </div>
                                 @endif
                                 <div class="pr-6">

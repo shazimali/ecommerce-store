@@ -12,13 +12,68 @@ on:
       - 'package-lock.json'
       - 'Dockerfile'
       - 'docker/**'
+      - 'docker-compose.yml'
 
 env:
   IMAGE_NAME: shazimali/everyday-shop
   IMAGE_TAG: latest
 
+# ------------------------------------------------
+# 1️⃣ TEST JOB (BLOCKS DEPLOY ON FAILURE)
+# ------------------------------------------------
+
 jobs:
+  
+  test:
+    name: 🧪 Run Laravel Tests (MySQL)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: testing_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: 🧱 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, pdo, pdo_mysql
+          coverage: none
+
+      - name: 📦 Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: ⚙️ Prepare testing environment
+        run: |
+          cp .env.testing .env
+          php artisan key:generate
+          php artisan migrate:fresh --force
+
+      - name: 🧪 Run tests
+        run: php artisan test
+
+# ------------------------------------------------
+# 2️⃣ BUILD & DEPLOY JOB (ONLY IF TESTS PASS)
+# ------------------------------------------------
+
   build-and-deploy:
+    name: 🚀 Build & Deploy to VPS
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -50,7 +105,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-
       # 5️⃣ Test SSH connection to VPS
       - name: 🧪 Test SSH connection
         uses: appleboy/ssh-action@v1.1.0
@@ -62,7 +116,18 @@ jobs:
             echo "✅ SSH connection successful."
             docker --version || echo "⚠️ Docker not installed!"
 
-      # 6️⃣ Deploy new image on VPS (rollback + APP_KEY fix)
+      # 6️⃣ Copy docker-compose.yml to VPS
+      - name: 📋 Copy docker-compose.yml to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/var/www/everyday_shop/"
+          overwrite: true
+
+      # 7️⃣ Deploy on VPS
       - name: 🚀 Deploy on VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -76,46 +141,19 @@ jobs:
             echo "📦 Pulling latest image..."
             docker pull ${{ env.IMAGE_NAME }}:latest
 
-            echo "📋 Backing up current container..."
-            docker stop everyday_shop_app || true
-            docker rename everyday_shop_app everyday_shop_app_backup || true
+            echo "🛑 Stopping old containers..."
+            docker compose down
 
-            echo "🚀 Starting new container..."
-            if docker run -d \
-              --name everyday_shop_app \
-              --env-file /var/www/everyday_shop/.env \
-              -v /var/www/everyday_shop/.env:/var/www/everyday_shop/.env \
-              -v everyday_shop_storage:/var/www/everyday_shop/storage \
-              -v everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache \
-              --network global_network \
-              -p 8080:80 \
-              ${{ env.IMAGE_NAME }}:latest; then
+            echo "🗑️ Removing stale cache volume..."
+            docker volume rm everyday_shop_everyday_shop_cache || true
 
-              echo "✅ Deployment successful!"
-              docker rm -f everyday_shop_app_backup || true
+            echo "🚀 Starting all containers..."
+            docker compose up -d
 
-              echo "🗝️ Checking APP_KEY..."
-              docker exec everyday_shop_app bash -c '
-                if ! grep -q "APP_KEY=base64:" /var/www/everyday_shop/.env; then
-                  echo "⚙️ Generating new APP_KEY..."
-                  php artisan key:generate --force
-                else
-                  echo "✅ APP_KEY already set."
-                fi
-              '
+            echo "⏳ Waiting for app to be ready..."
+            sleep 5
 
-              # echo "🔁 Running migrations..."
-              # docker exec everyday_shop_app php artisan migrate --force || true
+            echo "🧹 Clearing Laravel cache..."
+            docker exec everyday_shop_app php artisan optimize:clear
 
-              # echo "🔗 Fixing storage symlink..."
-              # docker exec everyday_shop_app php artisan storage:link || true
-
-              # echo "🧹 Clearing Laravel caches..."
-              # docker exec everyday_shop_app php artisan optimize:clear || true
-
-            else
-              echo "❌ Deployment failed. Rolling back..."
-              docker rm -f everyday_shop_app || true
-              docker rename everyday_shop_app_backup everyday_shop_app || true
-              docker start everyday_shop_app
-            fi
+            echo "✅ Deployment successful!"

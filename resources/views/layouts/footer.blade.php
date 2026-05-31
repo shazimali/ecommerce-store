@@ -8,13 +8,14 @@
                 </a>
                 <a class="block" href="">
                     <h1 class="text-2xl font-semibold text-center my-2"><span
-                            class="text-primary dark:text-black uppercase">EveryDay</span>
-                        <span class="text-black dark:text-primary ml-1 uppercase">{{ website()->title }}</span>
+                            class="text-primary dark:text-black uppercase">Every
+                            Day</span><span
+                            class="text-black dark:text-primary ml-1 uppercase  ">{{ website()->title }}</span>
                     </h1>
                 </a>
                 <div x-data="{ map: false }" class="mt-3">
                     <i class="fa-solid fa-location-dot text-primary"></i>
-                    <span>Ali Pur Chowk, Raj Kot, Gondlanwala Road, Gujranwala </span>
+                    <span>{{ website()->address }} </span>
                     <span x-on:click="map = !map" class="text-primary cursor-pointer">
                         <i class="fa-solid fa-map"></i>
                     </span>

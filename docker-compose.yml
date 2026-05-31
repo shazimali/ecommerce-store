@@ -1,12 +1,10 @@
-version: "3.9"
-
 services:
   everyday_shop_app:
     image: shazimali/everyday-shop:latest
     container_name: everyday_shop_app
     restart: always
     env_file:
-      - /var/www/everyday_shop/.env # Your manually created .env
+      - /var/www/everyday_shop/.env
     ports:
       - "8080:80"
     networks:
@@ -16,10 +14,29 @@ services:
       - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
 
+  everyday_shop_worker:
+    image: shazimali/everyday-shop:latest
+    container_name: everyday_shop_worker
+    restart: always
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90"]
+    env_file:
+      - /var/www/everyday_shop/.env
+    networks:
+      - global_network
+    volumes:
+      - everyday_shop_storage:/var/www/everyday_shop/storage
+      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
+    depends_on:
+      - everyday_shop_app
+
 networks:
   global_network:
     external: true
 
 volumes:
   everyday_shop_storage:
+    external: true
+    name: everyday_shop_storage      # ← forces exact volume name, no prefix
   everyday_shop_cache:
+    name: everyday_shop_cache        # ← forces exact volume name, no prefix

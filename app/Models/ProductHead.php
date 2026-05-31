@@ -10,6 +10,8 @@ use Stevebauman\Location\Facades\Location;
 
 class ProductHead extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $fillable = [
         'title',
         'slug',

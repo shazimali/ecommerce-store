@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryService implements CategoryInterface
 {
+    use \App\Traits\FileUploadTrait;
+
     public function getAll(Request $request)
     {
         $search = $request->search;
@@ -64,7 +66,7 @@ class CategoryService implements CategoryInterface
         $data = $request->all();
         try {
             if ($request->hasFile('image')) {
-                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+                $data['image'] = $this->uploadFile($request->file('image'));
             }
             $category = Category::create($data);
             $category->websites()->attach($data['websites']);
@@ -95,10 +97,8 @@ class CategoryService implements CategoryInterface
                 'order' => $request->order,
             ];
             if ($request->hasFile('image')) {
-                if (Storage::exists($category->image)) {
-                    Storage::delete($category->image);
-                }
-                $data['image'] = Storage::disk('public')->put('/', $request->file('image'));
+                $this->deleteFile($category->image);
+                $data['image'] = $this->uploadFile($request->file('image'));
             }
             $category->update($data);
             $category->websites()->sync($request->websites);
@@ -116,9 +116,7 @@ class CategoryService implements CategoryInterface
             if ($is_category_attached_with_website)
                 return  response()->json(['message' => 'Category attached with website, can not delete.'], 201);
 
-            if (Storage::exists($category->image)) {
-                Storage::delete($category->image);
-            }
+            $this->deleteFile($category->image);
             $category->delete();
             return  response()->json(['message' => 'Category deleted successfully.'], 200);
         } else {

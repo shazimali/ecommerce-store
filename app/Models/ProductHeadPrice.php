@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductHeadPrice extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $fillable = ['product_head_id', 'country_id', 'price', 'discount', 'discount_from', 'discount_to', 'created_at', 'updated_at'];
 
     function product_head(): HasOne
