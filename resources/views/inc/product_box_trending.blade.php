@@ -1,16 +1,30 @@
-
-<div class="text-center relative dark:text-secondary">
+<div class="text-center relative dark:text-secondary group">
     @if (
-        $pr->price_detail &&
+            $pr->price_detail &&
             $pr->price_detail->discount > 0 &&
-            (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to))
+            (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to)
+        )
         <div
-            class="absolute right-0 top-0 w-auto px-2  py-1 bg-green-600 text-white text-center text-1xl font-extrabold">
+            class="absolute right-0 top-0 z-10 w-auto px-2 py-1 bg-green-600 text-white text-center text-1xl font-extrabold">
             - {{ $pr->price_detail->discount }} %
         </div>
     @endif
-    <img src="{{ asset('storage/' . $pr->image) }}" {{-- class=" max-h-52" --}}
-        alt="{{ $pr->title }}" />
+
+    {{-- Image wrapper --}}
+    <div class="relative overflow-hidden">
+        {{-- Primary image --}}
+        <img src="{{ asset('storage/' . $pr->image) }}"
+            class="w-full transition-opacity duration-300 ease-in-out {{ $pr->image1 ? 'group-hover:opacity-0' : '' }}"
+            alt="{{ $pr->title }}" />
+
+        {{-- Hover image --}}
+        @if ($pr->image1)
+            <img src="{{ asset('storage/' . $pr->image1) }}"
+                class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+                alt="{{ $pr->title }} - alternate view" />
+        @endif
+    </div>
+
     <div class="pt-2 overflow-hidden max-w-36 text-xs truncate text-left">
         {{ $pr->title }}
     </div>
@@ -38,11 +52,6 @@
                 <i class="fa-regular fa-eye text-primary"></i>
                 View Detail
             </a>
-            {{-- <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary  my-2" href="">
-                        <i class="fa-solid fa-cart-shopping text-primary"></i>
-                        Add to Cart
-                    </a> --}}
         </div>
     @endif
 </div>
-               

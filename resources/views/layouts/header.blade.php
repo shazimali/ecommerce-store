@@ -5,13 +5,13 @@
         class="grid lg:grid-cols-3 md:grid-cols-3 py-5 px-8 bg-white border-secondary border-b dark:bg-black dark:border-b-slate-800">
         <div class="text-4xl font-semibold">
             <a href="{{ route('home') }}">
-                <span class="text-primary dark:text-secondary">Every Day</span>
-                <span class="dark:text-primary text-black">{{ website()->title }}</span>
+                <span class="text-primary dark:text-secondary uppercase">everyday</span>
+                <span class="dark:text-primary text-black uppercase">{{ website()->title }}</span>
             </a>
         </div>
-        <livewire:global-search/>
+        <livewire:global-search />
         <div class="text-end">
-          <livewire:cart-side-bar/>
+            <livewire:cart-side-bar />
         </div>
     </div>
 </div>
