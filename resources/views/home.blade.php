@@ -10,11 +10,11 @@
         <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"></el-dialog-backdrop>
 
         <div tabindex="0" class="flex items-end justify-center p-4 text-center focus:outline focus:outline-0 sm:items-center sm:p-0">
-            <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95">
+            <el-dialog-panel class="relative transform overflow-hidden rounded-none bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95">
                 <button type="button" 
                             command="close" 
                             commandfor="dialog" 
-                            class="inline-flex justify-center rounded-sm bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto absolute top-0 right-0 z-50"
+                            class="inline-flex justify-center rounded-none bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto absolute top-0 right-0 z-50"
                             @click="isOpen = false">x</button>
                 <a href="{{ route('collections',['slug' => $start_collection->slug]) }}" class="lg:block md:block sm:block xs:hidden w-full relative overflow-hidden bg-cover bg-no-repeat">
                     <img src="{{ asset('storage/'.$start_collection->image) }}"

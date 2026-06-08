@@ -186,9 +186,11 @@
     </div>
     @endif
     @if($order_completed)
-    <div class="bg-white p-5 rounded-lg shadow-md">
-        <div class="flex justify-between">
-            <span class="text-lg font-bold text-green-700">Your order has been placed successfully and we will let you know once your package is on its way.</span>
+    <div class="theme-alert-success flex items-start gap-4 p-6 border border-primary/20 border-l-4 border-l-primary bg-neutral-50 dark:bg-zinc-950 text-neutral-800 dark:text-neutral-200 rounded-none mb-6">
+        <i class="fa-solid fa-circle-check text-primary text-2xl mt-1"></i>
+        <div>
+            <h4 class="text-lg font-bold text-neutral-900 dark:text-white mb-1">Order Placed Successfully!</h4>
+            <p class="text-sm">Your order has been placed successfully and we will let you know once your package is on its way.</p>
         </div>
     </div>
     @endif

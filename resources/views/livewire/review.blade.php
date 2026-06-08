@@ -25,7 +25,7 @@
                                 <div>
                                     <div>
                                         <textarea wire:model="forms.{{ $index }}.review" rows="4" cols="4" name="review"
-                                            class="w-full border p-2 rounded mb-3 border-secondary dark:bg-black dark:border-slate-800"
+                                            class="w-full border p-2 rounded-none mb-3 border-secondary dark:bg-black dark:border-slate-800"
                                             placeholder="Write your review..."></textarea>
                                         @error('forms.' . $index . '.review')
                                             <span class="text-red-600 text-sm">{{ $message }}</span>

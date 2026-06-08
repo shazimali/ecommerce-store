@@ -22,6 +22,6 @@ class ProductService
 
     static public function getProductReviews(int $id)
     {
-        return  ProductReview::Where('product_id', $id)->get();
+        return  ProductReview::where('product_id', $id)->with('user')->get();
     }
 }

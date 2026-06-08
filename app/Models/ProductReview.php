@@ -18,4 +18,12 @@ class ProductReview extends Model
     {
         return $this->hasOne(ProductHead::class, 'id', 'product_id');
     }
+
+    /**
+     * Get the user that wrote the review.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

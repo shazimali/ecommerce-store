@@ -13,9 +13,12 @@
                 <!-- Your Information Section -->
                 <div class="">
                 @session('success')
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold">Success!</strong>
-                        <span class="block sm:inline">{{ session('success') }}</span>
+                    <div class="theme-alert-success flex items-center gap-3" role="alert">
+                        <i class="fa-solid fa-circle-check text-primary text-lg"></i>
+                        <div>
+                            <strong class="font-bold">Success!</strong>
+                            <span>{{ session('success') }}</span>
+                        </div>
                     </div>
                 @endsession
                     <h2 class="text-xl font-semibold mb-6 dark:text-white">Your Information</h2>
@@ -25,7 +28,7 @@
                                 First name <span class="text-primary">*</span>
                             </label>
                             <input type="text" value="{{ old('first_name') }}" name="first_name"
-                                class="w-full border border-gray-300 rounded px-3 py-2 dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="w-full border border-gray-300 rounded-none px-3 py-2 dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('first_name')
                                 <p class="text-red-500 text-xs">{{ $message }}</p>
                             @enderror
@@ -36,7 +39,7 @@
                                 Last name <span class="text-primary">*</span>
                             </label>
                             <input type="text" value="{{ old('last_name') }}" name="last_name"
-                                class="w-full border border-gray-300 rounded px-3 py-2
+                                class="w-full border border-gray-300 rounded-none px-3 py-2
                                 dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('last_name')
                                 <p class="text-red-500 text-xs">{{ $message }}</p>
@@ -47,7 +50,7 @@
                                 Email address <span class="text-primary">*</span>
                             </label>
                             <input type="email" value="{{ old('email_address') }}" name="email_address"
-                                class="w-full border border-gray-300 rounded px-3 py-2
+                                class="w-full border border-gray-300 rounded-none px-3 py-2
                             dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('email_address')
                                 <p class="text-red-500 text-xs">{{ $message }}</p>
@@ -59,7 +62,7 @@
                                 Subject <span class="text-primary">*</span>
                             </label>
                             <select
-                                class="w-full border border-gray-300 rounded px-3 py-2
+                                class="w-full border border-gray-300 rounded-none px-3 py-2
                             dark:bg-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 name="subject" value="{{ old('subject') }}">
                                 <option value="" disabled selected>Select a subject</option>
@@ -96,7 +99,7 @@
                 </div> --}}
                 <div class="text-center">
                     <button type="submit"
-                        class="w-96 mt-4 bg-primary text-secondary py-3 px-4 rounded hover:bg-primary transition-colors">
+                        class="w-96 mt-4 bg-primary text-secondary py-3 px-4 rounded-none hover:bg-primary transition-colors">
                         Submit
                     </button>
                 </div>
