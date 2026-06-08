@@ -1,7 +1,7 @@
 <ul>
     <li
         x-on:click="menu = ! menu"
-        class="bg-primary text-black block py-5 font-normal pl-5 border-secondary dark:text-white dark:border-slate-800 border-b">
+        class="bg-primary text-black block py-3 font-normal pl-5 border-secondary dark:text-white dark:border-slate-800 border-b">
         Collections
         <div class="float-end inline-block pr-5">
             <i class="fa-solid fa-caret-down"></i>

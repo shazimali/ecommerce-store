@@ -8,7 +8,7 @@
         <div>
             <livewire:nav-bar-collection />
         </div>
-        <div class="col-span-3 grid grid-cols-2 py-5 bg-white text-black dark:bg-black relative">
+        <div class="col-span-3 grid grid-cols-2 py-3 bg-white text-black dark:bg-black relative">
             <ul class="flex">
                 <li class="mr-6">
                     <a @class([
