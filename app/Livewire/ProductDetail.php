@@ -26,17 +26,16 @@ class ProductDetail extends Component
         $this->product = ProductService::getProductDetailBySlug($this->slug);
         $this->reviews = ProductService::getProductReviews($this->product->id);
 
-        $this->activeImage = getWebsiteUrl() . '/storage/' . $this->product->image;
+        $this->activeImage = getWebsiteUrl() . '/storage/' . $this->product->image1;
         $this->colors = $this->product->colors->isNotEmpty() ? $this->product->colors : [];
         $this->current_color = $this->colors ? $this->colors->first()->color_name : '';
 
         $this->images = [
-            $this->product->image ? getWebsiteUrl() . '/storage/' . $this->product->image  : '',
-            $this->product->image1 ? getWebsiteUrl() . '/storage/' . $this->product->image1  : '',
-            $this->product->image2 ? getWebsiteUrl() . '/storage/' . $this->product->image2  : '',
-            $this->product->image3 ? getWebsiteUrl() . '/storage/' . $this->product->image3  : '',
-            $this->product->image4 ? getWebsiteUrl() . '/storage/' . $this->product->image4  : '',
-            $this->product->image5 ? getWebsiteUrl() . '/storage/' . $this->product->image5  : '',
+            $this->product->image1 ? getWebsiteUrl() . '/storage/' . $this->product->image1 : '',
+            $this->product->image2 ? getWebsiteUrl() . '/storage/' . $this->product->image2 : '',
+            $this->product->image3 ? getWebsiteUrl() . '/storage/' . $this->product->image3 : '',
+            $this->product->image4 ? getWebsiteUrl() . '/storage/' . $this->product->image4 : '',
+            $this->product->image5 ? getWebsiteUrl() . '/storage/' . $this->product->image5 : '',
         ];
     }
 
@@ -50,13 +49,13 @@ class ProductDetail extends Component
         $color_info = $this->colors->where('id', $id)->first();
         $this->current_color = $name;
         $this->add_to_cart_active = true;
-        $this->activeImage =  getWebsiteUrl() . '/storage/' . $color_info->image1;
+        $this->activeImage = getWebsiteUrl() . '/storage/' . $color_info->image1;
         $this->images = [
-            $color_info->image1 ? getWebsiteUrl() . '/storage/' . $color_info->image1  : '',
-            $color_info->image2 ? getWebsiteUrl() . '/storage/' . $color_info->image2  : '',
-            $color_info->image3 ? getWebsiteUrl() . '/storage/' . $color_info->image3  : '',
-            $color_info->image4 ? getWebsiteUrl() . '/storage/' . $color_info->image4  : '',
-            $color_info->image5 ? getWebsiteUrl() . '/storage/' . $color_info->image5  : '',
+            $color_info->image1 ? getWebsiteUrl() . '/storage/' . $color_info->image1 : '',
+            $color_info->image2 ? getWebsiteUrl() . '/storage/' . $color_info->image2 : '',
+            $color_info->image3 ? getWebsiteUrl() . '/storage/' . $color_info->image3 : '',
+            $color_info->image4 ? getWebsiteUrl() . '/storage/' . $color_info->image4 : '',
+            $color_info->image5 ? getWebsiteUrl() . '/storage/' . $color_info->image5 : '',
         ];
     }
 
@@ -77,13 +76,13 @@ class ProductDetail extends Component
     }
     public function incrementQty($val)
     {
-        if ($val >  1) {
+        if ($val > 1) {
             $this->qty = $val;
         }
     }
     public function decrementQty($val)
     {
-        if ($val >  0) {
+        if ($val > 0) {
             $this->qty = $val;
         }
     }
