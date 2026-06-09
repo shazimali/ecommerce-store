@@ -196,6 +196,49 @@ swiper-slide {
   background-color: #f9fafb;
 }
 
+/* Dark mode styles for Trix Editor */
+.dark .trix-editor {
+  color: #e5e7eb; /* White/gray text */
+}
+
+.dark .trix-editor h1,
+.dark .trix-editor h2,
+.dark .trix-editor h3,
+.dark .trix-editor h4 {
+  color: #ffffff; /* White headings */
+}
+
+.dark .trix-editor strong {
+  color: #ffffff; /* White bold text */
+}
+
+.dark .trix-editor th,
+.dark .trix-editor td {
+  border-color: #3f3f46; /* Dark gray borders */
+}
+
+.dark .trix-editor th {
+  background-color: #18181b; /* Dark header bg */
+  color: #ffffff;
+}
+
+.dark .trix-editor tr:nth-child(even) {
+  background-color: #18181b; /* Dark alternate row bg */
+}
+
+.dark .trix-editor blockquote {
+  border-left-color: #3f3f46;
+  color: #a1a1aa;
+}
+
+.dark .trix-editor a {
+  color: #60a5fa;
+}
+
+.dark .trix-editor a:hover {
+  color: #93c5fd;
+}
+
 /* Theme Alert Boxes */
 .theme-alert-success {
   background-color: rgba(209, 156, 151, 0.05);
