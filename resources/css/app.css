@@ -4,15 +4,17 @@
 @import '@fortawesome/fontawesome-free/css/solid.css';
 @import '@fortawesome/fontawesome-free/css/brands.css';
 @tailwind base;
+
 * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary);
-  }
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary);
+}
+
 @tailwind components;
 @tailwind utilities;
 
 [x-cloak] {
-    display: none !important;
+  display: none !important;
 }
 
 swiper-container {
@@ -48,14 +50,15 @@ swiper-slide {
   object-fit: cover;
 }
 
-.swiper-pagination-bullet-active{
+.swiper-pagination-bullet-active {
   background-color: #D19C97 !important;
 }
 
 /* Custom styles for Trix Editor Dynamic Content */
 .trix-editor {
   line-height: 1.625;
-  color: #374151; /* Dark gray text */
+  color: #374151;
+  /* Dark gray text */
   font-size: 1rem;
 }
 
@@ -64,16 +67,34 @@ swiper-slide {
 .trix-editor h2,
 .trix-editor h3,
 .trix-editor h4 {
-  color: #111827; /* Dark black text */
+  color: #111827;
+  /* Dark black text */
   font-weight: 700;
   margin-top: 1.75em;
   margin-bottom: 0.5em;
   line-height: 1.25;
 }
-.trix-editor h1 { font-size: 1.875rem; } /* 30px */
-.trix-editor h2 { font-size: 1.5rem; }   /* 24px */
-.trix-editor h3 { font-size: 1.25rem; }   /* 20px */
-.trix-editor h4 { font-size: 1.125rem; }  /* 18px */
+
+.trix-editor h1 {
+  font-size: 1.875rem;
+}
+
+/* 30px */
+.trix-editor h2 {
+  font-size: 1.5rem;
+}
+
+/* 24px */
+.trix-editor h3 {
+  font-size: 1.25rem;
+}
+
+/* 20px */
+.trix-editor h4 {
+  font-size: 1.125rem;
+}
+
+/* 18px */
 
 /* Paragraph spacing */
 .trix-editor p {
@@ -86,6 +107,7 @@ swiper-slide {
   font-weight: 600;
   color: #111827;
 }
+
 .trix-editor em {
   font-style: italic;
 }
@@ -97,27 +119,34 @@ swiper-slide {
   margin-bottom: 1.25em;
   padding-left: 1.5rem;
 }
+
 .trix-editor ul {
   list-style-type: disc;
 }
+
 .trix-editor ol {
   list-style-type: decimal;
 }
+
 .trix-editor li {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
+
 .trix-editor li::marker {
-  color: #9ca3af; /* Gray bullet points */
+  color: #9ca3af;
+  /* Gray bullet points */
 }
 
 /* Links */
 .trix-editor a {
-  color: #2563eb; /* Blue links */
+  color: #2563eb;
+  /* Blue links */
   text-decoration: underline;
   font-weight: 500;
   transition: color 0.15s ease;
 }
+
 .trix-editor a:hover {
   color: #1d4ed8;
 }
@@ -149,129 +178,135 @@ swiper-slide {
   margin: 1.5em 0;
   font-size: 0.875rem;
 }
+
 .trix-editor th,
 .trix-editor td {
   border: 1px solid #e5e7eb;
   padding: 0.75rem 1rem;
   text-align: left;
 }
+
 .trix-editor th {
   background-color: #f9fafb;
   font-weight: 600;
   color: #111827;
 }
+
 .trix-editor tr:nth-child(even) {
   background-color: #f9fafb;
 }
 
-
-
 /* Theme Alert Boxes */
 .theme-alert-success {
-    background-color: rgba(209, 156, 151, 0.05);
-    border: 1px solid rgba(209, 156, 151, 0.3);
-    border-left: 4px solid #D19C97;
-    color: #1a1a1a;
-    padding: 1rem;
-    border-radius: 0px !important;
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1.5rem;
+  background-color: rgba(209, 156, 151, 0.05);
+  border: 1px solid rgba(209, 156, 151, 0.3);
+  border-left: 4px solid #D19C97;
+  color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 0px !important;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 1.5rem;
 }
 
 .dark .theme-alert-success {
-    background-color: rgba(209, 156, 151, 0.1);
-    border: 1px solid rgba(209, 156, 151, 0.4);
-    border-left: 4px solid #D19C97;
-    color: #f4f4f5;
+  background-color: rgba(209, 156, 151, 0.1);
+  border: 1px solid rgba(209, 156, 151, 0.4);
+  border-left: 4px solid #D19C97;
+  color: #f4f4f5;
 }
 
 .theme-alert-danger {
-    background-color: rgba(239, 68, 68, 0.05);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-left: 4px solid #ef4444;
-    color: #991b1b;
-    padding: 1rem;
-    border-radius: 0px !important;
-    font-family: 'Poppins', sans-serif;
-    margin-bottom: 1.5rem;
+  background-color: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 0px !important;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 1.5rem;
 }
 
 .dark .theme-alert-danger {
-    background-color: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    border-left: 4px solid #ef4444;
-    color: #fca5a5;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-left: 4px solid #ef4444;
+  color: #fca5a5;
 }
 
 /* SweetAlert2 Toast customization to match the theme */
 .swal2-popup.swal2-toast {
-    font-family: 'Poppins', sans-serif !important;
-    border-radius: 0px !important; /* Sharp corners */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-    border: 1px solid #D19C97 !important; /* Theme primary border */
-    background: #ffffff !important;
-    color: #1a1a1a !important;
-    padding: 0.75rem 1rem !important;
+  font-family: 'Poppins', sans-serif !important;
+  border-radius: 0px !important;
+  /* Sharp corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid #D19C97 !important;
+  /* Theme primary border */
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  padding: 0.75rem 1rem !important;
 }
 
 .dark .swal2-popup.swal2-toast {
-    background: #18181b !important; /* Zinc-900 */
-    color: #f4f4f5 !important; /* Zinc-100 */
-    border: 1px solid #D19C97 !important;
+  background: #18181b !important;
+  /* Zinc-900 */
+  color: #f4f4f5 !important;
+  /* Zinc-100 */
+  border: 1px solid #D19C97 !important;
 }
 
 .swal2-popup.swal2-toast .swal2-title {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    color: inherit !important;
-    margin: 0 0.5rem !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: inherit !important;
+  margin: 0 0.5rem !important;
 }
 
 .swal2-popup.swal2-toast .swal2-timer-progress-bar {
-    background: #D19C97 !important; /* Theme primary progress bar */
+  background: #D19C97 !important;
+  /* Theme primary progress bar */
 }
 
 /* Success toast styling */
 .swal2-popup.swal2-toast .swal2-icon.swal2-success {
-    border-color: #D19C97 !important;
-    color: #D19C97 !important;
+  border-color: #D19C97 !important;
+  color: #D19C97 !important;
 }
 
 .swal2-popup.swal2-toast .swal2-icon.swal2-success [class^='swal2-success-line'] {
-    background-color: #D19C97 !important;
+  background-color: #D19C97 !important;
 }
 
 .swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring {
-    border: .25em solid rgba(209, 156, 151, 0.2) !important;
+  border: .25em solid rgba(209, 156, 151, 0.2) !important;
 }
 
 /* Make icons look crisp and clean */
 .swal2-popup.swal2-toast .swal2-icon {
-    transform: scale(0.85) !important;
-    margin: 0 !important;
+  transform: scale(0.85) !important;
+  margin: 0 !important;
 }
 
 /* General SweetAlert2 overrides */
 .swal2-popup {
-    font-family: 'Poppins', sans-serif !important;
-    border-radius: 0px !important; /* Sharp corners */
-    border: 1px solid rgba(209, 156, 151, 0.3) !important;
+  font-family: 'Poppins', sans-serif !important;
+  border-radius: 0px !important;
+  /* Sharp corners */
+  border: 1px solid rgba(209, 156, 151, 0.3) !important;
 }
 
 .dark .swal2-popup {
-    background: #18181b !important;
-    color: #f4f4f5 !important;
-    border: 1px solid #27272a !important;
+  background: #18181b !important;
+  color: #f4f4f5 !important;
+  border: 1px solid #27272a !important;
 }
 
 .swal2-confirm {
-    background-color: #D19C97 !important;
-    color: #ffffff !important;
-    border-radius: 0px !important;
+  background-color: #D19C97 !important;
+  color: #ffffff !important;
+  border-radius: 0px !important;
 }
 
 .swal2-cancel {
-    border-radius: 0px !important;
+  border-radius: 0px !important;
 }
-
