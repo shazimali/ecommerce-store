@@ -85,6 +85,16 @@ class PermissionsSeeder extends Seeder
         $permissions[27]['name'] = 'Product  Delete';
         $permissions[27]['key'] = 'product_delete';
 
+        //Badges
+        $permissions[28]['name'] = 'Badge Access';
+        $permissions[28]['key'] = 'badge_access';
+        $permissions[29]['name'] = 'Badge Create';
+        $permissions[29]['key'] = 'badge_create';
+        $permissions[30]['name'] = 'Badge Edit';
+        $permissions[30]['key'] = 'badge_edit';
+        $permissions[31]['name'] = 'Badge Delete';
+        $permissions[31]['key'] = 'badge_delete';
+
 
         foreach ($permissions as $key => $permission) {
 

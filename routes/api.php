@@ -20,6 +20,7 @@ use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\Settings\SettingsController;
 use App\Http\Controllers\API\Admin\SocialMedias\SocialMediasController;
 use App\Http\Controllers\API\Admin\SubCategories\subCategoryController;
+use App\Http\Controllers\API\Admin\Badges\BadgesController;
 use App\Http\Controllers\API\Admin\Suppliers\SupplierController;
 use App\Http\Controllers\API\Admin\Users\UsersController;
 use App\Http\Controllers\API\Admin\Websites\WebsitesController;
@@ -44,7 +45,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/notifications/{id}', [AuthController::class, 'setToReadNotification']);
         Route::post('/notifications-destroy', [AuthController::class, 'destroyAllNotifications']);
     });
-    Route::middleware(['auth:sanctum', ApiJsonResponseMiddleware::class])->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
 
         //Roles
         Route::prefix('/roles')->group(function () {
@@ -113,6 +114,16 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{id}', [subCategoryController::class, 'edit']);
             Route::post('/update/{id}', [subCategoryController::class, 'update']);
             Route::delete('/delete/{id}', [subCategoryController::class, 'destroy']);
+        });
+
+        // Badges
+        Route::prefix('/badges')->group(function () {
+            Route::get('/', [BadgesController::class, 'index']);
+            Route::post('/store', [BadgesController::class, 'store']);
+            Route::get('/edit/{id}', [BadgesController::class, 'edit']);
+            Route::post('/update/{id}', [BadgesController::class, 'update']);
+            Route::delete('/delete/{id}', [BadgesController::class, 'destroy']);
+            Route::get('/get-all-sub-categories', [BadgesController::class, 'getAllSubCategories']);
         });
 
         //Products

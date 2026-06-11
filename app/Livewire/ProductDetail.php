@@ -21,6 +21,7 @@ class ProductDetail extends Component
     public $qty = 1;
     public $current_color;
     public $relatedProducts = [];
+    public $badges = [];
 
     public function mount()
     {
@@ -70,6 +71,36 @@ class ProductDetail extends Component
             }
         } else {
             $this->relatedProducts = collect();
+        }
+
+        // Load badges under add to cart button if current category exists in this product sub category
+        $currentCategoryId = session('current_category_id');
+        $productCategoryIdsArray = $subCategoryIds->isNotEmpty() ? \DB::table('category_sub_category')
+            ->whereIn('sub_category_id', $subCategoryIds)
+            ->pluck('category_id')
+            ->unique()
+            ->toArray() : [];
+
+        if (!$currentCategoryId && !empty($productCategoryIdsArray)) {
+            $currentCategoryId = $productCategoryIdsArray[0];
+            session(['current_category_id' => $currentCategoryId]);
+        }
+
+        if ($currentCategoryId && in_array($currentCategoryId, $productCategoryIdsArray)) {
+            $matchingSubCategoryIds = \DB::table('category_sub_category')
+                ->where('category_id', $currentCategoryId)
+                ->whereIn('sub_category_id', $subCategoryIds)
+                ->pluck('sub_category_id')
+                ->unique()
+                ->toArray();
+
+            $this->badges = \App\Models\Badge::where('status', 'ACTIVE')
+                ->whereHas('sub_categories', function ($q) use ($matchingSubCategoryIds) {
+                    $q->whereIn('sub_categories.id', $matchingSubCategoryIds);
+                })
+                ->get();
+        } else {
+            $this->badges = collect();
         }
     }
 

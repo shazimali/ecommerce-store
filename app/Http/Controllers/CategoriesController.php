@@ -11,6 +11,7 @@ class CategoriesController extends Controller
     {
         $category = Category::where('slug', $slug)->first();
         if ($category) {
+            session(['current_category_id' => $category->id]);
             $subCategories = $category->sub_categories;
             return view('categories', [
                 'subCategories' => $subCategories,

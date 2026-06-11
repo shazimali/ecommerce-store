@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->append(ApiJsonResponseMiddleware::class);
+        $middleware->prependToGroup('api', ApiJsonResponseMiddleware::class);
+
         $trustedHosts = array_filter(
             explode(',', env('TRUSTED_HOSTS', 'localhost'))
         );
