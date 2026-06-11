@@ -17,7 +17,7 @@ class ProductService
 
     static public function getProductDetailBySlug(string $slug)
     {
-        return  ProductHead::where('slug', $slug)->with('stocks', 'colors')->first();
+        return  ProductHead::where('slug', $slug)->with('stocks', 'colors', 'sub_categories')->first();
     }
 
     static public function getProductReviews(int $id)

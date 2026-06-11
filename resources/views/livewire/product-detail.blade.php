@@ -1,19 +1,5 @@
-@php
-    $embed_code = $product->youtube_link;
-    if ($embed_code) {
-        if (strpos($embed_code, 'src="') !== false) {
-            preg_match('/src="([^"]+)"/', $embed_code, $matches);
-            if (isset($matches[1])) {
-                $original_src = $matches[1];
-                $separator = (strpos($original_src, '?') !== false) ? '&' : '?';
-                $new_src = $original_src . $separator . 'autoplay=1&enablejsapi=1';
-                $embed_code = str_replace($original_src, $new_src, $embed_code);
-            }
-        }
-    }
-@endphp
 <div class="bg-white dark:bg-black"
-    x-data="{ tab: 0, isVideoOpen: false, videoEmbed: '{{ addslashes(str_replace(["\r", "\n"], '', $embed_code)) }}' }">
+    x-data="{ tab: 0, isVideoOpen: false, videoEmbed: '{{ addslashes(str_replace(["\r", "\n"], '', $product->youtube_link)) }}' }">
     <!-- Main Product Section -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16 px-8 py-8 lg:py-16 text-black dark:text-secondary">
 
@@ -106,7 +92,7 @@
             @if ($review_count > 0)
                 <button
                     x-on:click.prevent="tab = 1; document.getElementById('tabs-section').scrollIntoView({ behavior: 'smooth' })"
-                    class="flex items-center gap-2 mb-4 hover:opacity-85 transition-opacity focus:outline-none text-left cursor-pointer">
+                    class="flex items-center gap-2 mb-2 hover:opacity-85 transition-opacity focus:outline-none text-left cursor-pointer">
                     <div class="flex text-amber-400">
                         @for ($i = 0; $i < $review_mean; $i++)
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
@@ -128,7 +114,7 @@
                     </span>
                 </button>
             @else
-                <div class="flex items-center gap-2 mb-4">
+                <div class="flex items-center gap-2 mb-2">
                     <div class="flex text-neutral-300 dark:text-neutral-600">
                         @for ($i = 0; $i < 5; $i++)
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -145,7 +131,7 @@
             @endif
 
             <!-- Price and Status Block -->
-            <div class="py-4 border-y border-neutral-100 dark:border-neutral-800 my-4">
+            <div class="py-2">
                 @if (count($product->stocks) == 0)
                     <span
                         class="inline-flex items-center px-3 py-1 text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400 uppercase tracking-wider">
@@ -251,6 +237,37 @@
             @endif
         </div>
     </div>
+
+    <!-- Related Products Slider (Same Category, Trending) -->
+    @if(count($relatedProducts) > 0)
+        <div class="mt-16 text-center">
+            <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Related Products</h2>
+        </div>
+        <section class="overflow-hidden">
+            <div class="container xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 mx-auto sm:px-6">
+                <!-- Swiper -->
+                <div class="swiper related-products-swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
+                    <div class="swiper-wrapper">
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
     <!-- Tabs Section -->
     <div id="tabs-section" class="mt-12 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-8">

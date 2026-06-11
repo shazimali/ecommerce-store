@@ -20,6 +20,7 @@ class ProductDetail extends Component
     public $add_to_cart_active = false;
     public $qty = 1;
     public $current_color;
+    public $relatedProducts = [];
 
     public function mount()
     {
@@ -37,6 +38,39 @@ class ProductDetail extends Component
             $this->product->image4 ? getWebsiteUrl() . '/storage/' . $this->product->image4 : '',
             $this->product->image5 ? getWebsiteUrl() . '/storage/' . $this->product->image5 : '',
         ];
+
+        // Load trending products from the same categories (by loading all subcategories under those categories)
+        $subCategoryIds = $this->product->sub_categories->pluck('id');
+        if ($subCategoryIds->isNotEmpty()) {
+            // Get all categories that the current product's subcategories belong to
+            $categoryIds = \DB::table('category_sub_category')
+                ->whereIn('sub_category_id', $subCategoryIds)
+                ->pluck('category_id')
+                ->unique();
+
+            if ($categoryIds->isNotEmpty()) {
+                // Get all subcategories belonging to those categories
+                $allSubCategoryIds = \DB::table('category_sub_category')
+                    ->whereIn('category_id', $categoryIds)
+                    ->pluck('sub_category_id')
+                    ->unique();
+
+                // Load active trending products from these subcategories, excluding current product
+                $this->relatedProducts = ProductHead::active()
+                    ->trending()
+                    ->whereHas('sub_categories', function ($q) use ($allSubCategoryIds) {
+                        $q->whereIn('sub_categories.id', $allSubCategoryIds);
+                    })
+                    ->where('id', '!=', $this->product->id)
+                    ->with(['price_detail', 'stocks'])
+                    ->orderBy('order')
+                    ->get();
+            } else {
+                $this->relatedProducts = collect();
+            }
+        } else {
+            $this->relatedProducts = collect();
+        }
     }
 
     public function changeActiveImage($image)
