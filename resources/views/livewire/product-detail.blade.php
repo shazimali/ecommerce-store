@@ -143,25 +143,44 @@
                         Coming Soon
                     </span>
                 @else
-                    <div class="flex items-baseline gap-4">
+                    <div>
+                        <div class="flex items-baseline gap-4">
+                            @if ($product->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $product->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $product->price_detail->discount_to))
+                                <span class="text-3xl font-extrabold text-primary">
+                                    {{ $product->price_detail->country->currency }}
+                                    {{ number_format(round($product->price_detail->price - ($product->price_detail->price / 100) * $product->price_detail->discount), 2) }}
+                                </span>
+                                <span class="text-lg text-neutral-400 line-through">
+                                    {{ $product->price_detail->country->currency }}
+                                    {{ number_format($product->price_detail->price, 2) }}
+                                </span>
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400 uppercase">
+                                    -{{ $product->price_detail->discount }}% off
+                                </span>
+                            @else
+                                <span class="text-3xl font-extrabold text-primary">
+                                    {{ $product->price_detail->country->currency }}
+                                    {{ number_format($product->price_detail->price, 2) }}
+                                </span>
+                            @endif
+                        </div>
                         @if ($product->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $product->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $product->price_detail->discount_to))
-                            <span class="text-3xl font-extrabold text-primary">
-                                {{ $product->price_detail->country->currency }}
-                                {{ number_format(round($product->price_detail->price - ($product->price_detail->price / 100) * $product->price_detail->discount), 2) }}
-                            </span>
-                            <span class="text-lg text-neutral-400 line-through">
-                                {{ $product->price_detail->country->currency }}
-                                {{ number_format($product->price_detail->price, 2) }}
-                            </span>
-                            <span
-                                class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400 uppercase">
-                                -{{ $product->price_detail->discount }}% off
-                            </span>
-                        @else
-                            <span class="text-3xl font-extrabold text-primary">
-                                {{ $product->price_detail->country->currency }}
-                                {{ number_format($product->price_detail->price, 2) }}
-                            </span>
+                            @php
+                                $daysLeft = Carbon\Carbon::today()->diffInDays(Carbon\Carbon::parse($product->price_detail->discount_to));
+                            @endphp
+                            <div class="mt-2 flex items-center text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 px-2.5 py-1 rounded w-fit">
+                                <i class="fa-regular fa-clock mr-1.5 animate-pulse"></i>
+                                <span>
+                                    @if($daysLeft == 0)
+                                        Ends today
+                                    @elseif($daysLeft == 1)
+                                        Ends tomorrow
+                                    @else
+                                        Ends in {{ $daysLeft }} days
+                                    @endif
+                                </span>
+                            </div>
                         @endif
                     </div>
                 @endif

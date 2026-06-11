@@ -3,13 +3,12 @@
     <div class="bg-secondary py-10 border-b-2 border-white">
         <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1  gap-10 px-8">
             <div>
-                <a class="block px-10" href="#">
+                <a class="block px-10" href="{{ route('home') }}">
                     <img src="{{ asset('storage/' . website()->logo) }}" alt="" class="border rounded-none">
                 </a>
-                <a class="block" href="">
+                <a class="block" href="{{ route('home') }}">
                     <h1 class="text-2xl font-semibold text-center my-2"><span
-                            class="text-primary dark:text-black uppercase">Every
-                            Day</span><span
+                            class="text-primary dark:text-black uppercase">EveryDay</span><span
                             class="text-black dark:text-primary ml-1 uppercase  ">{{ website()->title }}</span>
                     </h1>
                 </a>

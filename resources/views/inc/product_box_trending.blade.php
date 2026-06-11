@@ -31,20 +31,22 @@
     @if ($pr->coming_soon)
         <p class="text-primary text-xs text-left"><b>Coming Soon</b></p>
     @else
-        @if ($pr->price_detail && $pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to))
-            <div class="text-xs text-left">
-                <b>{{ $pr->price_detail->country->currency }}</b>
-                {{ number_format(round($pr->price_detail->price - ($pr->price_detail->price / 100) * $pr->price_detail->discount), 2) }}
-                <del class="text-gray-500">
-                    {{ $pr->price_detail->country->currency }}
+        @if ($pr->price_detail)
+            @if ($pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $pr->price_detail->discount_to))
+                <div class="text-xs text-left">
+                    <b>{{ $pr->price_detail->country->currency }}</b>
+                    {{ number_format(round($pr->price_detail->price - ($pr->price_detail->price / 100) * $pr->price_detail->discount), 2) }}
+                    <del class="text-gray-500">
+                        {{ $pr->price_detail->country->currency }}
+                        {{ number_format($pr->price_detail->price, 2) }}
+                    </del>
+                </div>
+            @else
+                <div class="text-xs text-left">
+                    <b>{{ $pr->price_detail->country->currency }}</b>
                     {{ number_format($pr->price_detail->price, 2) }}
-                </del>
-            </div>
-        @else
-            <div class="text-xs text-left">
-                <b>{{ $pr->price_detail->country->currency }}</b>
-                {{ number_format($pr->price_detail->price, 2) }}
-            </div>
+                </div>
+            @endif
         @endif
         <div class="w-full">
             <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2"

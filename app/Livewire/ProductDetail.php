@@ -66,6 +66,17 @@ class ProductDetail extends Component
                     ->with(['price_detail', 'stocks'])
                     ->orderBy('order')
                     ->get();
+
+                if ($this->relatedProducts->isEmpty()) {
+                    $this->relatedProducts = ProductHead::active()
+                        ->whereHas('sub_categories', function ($q) use ($allSubCategoryIds) {
+                            $q->whereIn('sub_categories.id', $allSubCategoryIds);
+                        })
+                        ->where('id', '!=', $this->product->id)
+                        ->with(['price_detail', 'stocks'])
+                        ->orderBy('order')
+                        ->get();
+                }
             } else {
                 $this->relatedProducts = collect();
             }
