@@ -24,7 +24,7 @@ class UpdateRoleRequest extends JsonFormRequest
         return [
             'name'     => [
                 'required',
-                'unique:roles,name,'.$this->id,
+                'unique:roles,name,'.$this->route('id'),
                 'max:50',
             ],
             'permissions'    => [
