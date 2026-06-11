@@ -104,6 +104,42 @@ const trending_swiper = new Swiper('.trending-swiper-container', {
 
 });
 
+const related_swiper = new Swiper('.related-products-swiper-container', {
+  modules: [Navigation, Pagination, Autoplay],
+
+  slidesPerView: 1,
+  centeredSlides: true,
+  spaceBetween: 30,
+  loop: true,
+  autoplay: {
+    delay: 2500,
+    disableOnInteraction: false,
+    pauseOnMouseEnter: true,
+  },
+  navigation: {
+    nextEl: ".related-next-btn",
+    prevEl: ".related-prev-btn",
+  },
+  breakpoints: {
+    380: {
+      slidesPerView: 1.2,
+    },
+    640: {
+      slidesPerView: 4.4,
+    },
+    768: {
+      slidesPerView: 2.4,
+    },
+    1024: {
+      slidesPerView: 5.5,
+    },
+    1280: {
+      slidesPerView: 4.2,
+    },
+  },
+
+});
+
 const swiperSlider = new Swiper(".mySwiper", {
   modules: [Navigation, Pagination, Autoplay],
   loop: true,
