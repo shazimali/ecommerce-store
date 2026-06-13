@@ -259,7 +259,7 @@
             @if(count($badges) > 0)
                 <div class="flex flex-wrap items-center gap-3">
                     @foreach($badges as $badge)
-                        <img height="40" width="40" src="{{ asset('storage/' . $badge['image']) }}" alt="{{ $badge['title'] }}" />
+                        <img height="55" width="55" src="{{ asset('storage/' . $badge['image']) }}" alt="{{ $badge['title'] }}" />
                     @endforeach
                 </div>
             @endif

@@ -13,7 +13,7 @@ class SubCategory extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'category_sub_category', 'category_id', 'sub_category_id');
+        return $this->belongsToMany(Category::class, 'category_sub_category', 'sub_category_id', 'category_id');
     }
 
     public function product_heads(): BelongsToMany
