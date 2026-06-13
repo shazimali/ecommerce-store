@@ -40,78 +40,66 @@ class ProductDetail extends Component
             $this->product->image5 ? getWebsiteUrl() . '/storage/' . $this->product->image5 : '',
         ];
 
-        // Load trending products from the same categories (by loading all subcategories under those categories)
+        // Get the product's own sub-category IDs
         $subCategoryIds = $this->product->sub_categories->pluck('id');
-        if ($subCategoryIds->isNotEmpty()) {
-            // Get all categories that the current product's subcategories belong to
-            $categoryIds = \DB::table('category_sub_category')
+
+        // Get the parent category IDs that this product belongs to (via its sub-categories)
+        $categoryIds = $subCategoryIds->isNotEmpty()
+            ? \DB::table('category_sub_category')
                 ->whereIn('sub_category_id', $subCategoryIds)
                 ->pluck('category_id')
+                ->unique()
+            : collect();
+
+        // ── Related Products ─────────────────────────────────────────────────────
+        // Find products that share at least one parent CATEGORY with this product.
+        // Try trending first; fall back to all active products in those categories.
+        if ($categoryIds->isNotEmpty()) {
+            // Collect ALL sub-category IDs that live under the same parent categories
+            $siblingSubCategoryIds = \DB::table('category_sub_category')
+                ->whereIn('category_id', $categoryIds)
+                ->pluck('sub_category_id')
                 ->unique();
 
-            if ($categoryIds->isNotEmpty()) {
-                // Get all subcategories belonging to those categories
-                $allSubCategoryIds = \DB::table('category_sub_category')
-                    ->whereIn('category_id', $categoryIds)
-                    ->pluck('sub_category_id')
-                    ->unique();
+            $related = ProductHead::active()
+                ->trending()
+                ->whereHas('sub_categories', function ($q) use ($siblingSubCategoryIds) {
+                    $q->whereIn('sub_categories.id', $siblingSubCategoryIds);
+                })
+                ->where('id', '!=', $this->product->id)
+                ->with(['price_detail.country', 'stocks'])
+                ->orderBy('order')
+                ->get();
 
-                // Load active trending products from these subcategories, excluding current product
-                $this->relatedProducts = ProductHead::active()
-                    ->trending()
-                    ->whereHas('sub_categories', function ($q) use ($allSubCategoryIds) {
-                        $q->whereIn('sub_categories.id', $allSubCategoryIds);
+            // Fall back to all active (non-trending) products in the same categories
+            if ($related->isEmpty()) {
+                $related = ProductHead::active()
+                    ->whereHas('sub_categories', function ($q) use ($siblingSubCategoryIds) {
+                        $q->whereIn('sub_categories.id', $siblingSubCategoryIds);
                     })
                     ->where('id', '!=', $this->product->id)
-                    ->with(['price_detail', 'stocks'])
+                    ->with(['price_detail.country', 'stocks'])
                     ->orderBy('order')
                     ->get();
-
-                if ($this->relatedProducts->isEmpty()) {
-                    $this->relatedProducts = ProductHead::active()
-                        ->whereHas('sub_categories', function ($q) use ($allSubCategoryIds) {
-                            $q->whereIn('sub_categories.id', $allSubCategoryIds);
-                        })
-                        ->where('id', '!=', $this->product->id)
-                        ->with(['price_detail', 'stocks'])
-                        ->orderBy('order')
-                        ->get();
-                }
-            } else {
-                $this->relatedProducts = collect();
             }
+
+            $this->relatedProducts = $related->toArray();
         } else {
-            $this->relatedProducts = collect();
+            $this->relatedProducts = [];
         }
 
-        // Load badges under add to cart button if current category exists in this product sub category
-        $currentCategoryId = session('current_category_id');
-        $productCategoryIdsArray = $subCategoryIds->isNotEmpty() ? \DB::table('category_sub_category')
-            ->whereIn('sub_category_id', $subCategoryIds)
-            ->pluck('category_id')
-            ->unique()
-            ->toArray() : [];
-
-        if (!$currentCategoryId && !empty($productCategoryIdsArray)) {
-            $currentCategoryId = $productCategoryIdsArray[0];
-            session(['current_category_id' => $currentCategoryId]);
-        }
-
-        if ($currentCategoryId && in_array($currentCategoryId, $productCategoryIdsArray)) {
-            $matchingSubCategoryIds = \DB::table('category_sub_category')
-                ->where('category_id', $currentCategoryId)
-                ->whereIn('sub_category_id', $subCategoryIds)
-                ->pluck('sub_category_id')
-                ->unique()
-                ->toArray();
-
+        // ── Badges ───────────────────────────────────────────────────────────────
+        // Load badges directly from the database based on the product's own
+        // sub-categories. No session dependency needed.
+        if ($subCategoryIds->isNotEmpty()) {
             $this->badges = \App\Models\Badge::where('status', 'ACTIVE')
-                ->whereHas('sub_categories', function ($q) use ($matchingSubCategoryIds) {
-                    $q->whereIn('sub_categories.id', $matchingSubCategoryIds);
+                ->whereHas('sub_categories', function ($q) use ($subCategoryIds) {
+                    $q->whereIn('sub_categories.id', $subCategoryIds);
                 })
-                ->get();
+                ->get()
+                ->toArray();
         } else {
-            $this->badges = collect();
+            $this->badges = [];
         }
     }
 

@@ -26,7 +26,7 @@ class UpdateUserRequest extends JsonFormRequest
             'email'     => [
                 'required',
                 'email',
-                'unique:users,email,' . $this->id,
+                'unique:users,email,' . $this->route('id'),
                 'max:50',
             ],
             'password' => 'nullable|min:8|confirmed',

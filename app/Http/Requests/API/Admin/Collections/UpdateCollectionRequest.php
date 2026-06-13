@@ -22,8 +22,8 @@ class UpdateCollectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|unique:collections,title,' . $this->id,
-            'slug' => 'required|unique:collections,slug,' . $this->id,
+            'title' => 'required|unique:collections,title,' . $this->route('id'),
+            'slug' => 'required|unique:collections,slug,' . $this->route('id'),
             'status' => 'required',
             'order' => 'required|numeric',
             'position' => 'required',

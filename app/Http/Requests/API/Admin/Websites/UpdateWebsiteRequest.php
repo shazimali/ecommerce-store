@@ -24,11 +24,11 @@ class UpdateWebsiteRequest extends JsonFormRequest
         return [
             'title'     => [
                 'required',
-                'unique:websites,title,' . $this->id,
+                'unique:websites,title,' . $this->route('id'),
             ],
             'domain'    => [
                 'required',
-                'unique:websites,domain,' . $this->id,
+                'unique:websites,domain,' . $this->route('id'),
             ],
             'email' => [
                 'nullable',

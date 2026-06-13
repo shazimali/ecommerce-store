@@ -24,19 +24,19 @@ class UpdateProductRequest extends FormRequest
         return [
             'title' => [
                 'required',
-                'unique:product_heads,title,' . $this->id,
+                'unique:product_heads,title,' . $this->route('id'),
             ],
             'slug' => [
                 'required',
-                'unique:product_heads,slug,' . $this->id,
+                'unique:product_heads,slug,' . $this->route('id'),
             ],
             'code' => [
                 'required',
-                'unique:product_heads,code,' . $this->id,
+                'unique:product_heads,code,' . $this->route('id'),
             ],
             'sku' => [
                 'required',
-                'unique:product_heads,sku,' . $this->id,
+                'unique:product_heads,sku,' . $this->route('id'),
             ],
             'order' => 'required|numeric',
             'short_desc' => 'required',

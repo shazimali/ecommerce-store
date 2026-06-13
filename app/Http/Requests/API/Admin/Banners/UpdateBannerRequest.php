@@ -22,7 +22,7 @@ class UpdateBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|unique:banners,title,' . $this->id,
+            'title' => 'required|unique:banners,title,' . $this->route('id'),
             'image' => 'nullable|image|max:500',
             'mob_image' => 'nullable|image|max:500',
             'order' => 'required',
