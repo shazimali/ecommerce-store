@@ -266,37 +266,6 @@
         </div>
     </div>
 
-    <!-- Related Products Slider (Same Category, Trending) -->
-    @if(count($relatedProducts) > 0)
-        <div class="mt-16 text-center">
-            <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Related Products</h2>
-        </div>
-        <section class="overflow-hidden">
-            <div class="container xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 mx-auto sm:px-6">
-                <!-- Swiper -->
-                <div class="swiper related-products-swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
-                    <div class="swiper-wrapper">
-                        @foreach($relatedProducts as $pr)
-                            <div class="swiper-slide bg-white dark:bg-black py-4">
-                                @include('inc.product_box_trending')
-                            </div>
-                        @endforeach
-                        @foreach($relatedProducts as $pr)
-                            <div class="swiper-slide bg-white dark:bg-black py-4">
-                                @include('inc.product_box_trending')
-                            </div>
-                        @endforeach
-                        @foreach($relatedProducts as $pr)
-                            <div class="swiper-slide bg-white dark:bg-black py-4">
-                                @include('inc.product_box_trending')
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endif
-
     <!-- Tabs Section -->
     <div id="tabs-section" class="mt-12 md:mt-20 border-t border-neutral-200 dark:border-neutral-800 pt-8">
         <div class="max-w-4xl mx-auto px-8">
@@ -438,3 +407,33 @@
         </div>
     </div>
 </div>
+ <!-- Related Products Slider (Same Category, Trending) -->
+    @if(count($relatedProducts) > 0)
+        <div class="mt-16 text-center">
+            <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Related Products</h2>
+        </div>
+        <section class="overflow-hidden">
+            <div class="container xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 mx-auto sm:px-6">
+                <!-- Swiper -->
+                <div class="swiper related-products-swiper-container lg:px-6 md:px-6 sm:px-2 xs:px-2">
+                    <div class="swiper-wrapper">
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                        @foreach($relatedProducts as $pr)
+                            <div class="swiper-slide bg-white dark:bg-black py-4">
+                                @include('inc.product_box_trending')
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif

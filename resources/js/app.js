@@ -34,7 +34,7 @@ const swiper = new Swiper('.swiper-container', {
 
   slidesPerView: 1, // Number of slides visible
   centeredSlides: true, // Center the active slide
-  spaceBetween: 30, // Space between slides
+  spaceBetween: 0, // Space between slides
   // slidesPerGroup:3,
   loop: true, // Enable looping
   autoplay: {
