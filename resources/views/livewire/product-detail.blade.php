@@ -406,9 +406,7 @@
             </div>
         </div>
     </div>
-</div>
- <!-- Related Products Slider (Same Category, Trending) -->
-    @if(count($relatedProducts) > 0)
+        @if(count($relatedProducts) > 0)
         <div class="mt-16 text-center">
             <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Related Products</h2>
         </div>
@@ -437,3 +435,5 @@
             </div>
         </section>
     @endif
+</div>
+ <!-- Related Products Slider (Same Category, Trending) -->
