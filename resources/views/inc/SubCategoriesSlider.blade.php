@@ -7,7 +7,7 @@
         @foreach ($category->front_sub_categories as $sub_cat)
           <div class="swiper-slide">
             <div class="bg-white dark:bg-black overflow-hidden cursor-pointer group pt-2 pb-4">
-              <div class="aspect-[21/9] relative">
+              <div class="aspect-[16/10] relative">
                 <img src="{{ asset('storage/' . $sub_cat->image) }}" alt="{{ $sub_cat->title }}"
                   class="w-full h-full object-cover" />
               </div>

@@ -1,9 +1,9 @@
 <div>
     @if (request()->routeIs('home'))
-        <div x-data="{ menu: true, sideBarOpen: false, newArOpen: false }" class="lg:block md:block sm:hidden xs:hidden">
+        <div x-data="{ menu: true, sideBarOpen: false, newArOpen: false }" class="lg:block md:block sm:hidden xs:hidden relative z-40">
     @else
             <div x-data="{ menu: false, sideBarOpen: false, newArOpen: false }"
-                class="lg:block md:block sm:hidden xs:hidden">
+                class="lg:block md:block sm:hidden xs:hidden relative z-40">
         @endif
             <div class="grid lg:grid-cols-4 md:grid-cols-4 gap-5 px-8 bg-white dark:bg-black">
                 <div>

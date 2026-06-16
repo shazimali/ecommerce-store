@@ -10,7 +10,7 @@
     <li 
         x-show="menu"
         x-transition.duration.300ms
-        class="absolute"
+        class="absolute z-50"
         style="width: 22.8%"
         >
         <ul class="relative">
