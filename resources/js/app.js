@@ -47,20 +47,20 @@ const swiper = new Swiper('.swiper-container', {
   },
   breakpoints: {
     // Responsive design, changing slidesPerView based on screen
-     380: {
-      slidesPerView: 1.2,
+    380: {
+      slidesPerView: 2.2,
     },
     640: {
-      slidesPerView: 1.4,
+      slidesPerView: 3.2,
     },
     768: {
-      slidesPerView: 2.4,
+      slidesPerView: 4.2,
     },
     1024: {
       slidesPerView: 5.5,
     },
     1280: {
-      slidesPerView: 3.2,
+      slidesPerView: 6.5,
     },
   },
 
