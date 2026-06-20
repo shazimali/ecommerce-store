@@ -35,6 +35,13 @@
                         <li class="mr-6">
                             <a @class([
                                 'hover:text-primary dark:hover:text-primary',
+                                'dark:text-secondary ' => Route::currentRouteName() != 'bundles.shop',
+                                'text-primary dark:text-primary' => Route::is('bundles.shop') || Route::is('bundle.detail'),
+                            ]) href="{{ route('bundles.shop') }}">Bundles</a>
+                        </li>
+                        <li class="mr-6">
+                            <a @class([
+                                'hover:text-primary dark:hover:text-primary',
                                 'dark:text-secondary ' => Route::currentRouteName() != 'blogs.index',
                                 'text-primary dark:text-primary' =>
                                     Route::is('blogs.*') || Route::is('blogs.index'),

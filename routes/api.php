@@ -15,6 +15,8 @@ use App\Http\Controllers\API\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\API\Admin\ProductReviews\ProductReviewController;
 use App\Http\Controllers\API\Admin\Products\ProductColors\ProductColorsController;
 use App\Http\Controllers\API\Admin\Products\ProductController;
+use App\Http\Controllers\API\Admin\Bundles\BundleColors\BundleColorsController;
+use App\Http\Controllers\API\Admin\Bundles\BundleController;
 use App\Http\Controllers\API\Admin\Purchases\PurchasesController;
 use App\Http\Controllers\API\Admin\Roles\RolesController;
 use App\Http\Controllers\API\Admin\Settings\SettingsController;
@@ -151,6 +153,33 @@ Route::prefix('admin')->group(function () {
                 Route::get('/edit/{id}', [ProductColorsController::class, 'edit']);
                 Route::put('/update/{id}', [ProductColorsController::class, 'update']);
                 Route::delete('/delete/{id}', [ProductColorsController::class, 'destroy']);
+            });
+        });
+
+        //Bundles
+        Route::prefix('/bundles')->group(function () {
+            Route::get('/', [BundleController::class, 'index']);
+            Route::post('/store', [BundleController::class, 'store']);
+            Route::get('/edit/{id}', [BundleController::class, 'edit']);
+            Route::post('/update/{id}', [BundleController::class, 'update']);
+            Route::delete('/delete/{id}', [BundleController::class, 'destroy']);
+
+            //Bundle Prices
+            Route::prefix('/prices')->group(function () {
+                Route::get('/{id}', [BundleController::class, 'getPrices']);
+                Route::post('/store', [BundleController::class, 'storePrice']);
+                Route::post('/edit/{id}', [BundleController::class, 'editPrice']);
+                Route::put('/update/{id}', [BundleController::class, 'updatePrice']);
+                Route::delete('/delete/{id}', [BundleController::class, 'deletePrice']);
+            });
+
+            //Bundle Colors
+            Route::prefix('/colors')->group(function () {
+                Route::get('/{id}', [BundleColorsController::class, 'index']);
+                Route::post('/store', [BundleColorsController::class, 'store']);
+                Route::get('/edit/{id}', [BundleColorsController::class, 'edit']);
+                Route::put('/update/{id}', [BundleColorsController::class, 'update']);
+                Route::delete('/delete/{id}', [BundleColorsController::class, 'destroy']);
             });
         });
 

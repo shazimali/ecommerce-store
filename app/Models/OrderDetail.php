@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class OrderDetail extends Model
 {
 
-    protected $fillable = ['order_id', 'product_id', 'color_id', 'currency', 'unit_amount', 'quantity', 'total_amount', 'created_at', 'updated_at'];
+    protected $fillable = ['order_id', 'product_id', 'color_id', 'bundle_id', 'bundle_color_id', 'currency', 'unit_amount', 'quantity', 'total_amount', 'created_at', 'updated_at'];
     /**
      * Get the user associated with the OrderDetail
      *
@@ -27,6 +27,16 @@ class OrderDetail extends Model
     public function color(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ProductColor::class, 'color_id', 'id');
+    }
+
+    public function bundle(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Bundle::class, 'bundle_id', 'id');
+    }
+
+    public function bundle_color(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(BundleColor::class, 'bundle_color_id', 'id');
     }
 
     public function coupon(): HasOne

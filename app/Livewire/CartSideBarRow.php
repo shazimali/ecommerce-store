@@ -16,21 +16,35 @@ class CartSideBarRow extends Component
 
     public function mount($crt)
     {
-        $product = ProductHead::where('slug', $crt['slug'])->first();
-        if ($product) {
-            $product_image = $product->image;
-            if ($product->colors->count() > 0) {
-                $product_image =  $product->colors->where('color_name', $crt['color'])->first()->image1;
+        $is_bundle = $crt['is_bundle'] ?? false;
+        if ($is_bundle) {
+            $bundle = \App\Models\Bundle::where('slug', $crt['slug'])->first();
+            if ($bundle) {
+                $bundle_image = $bundle->image;
+                if ($bundle->colors->count() > 0 && !empty($crt['color'])) {
+                    $bundle_image = $bundle->colors->where('color_name', $crt['color'])->first()->image1 ?? $bundle->image;
+                }
+                $this->img = env('APP_URL') . '/storage/' . $bundle_image;
+                $this->color_title = $crt['color'] ? $crt['color'] : '';
             }
-            $this->img = env('APP_URL') . '/storage/' . $product_image;
-            $this->color_title = $crt['color'] ? $crt['color'] : '';
+        } else {
+            $product = ProductHead::where('slug', $crt['slug'])->first();
+            if ($product) {
+                $product_image = $product->image;
+                if ($product->colors->count() > 0 && !empty($crt['color'])) {
+                    $product_image =  $product->colors->where('color_name', $crt['color'])->first()->image1 ?? $product->image;
+                }
+                $this->img = env('APP_URL') . '/storage/' . $product_image;
+                $this->color_title = $crt['color'] ? $crt['color'] : '';
+            }
         }
         $this->crt = $crt;
     }
 
     public function removeItem($slug, $color)
     {
-        CartManagementService::removeCartItem($slug, $color);
+        $is_bundle = $this->crt['is_bundle'] ?? false;
+        CartManagementService::removeCartItem($slug, $color, $is_bundle);
         $data = ['type' => 'success', 'message' => 'Item removed successfully.'];
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');
@@ -38,7 +52,8 @@ class CartSideBarRow extends Component
 
     public function increaseQty($slug, $color)
     {
-        CartManagementService::incrementQuantityToCartItem($slug, $color);
+        $is_bundle = $this->crt['is_bundle'] ?? false;
+        CartManagementService::incrementQuantityToCartItem($slug, $color, $is_bundle);
         $data = ['type' => 'success', 'message' => 'Item quantity increased successfully.'];
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');
@@ -46,8 +61,9 @@ class CartSideBarRow extends Component
 
     public function decreaseQty($slug, $color)
     {
-        CartManagementService::decrementQuantityToCartItem($slug, $color);
-        $data = ['type' => 'success', 'message' => 'Item decreased decreased successfully.'];
+        $is_bundle = $this->crt['is_bundle'] ?? false;
+        CartManagementService::decrementQuantityToCartItem($slug, $color, $is_bundle);
+        $data = ['type' => 'success', 'message' => 'Item quantity decreased successfully.'];
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');
     }

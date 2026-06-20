@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductReview extends Model
 {
-    protected $fillable = ['product_id', 'user_id', 'rating', 'review', 'image1', 'image2', 'image3', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['product_id', 'bundle_id', 'user_id', 'rating', 'review', 'image1', 'image2', 'image3', 'status', 'created_at', 'updated_at'];
 
     /**
      * Get the user associated with the ProductReview
@@ -17,6 +17,11 @@ class ProductReview extends Model
     public function product(): HasOne
     {
         return $this->hasOne(ProductHead::class, 'id', 'product_id');
+    }
+
+    public function bundle(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Bundle::class, 'bundle_id', 'id');
     }
 
     /**

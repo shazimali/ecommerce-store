@@ -92,29 +92,54 @@ class CheckoutService
 
         // 3. Create Order Details
         foreach ($cartItems as $cart_item) {
-            $productColorId = 0;
-            // Original logic:
-            // ProductColor::where('color_name', $cart_item['color'])->first() ? ... ->id : 0
-            if (!empty($cart_item['color'])) {
-                $pColor = ProductColor::where('color_name', $cart_item['color'])->first();
-                if ($pColor) {
-                    $productColorId = $pColor->id;
+            $is_bundle = isset($cart_item['is_bundle']) && $cart_item['is_bundle'];
+
+            if ($is_bundle) {
+                $bundle = \App\Models\Bundle::where('slug', $cart_item['slug'])->first();
+                $bundleColorId = null;
+                if (!empty($cart_item['color']) && $bundle) {
+                    $bColor = \App\Models\BundleColor::where('bundle_id', $bundle->id)
+                        ->where('color_name', $cart_item['color'])
+                        ->first();
+                    if ($bColor) {
+                        $bundleColorId = $bColor->id;
+                    }
                 }
+
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'color_id' => 0, // default placeholder
+                    'product_id' => null,
+                    'bundle_id' => $bundle ? $bundle->id : null,
+                    'bundle_color_id' => $bundleColorId,
+                    'currency' => $cart_item['currency'],
+                    'quantity' => $cart_item['quantity'],
+                    'unit_amount' => round($cart_item['unit_amount']),
+                    'total_amount' => round($cart_item['total_amount']),
+                ]);
+            } else {
+                $productColorId = 0;
+                if (!empty($cart_item['color'])) {
+                    $pColor = ProductColor::where('color_name', $cart_item['color'])->first();
+                    if ($pColor) {
+                        $productColorId = $pColor->id;
+                    }
+                }
+                
+                $product = ProductHead::where('slug', $cart_item['slug'])->first();
+                
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'color_id' => $productColorId,
+                    'product_id' => $product ? $product->id : null, 
+                    'bundle_id' => null,
+                    'bundle_color_id' => null,
+                    'currency' => $cart_item['currency'],
+                    'quantity' => $cart_item['quantity'],
+                    'unit_amount' => round($cart_item['unit_amount']),
+                    'total_amount' => round($cart_item['total_amount']),
+                ]);
             }
-            
-            // Note: Assuming 'slug' always exists and product is found as per original code.
-            // Good to add check but refactoring primarily first.
-            $product = ProductHead::where('slug', $cart_item['slug'])->first();
-            
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'color_id' => $productColorId,
-                'product_id' => $product ? $product->id : null, 
-                'currency' => $cart_item['currency'],
-                'quantity' => $cart_item['quantity'],
-                'unit_amount' => round($cart_item['unit_amount']),
-                'total_amount' => round($cart_item['total_amount']),
-            ]);
         }
         \Illuminate\Support\Facades\Log::info('Order Details Created');
 

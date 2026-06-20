@@ -60,19 +60,24 @@
     </div>
     <div class="bg-secondary p-5">
         @foreach ($order->detail as $order_detail)
+        @php
+            $itemTitle = $order_detail->product ? $order_detail->product->title : ($order_detail->bundle ? $order_detail->bundle->title : 'N/A');
+            $itemImage = $order_detail->product ? $order_detail->product->image : ($order_detail->bundle ? $order_detail->bundle->image : '');
+            $itemColor = $order_detail->color ? $order_detail->color->color_name : ($order_detail->bundle_color ? $order_detail->bundle_color->color_name : 'N/A');
+        @endphp
         <div class="lg:block md:block sm:block xs:hidde">
            <div @class([
                    'grid grid-cols-[70%_30%] py-2' => true,
                    'border-b border-gray-300  dark:border-slate-800' => true
                    ])>
                    <div class="grid grid-cols-[20%_80%] gap-2 relative">
-                           <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$order_detail->product->image }}" alt="{{ $order_detail->product->title }}">
+                           <img class="h-50 w-50 inline-block" src="{{ env('APP_URL').'/storage/'.$itemImage }}" alt="{{ $itemTitle }}">
                            <div>
-                                   <div class="text-xs"><b>{{ $order_detail->product->title }}</b></div> 
+                                   <div class="text-xs"><b>{{ $itemTitle }}</b></div> 
                                    <div class="text-xs">{{ $order_detail->currency }} {{ number_format($order_detail->unit_amount,2)  }}</div> 
                                    
                                    <div class="flex text-xs">
-                                           Color: {{ $order_detail->color ? $order_detail->color->color_name : 'N/A' }}
+                                           Color: {{ $itemColor }}
                                    </div>
                                    <div class="flex text-xs">
                                        Qty: {{ $order_detail->quantity }}

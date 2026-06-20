@@ -95,6 +95,35 @@ class PermissionsSeeder extends Seeder
         $permissions[31]['name'] = 'Badge Delete';
         $permissions[31]['key'] = 'badge_delete';
 
+        //Bundles
+        $permissions[32]['name'] = 'Bundle Access';
+        $permissions[32]['key'] = 'bundle_access';
+        $permissions[33]['name'] = 'Bundle Create';
+        $permissions[33]['key'] = 'bundle_create';
+        $permissions[34]['name'] = 'Bundle Edit';
+        $permissions[34]['key'] = 'bundle_edit';
+        $permissions[35]['name'] = 'Bundle Delete';
+        $permissions[35]['key'] = 'bundle_delete';
+
+        //Bundle Prices
+        $permissions[36]['name'] = 'Bundle Price Access';
+        $permissions[36]['key'] = 'bundle_price_access';
+        $permissions[37]['name'] = 'Bundle Price Create';
+        $permissions[37]['key'] = 'bundle_price_create';
+        $permissions[38]['name'] = 'Bundle Price Edit';
+        $permissions[38]['key'] = 'bundle_price_update';
+        $permissions[39]['name'] = 'Bundle Price Delete';
+        $permissions[39]['key'] = 'bundle_price_delete';
+
+        //Bundle Colors
+        $permissions[40]['name'] = 'Bundle Color Access';
+        $permissions[40]['key'] = 'bundle_color_access';
+        $permissions[41]['name'] = 'Bundle Color Create';
+        $permissions[41]['key'] = 'bundle_color_create';
+        $permissions[42]['name'] = 'Bundle Color Edit';
+        $permissions[42]['key'] = 'bundle_color_update';
+        $permissions[43]['name'] = 'Bundle Color Delete';
+        $permissions[43]['key'] = 'bundle_color_delete';
 
         foreach ($permissions as $key => $permission) {
 

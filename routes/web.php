@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogsController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\BundlesController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\ContactUsController;
@@ -22,6 +23,8 @@ Route::get('categories/{slug}', [CategoriesController::class, 'subCategoriesByCa
 Route::get('sub-categories/{slug}', [SubCategoriesController::class, 'productsBySubCategorySlug'])->name('sub-categories');
 Route::get('products/{slug}', [ProductsController::class, 'detail'])->name('product.detail');
 Route::get('shop', [ProductsController::class, 'shop'])->name('shop');
+Route::get('bundles', [BundlesController::class, 'shop'])->name('bundles.shop');
+Route::get('bundles/{slug}', [BundlesController::class, 'detail'])->name('bundle.detail');
 Route::get('blogs', [BlogsController::class, 'index'])->name('blogs.index');
 Route::get('blogs/{slug}', [BlogsController::class, 'detail'])->name('blogs.detail');
 Route::get('pages/{slug}', [PagesController::class, 'index'])->name('pages.index');

@@ -48,7 +48,9 @@
                     </li>
                     <li class="py-1">
                         <a class="hover:text-primary hover:underline" href="{{ route('shop') }}">Shop</a>
-
+                    </li>
+                    <li class="py-1">
+                        <a class="hover:text-primary hover:underline" href="{{ route('bundles.shop') }}">Bundles</a>
                     </li>
                     <li class="py-1">
                         <a class="hover:text-primary hover:underline" href="{{ route('blogs.index') }}">Blogs</a>

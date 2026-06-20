@@ -99,6 +99,9 @@
                             <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="{{ route('shop') }}">Shop</a>
                         </li>
                         <li class="text-start py-2">
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('bundles.shop') || Route::is('bundle.detail')])  href="{{ route('bundles.shop') }}">Bundles</a>
+                        </li>
+                        <li class="text-start py-2">
                             <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('blogs.*') || Route::is('blogs.detail') ])  href="{{ route('blogs.index') }}">Blogs</a>
                         </li>
                         @if(header_pages()->count() > 0)

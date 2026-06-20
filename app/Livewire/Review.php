@@ -33,9 +33,9 @@ class Review extends Component
             $this->forms[$key]['image'] = $form->image;
             $this->forms[$key]['rating'] = 0;
             $this->forms[$key]['user_id'] =  Auth::id();
-            // $this->forms[$key]['product_id'] =  Auth::id();
             $this->forms[$key]['product_id'] = $form->id;
             $this->forms[$key]['status'] =  'INACTIVE';
+            $this->forms[$key]['is_bundle'] = $form->is_bundle;
         }
         $this->history = ReviewService::getReviewsHistory();
     }
@@ -74,15 +74,18 @@ class Review extends Component
             $storedImages[] = $image->store('reviews', 'public');
         }
 
+        $is_bundle = $this->forms[$index]['is_bundle'];
+
         ProductReview::create([
-            'product_id' =>  $this->forms[$index]['product_id'],
+            'product_id' =>  !$is_bundle ? $this->forms[$index]['product_id'] : null,
+            'bundle_id' =>  $is_bundle ? $this->forms[$index]['product_id'] : null,
             'user_id' => Auth::id(),
             'rating' => $this->forms[$index]['rating'],
             'review' =>  $this->forms[$index]['review'],
             'image1' => $storedImages[0] ?? null,
             'image2' => $storedImages[1] ?? null,
             'image3' => $storedImages[2] ?? null,
-            'status' => 'active',
+            'status' => 'ACTIVE', // uppercase to match database convention
         ]);
         // Reset this specific form
         $this->forms[$index]['review'] = '';

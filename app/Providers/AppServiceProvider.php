@@ -24,6 +24,14 @@ class AppServiceProvider extends ServiceProvider
             \App\Interfaces\API\Admin\Products\ProductPriceInterface::class,
             \App\Services\API\Admin\Products\ProductPriceService::class
         );
+        $this->app->bind(
+            \App\Interfaces\API\Admin\Bundles\BundleInterface::class,
+            \App\Services\API\Admin\Bundles\BundleService::class
+        );
+        $this->app->bind(
+            \App\Interfaces\API\Admin\Bundles\BundlePriceInterface::class,
+            \App\Services\API\Admin\Bundles\BundlePriceService::class
+        );
     }
 
     /**
