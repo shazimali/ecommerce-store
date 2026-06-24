@@ -90,9 +90,12 @@ class ShopService
             });
         }
 
-        // Rating Filter (Placeholder for future implementation)
+        // Rating Filter
         if (!empty($filters['rating'])) {
-            // Logic for rating filtering
+            $rating = $filters['rating'];
+            $query->where(function ($q) use ($rating) {
+                $q->whereRaw('(select coalesce(avg(rating), 0) from product_reviews where product_reviews.product_id = product_heads.id and product_reviews.status = \'ACTIVE\') >= ?', [$rating]);
+            });
         }
     }
 

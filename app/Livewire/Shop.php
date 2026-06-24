@@ -42,8 +42,8 @@ class Shop extends Component
         $this->categories = $filterData['categories'];
         $this->colors = $filterData['colors'];
         
-        $this->price_from = $this->price_from ?: getSettingVal('shop_filter_price_from');
-        $this->price_to = $this->price_to ?: getSettingVal('shop_filter_price_to');
+        $this->price_from = $this->price_from !== null && $this->price_from !== '' ? (float)$this->price_from : (float)getSettingVal('shop_filter_price_from');
+        $this->price_to = $this->price_to !== null && $this->price_to !== '' ? (float)$this->price_to : (float)getSettingVal('shop_filter_price_to');
     }
 
     /**
@@ -71,6 +71,12 @@ class Shop extends Component
                 break;
             case 'sub_category_type':
                 $this->sub_category = $val;
+                if ($val) {
+                    $subCategory = \App\Models\SubCategory::where('slug', $val)->with('categories')->first();
+                    if ($subCategory && $subCategory->categories->isNotEmpty()) {
+                        $this->category = $subCategory->categories->first()->slug;
+                    }
+                }
                 break;
             case 'color':
                 $this->color = $val;

@@ -1,30 +1,30 @@
-<div class="grid lg:grid-cols-[25%_75%] md:grid-cols-[25%_75%] xs:grid-col-1 py-10 px-8 text-black">
-    <div class="xs:hidden lg:block md:block">
+<div class="grid grid-cols-1 md:grid-cols-[25%_75%] gap-8 py-10 px-8 text-black dark:text-white">
+    <div class="hidden md:block pr-6 border-r border-slate-100 dark:border-slate-800">
        @include('inc.shop-filters')
     </div>
     <div>
-        <div class="lg:flex-row md:flex-row sm:flex-col xs:flex-col justify-between">
-            <div class="drawer drawer-end lg:hidden md:hidden sm:block xs:block lg:mb-0 md:mb-0 sm:mb-5 xs:mb-5 z-50">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 mb-6 border-b border-slate-100 dark:border-slate-800">
+            <div class="drawer drawer-end md:hidden z-50">
                 <input id="shop-mobile-filter" type="checkbox" class="drawer-toggle" />
-                <div class="drawer-content mt-3 cursor-pointer">
+                <div class="drawer-content mt-1 cursor-pointer">
                     <label for="shop-mobile-filter"
-                        class="px-10 drawer-button text-primary border border-solid border-secondary dark:border-slate-800 py-3">
+                        class="px-6 drawer-button text-primary border border-solid border-slate-200 dark:border-slate-800 py-2.5 rounded-lg inline-flex items-center gap-2 bg-slate-50 dark:bg-slate-900">
                         <i class="fa-solid fa-filter"></i>
-                        <span class="text-black dark:text-white text-sm">Filters</span>
+                        <span class="text-slate-800 dark:text-white text-sm font-semibold">Filters</span>
                     </label>
                 </div>
 
                 <div class="drawer-side text-black">
                     <label for="shop-mobile-filter" aria-label="close sidebar" class="drawer-overlay"></label>
-                    <div class="menu  bg-white dark:bg-black min-h-full w-1/2 p-4 text-start">
-                        <div class="border-b border-b-secondary dark:border-b-slate-800 mb-1">
-                            <h1 class="uppercase text-1xl dark:text-white font-semibold pb-1">Filters</h1>
+                    <div class="menu bg-white dark:bg-black min-h-full w-2/3 p-6 text-start shadow-xl">
+                        <div class="border-b border-slate-200 dark:border-slate-800 mb-4 pb-2">
+                            <h1 class="uppercase text-lg dark:text-white font-bold tracking-wider">Filters</h1>
                         </div>    
-                            @include('inc.shop-filters')
+                        @include('inc.shop-filters')
                     </div>
                 </div>
             </div>
-            <select wire:model="sort_by" wire:change="updateSortBy($event.target.value)" name="sort_by" class="px-10 block text-sm  border border-secondary   dark:bg-black dark:text-white dark:border-slate-800 lg:mt-0 md:mt-0 sm:mt-5 xs:mt-5">
+            <select wire:model="sort_by" wire:change="updateSortBy($event.target.value)" name="sort_by" class="w-full md:w-auto px-6 py-2.5 block text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-200 font-medium">
                 <option value="">Sort by</option>
                 <option value="new">New</option>
                 <option value="featured">Featured</option>
@@ -32,12 +32,12 @@
                 <option value="sale">Sale</option>
             </select>
         </div>
-        <div class="mt-5 grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-2 gap-5">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($products as $key => $product)
             @include('inc.product_box')
             @endforeach
         </div>
-        <div class="py-2">
+        <div class="py-6">
             {{ $products->links() }}
         </div>
 

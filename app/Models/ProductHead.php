@@ -80,4 +80,9 @@ class ProductHead extends Model
     {
         return $this->hasMany(PurchaseDetail::class, 'product_head_id', 'id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class, 'product_id', 'id');
+    }
 }
