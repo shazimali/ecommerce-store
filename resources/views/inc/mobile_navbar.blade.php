@@ -2,10 +2,10 @@
     @include('inc.news')
     @include('inc.mobile_header')
     <div class="flex justify-center py-2 text-black">
-    <a class="font-semibold text-4xl" href="{{ route('home') }}">
-            <span class="text-primary dark:text-secondary">Every Day</span>
+        <a class="font-semibold text-4xl" href="{{ route('home') }}">
+            <span class="text-primary dark:text-secondary">EveryDay</span>
             <span class="dark:text-primary">{{ website()->title }}</span>
-    </a>
+        </a>
     </div>
     <nav class="flex justify-between border-secondary border dark:border-slate-800 p-2">
         <div class="drawer drawer-start w-6">
@@ -15,62 +15,65 @@
                     <i class="fa-solid fa-bars text-black dark:text-white text-3xl"></i>
                 </label>
             </div>
-        
+
             <div class="drawer-side z-50">
                 <label for="mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
                 <div class="menu bg-white dark:bg-black text-black dark:text-white min-h-full w-64 p-4 text-start">
                     <ul x-data="{mobileNewArr:false}">
                         <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('home')])  href="{{ route('home') }}">Home</a>
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('home')]) href="{{ route('home') }}">Home</a>
                         </li>
                         <li x-on:click="mobileNewArr = !mobileNewArr" class="py-2 text-start grid grid-cols-1">
-                                <div class="flex justify-between">
-                                    New Arrival
-                                    <div>
-                                        <i class="fa-solid fa-caret-down"></i>
-                                    </div>
+                            <div class="flex justify-between">
+                                New Arrival
+                                <div>
+                                    <i class="fa-solid fa-caret-down"></i>
                                 </div>
-                                
-                            <div
-                            x-show="mobileNewArr"
-                            class="bg-white dark:bg-black mt-5 z-50 block">
-                            @foreach (newArrivals() as $new_pr)
-                            <div class="text-center dark:text-white px-5 py-5 relative">
-                                @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
-                                <div class="absolute right-5  top-5 w-auto px-1 py-1 bg-green-600 text-white text-[8px] text-center">{{ $new_pr->price_detail->discount}} % off</div>
-                                @endif
-                                    <img
-                                        src="{{ asset('storage/'.$new_pr->nav_image) }}"
-                                        alt="{{ $new_pr->title }}" />
-                                    <div class="pt-2 overflow-hidden  text-xs truncate">               
-                                         {{$new_pr->short_desc }}     
-                                    </div>
-                                    @if ($new_pr->coming_soon)
-                                    <p class="text-primary text-xs text-center"><b>Coming Soon</b></p>    
-                                    @else 
-                                        @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 &&  (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
-                                            <div class="pt-2 overflow-hidden  text-xs truncate text-center">
-                                                <b>{{ $new_pr->price_detail->country->currency }}</b>  {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price/100*$new_pr->price_detail->discount)),2 ) }}
-                                                <del class="text-gray-500">
-                                                    {{ $new_pr->price_detail->country->currency }} {{  number_format($new_pr->price_detail->price,2)  }}
-                                                </del>
-                                            </div>
-                                            @else
-                                            <div class="text-xs text-center">
-                                                <b>{{ $new_pr->price_detail->country->currency }}</b>  {{  number_format($new_pr->price_detail->price,2)  }}
-                                            </div>
-                                        @endif
-                                    @endif
-                                    <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2" href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
-                                        <i class="fa-regular fa-eye text-primary"></i>
-                                        View Detail
-                                    </a>
                             </div>
-                            @endforeach      
+
+                            <div x-show="mobileNewArr" class="bg-white dark:bg-black mt-5 z-50 block">
+                                @foreach (newArrivals() as $new_pr)
+                                    <div class="text-center dark:text-white px-5 py-5 relative">
+                                        @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
+                                            <div
+                                                class="absolute right-5  top-5 w-auto px-1 py-1 bg-green-600 text-white text-[8px] text-center">
+                                                {{ $new_pr->price_detail->discount}} % off</div>
+                                        @endif
+                                        <img src="{{ asset('storage/' . $new_pr->nav_image) }}" alt="{{ $new_pr->title }}" />
+                                        <div class="pt-2 overflow-hidden  text-xs truncate">
+                                            {{$new_pr->short_desc }}
+                                        </div>
+                                        @if ($new_pr->coming_soon)
+                                            <p class="text-primary text-xs text-center"><b>Coming Soon</b></p>
+                                        @else
+                                            @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
+                                                <div class="pt-2 overflow-hidden  text-xs truncate text-center">
+                                                    <b>{{ $new_pr->price_detail->country->currency }}</b>
+                                                    {{ number_format(round($new_pr->price_detail->price - ($new_pr->price_detail->price / 100 * $new_pr->price_detail->discount)), 2) }}
+                                                    <del class="text-gray-500">
+                                                        {{ $new_pr->price_detail->country->currency }}
+                                                        {{  number_format($new_pr->price_detail->price, 2)  }}
+                                                    </del>
+                                                </div>
+                                            @else
+                                                <div class="text-xs text-center">
+                                                    <b>{{ $new_pr->price_detail->country->currency }}</b>
+                                                    {{  number_format($new_pr->price_detail->price, 2)  }}
+                                                </div>
+                                            @endif
+                                        @endif
+                                        <a class="block text-xs border border-secondary p-1 hover:text-primary hover:border-primary my-2"
+                                            href="{{ route('product.detail', ['slug' => $new_pr->slug]) }}">
+                                            <i class="fa-regular fa-eye text-primary"></i>
+                                            View Detail
+                                        </a>
+                                    </div>
+                                @endforeach
                             </div>
                         </li>
                         <li x-data="{mobileCollection: false}" class="block">
-                            <div x-on:click="mobileCollection = !mobileCollection" class="bg-primary text-white flex justify-between py-2 px-2 cursor-pointer">
+                            <div x-on:click="mobileCollection = !mobileCollection"
+                                class="bg-primary text-white flex justify-between py-2 px-2 cursor-pointer">
                                 collection
                                 <div>
                                     <i class="fa-solid fa-caret-down"></i>
@@ -78,110 +81,116 @@
                             </div>
                             <div x-show="mobileCollection" class="block w-full">
                                 @foreach (website()->categories as $category)
-                                <div x-data="{ openSub: false }" class="py-2 px-3 border-b border-secondary dark:border-slate-800 text-start text-sm w-full block">
-                                    @if(count($category->front_sub_categories))
-                                        <div x-on:click="openSub = !openSub" class="flex justify-between items-center cursor-pointer font-semibold py-1 w-full">
-                                            <span>{{ $category->title }}</span>
-                                            <i class="fa-solid fa-caret-down transition-transform duration-200" :class="openSub ? 'rotate-180' : ''"></i>
-                                        </div>
-                                        <div x-show="openSub" class="pl-4 py-2 flex flex-col gap-1 w-full">
-                                            @foreach ($category->front_sub_categories as $sub_cat)
-                                                <a class="underline text-xs hover:text-primary py-1" href="{{ route('sub-categories',['slug' => $sub_cat->slug ]) }}">{{ $sub_cat->title }}</a>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <a href="{{ route('categories', ['slug' => $category->slug]) }}" class="block font-semibold py-1 hover:text-primary w-full">
-                                            {{ $category->title }}
-                                        </a>
-                                    @endif
-                                </div>
+                                    <div x-data="{ openSub: false }"
+                                        class="py-2 px-3 border-b border-secondary dark:border-slate-800 text-start text-sm w-full block">
+                                        @if(count($category->front_sub_categories))
+                                            <div x-on:click="openSub = !openSub"
+                                                class="flex justify-between items-center cursor-pointer font-semibold py-1 w-full">
+                                                <span>{{ $category->title }}</span>
+                                                <i class="fa-solid fa-caret-down transition-transform duration-200"
+                                                    :class="openSub ? 'rotate-180' : ''"></i>
+                                            </div>
+                                            <div x-show="openSub" class="pl-4 py-2 flex flex-col gap-1 w-full">
+                                                @foreach ($category->front_sub_categories as $sub_cat)
+                                                    <a class="underline text-xs hover:text-primary py-1"
+                                                        href="{{ route('sub-categories', ['slug' => $sub_cat->slug]) }}">{{ $sub_cat->title }}</a>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <a href="{{ route('categories', ['slug' => $category->slug]) }}"
+                                                class="block font-semibold py-1 hover:text-primary w-full">
+                                                {{ $category->title }}
+                                            </a>
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
                         </li>
                         <li class="text-start py-2">
-                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="{{ route('shop') }}">Shop</a>
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('shop')]) href="{{ route('shop') }}">Shop</a>
                         </li>
                         <li class="text-start py-2">
-                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('bundles.shop') || Route::is('bundle.detail')])  href="{{ route('bundles.shop') }}">Bundles</a>
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('bundles.shop') || Route::is('bundle.detail')])
+                                href="{{ route('bundles.shop') }}">Bundles</a>
                         </li>
                         <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('blogs.*') || Route::is('blogs.detail') ])  href="{{ route('blogs.index') }}">Blogs</a>
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('blogs.*') || Route::is('blogs.detail')])
+                                href="{{ route('blogs.index') }}">Blogs</a>
                         </li>
                         @if(header_pages()->count() > 0)
-                        @foreach (header_pages() as $page)
-                            <li class="text-start py-2">
-                                <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('pages.index')])  href="{{ route('pages.index',['slug' => $page->slug]) }}">{{ $page->title }}</a>
-                            </li>
-                        @endforeach
+                            @foreach (header_pages() as $page)
+                                <li class="text-start py-2">
+                                    <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('pages.index')])
+                                        href="{{ route('pages.index', ['slug' => $page->slug]) }}">{{ $page->title }}</a>
+                                </li>
+                            @endforeach
                         @endif
                         <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('contact_us')])  href="{{ route('contact_us') }}">Contact</a>
+                            <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('contact_us')]) href="{{ route('contact_us') }}">Contact</a>
                         </li>
                         @guest
-                        <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('login')])  href="{{ route('login') }}">Login</a>
-                        </li>
-                        <li class="text-start py-2">
-                            <a  @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('register')])  href="{{ route('register') }}">Register</a>
-                        </li>
+                            <li class="text-start py-2">
+                                <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('login')]) href="{{ route('login') }}">Login</a>
+                            </li>
+                            <li class="text-start py-2">
+                                <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary', 'text-primary' => Route::is('register')]) href="{{ route('register') }}">Register</a>
+                            </li>
                         @endguest
                         @auth
-                        <li class="text-start py-2">
-                            <form method="post" action="{{ route('logout') }}">
-                            @csrf
-                            <input type="submit" value="Logout"  class="hover:text-primary dark:text-secondary dark:hover:text-primary cursor-pointer">
-                            </form>
-                        </li>
+                            <li class="text-start py-2">
+                                <form method="post" action="{{ route('logout') }}">
+                                    @csrf
+                                    <input type="submit" value="Logout"
+                                        class="hover:text-primary dark:text-secondary dark:hover:text-primary cursor-pointer">
+                                </form>
+                            </li>
                         @endauth
                     </ul>
                 </div>
             </div>
         </div>
         <div>
-            <livewire:global-search/>
+            <livewire:global-search />
         </div>
         <div class="flex justify-between">
-            <livewire:mobile-cart-side-bar/>
+            <livewire:mobile-cart-side-bar />
             @auth
                 <div class="dropdown dropdown-end -mt-2">
-                   <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                       <div class="w-8 rounded-full">
-                           @if(auth()->user()->avatar)
-                       <img
-                           alt="{{ auth()->user()->name }}"
-                           src="{{ auth()->user()->avatar }}" />
-                           @else
-                       <img
-                           alt="Tailwind CSS Navbar component"
-                           src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" />
-                           @endif
-                       </div>
-                   </div>
-                   <ul
-                       tabindex="0"
-                       class="menu menu-sm dropdown-content text-black dark:text-white bg-white dark:bg-black rounded-box z-50  w-52 p-2 shadow">
-                       <li class="border-b pb-1">
-                           @php
-                               $user_name = explode(' ', auth()->user()->name);
-                           @endphp
-                           <a>Hi, {{ $user_name[0] }}</a>
-                       </li>
-                       <li>
-                       <a href="{{ route('dashboard.account') }}" class="justify-between">
-                           Account
-                           {{-- <span class="badge">New</span> --}}
-                       </a>
-                       </li>
-                       <li><a href="{{ route('dashboard.orders') }}">Orders</a></li>
-                       <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li>
-                       <li>
-                           <form method="post" action="{{ route('logout') }}">
-                               @csrf
-                               <input type="submit" value="Logout"  class="hover:text-primary dark:hover:text-primary cursor-pointer">
-                           </form>
-                       </li>
-                   </ul>
-               </div>
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-8 rounded-full">
+                            @if(auth()->user()->avatar)
+                                <img alt="{{ auth()->user()->name }}" src="{{ auth()->user()->avatar }}" />
+                            @else
+                                <img alt="Tailwind CSS Navbar component"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" />
+                            @endif
+                        </div>
+                    </div>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content text-black dark:text-white bg-white dark:bg-black rounded-box z-50  w-52 p-2 shadow">
+                        <li class="border-b pb-1">
+                            @php
+                                $user_name = explode(' ', auth()->user()->name);
+                               @endphp
+                            <a>Hi, {{ $user_name[0] }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('dashboard.account') }}" class="justify-between">
+                                Account
+                                {{-- <span class="badge">New</span> --}}
+                            </a>
+                        </li>
+                        <li><a href="{{ route('dashboard.orders') }}">Orders</a></li>
+                        <li><a href="{{ route('dashboard.reviews') }}">Reviews</a></li>
+                        <li>
+                            <form method="post" action="{{ route('logout') }}">
+                                @csrf
+                                <input type="submit" value="Logout"
+                                    class="hover:text-primary dark:hover:text-primary cursor-pointer">
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             @endauth
         </div>
     </nav>
