@@ -5,24 +5,24 @@ import 'swiper/css/pagination';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import './bootstrap';
 
-window.addEventListener('alert',(event) => {
-    let data = event.detail;
+window.addEventListener('alert', (event) => {
+  let data = event.detail;
 
-    const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
-      });
-      Toast.fire({
-        icon: data.type,
-        text: data.title,
-      });
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  Toast.fire({
+    icon: data.type,
+    text: data.title,
+  });
 })
 
 
@@ -48,19 +48,19 @@ const swiper = new Swiper('.swiper-container', {
   breakpoints: {
     // Responsive design, changing slidesPerView based on screen
     380: {
-      slidesPerView: 2.2,
+      slidesPerView: 1.2,
     },
     640: {
-      slidesPerView: 3.2,
+      slidesPerView: 4.4,
     },
     768: {
-      slidesPerView: 4.2,
+      slidesPerView: 2.4,
     },
     1024: {
       slidesPerView: 5.5,
     },
     1280: {
-      slidesPerView: 6.5,
+      slidesPerView: 4.2,
     },
   },
 
