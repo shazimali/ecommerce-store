@@ -211,7 +211,7 @@
 
             <!-- Quantity & Actions -->
             @if (!$product->coming_soon && $product->stocks->count() > 0)
-                <div class="flex flex-col sm:flex-row items-center gap-4 py-4 mb-6">
+                <div class="flex flex-row items-center gap-4 py-4 mb-6 w-full">
                     <!-- Quantity Box -->
                     <div
                         class="flex items-center border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-zinc-900 p-1">
@@ -238,7 +238,7 @@
 
                     <!-- Add to Cart CTA -->
                     <button wire:click="addToCart('{{ $product['slug'] }}')" wire:loading.attr="disabled"
-                        class="w-full sm:w-auto min-w-[200px] flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-8 shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50">
+                        class="flex-1 sm:flex-none sm:min-w-[200px] flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-8 shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>Add to Cart</span>
                         <svg wire:loading wire:target="addToCart('{{ $product['slug'] }}')" aria-hidden="true" role="status"
@@ -259,7 +259,7 @@
             @if(count($badges) > 0)
                 <div class="flex flex-wrap items-center gap-3">
                     @foreach($badges as $badge)
-                        <img height="55" width="55" src="{{ asset('storage/' . $badge['image']) }}" alt="{{ $badge['title'] }}" />
+                        <img src="{{ asset('storage/' . $badge['image']) }}" alt="{{ $badge['title'] }}" class="h-10 w-10 md:h-[55px] md:w-[55px] object-contain" />
                     @endforeach
                 </div>
             @endif

@@ -33,6 +33,7 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{asset('apple-touch-icon.png')}}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="application/ld+json">
 {
@@ -59,6 +60,7 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     @include('inc.navbar')
     @yield('content')
     @include('layouts.footer')
+    @livewireScripts
     @stack('scripts')
   </body>
 </html>

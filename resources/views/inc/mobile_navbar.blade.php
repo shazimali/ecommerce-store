@@ -69,31 +69,34 @@
                             @endforeach      
                             </div>
                         </li>
-                        <li x-data="{mobileCollection: false}">
-                            <div x-on:click="mobileCollection = !mobileCollection" class="bg-primary text-white flex justify-between py-2 px-2">
+                        <li x-data="{mobileCollection: false}" class="block">
+                            <div x-on:click="mobileCollection = !mobileCollection" class="bg-primary text-white flex justify-between py-2 px-2 cursor-pointer">
                                 collection
                                 <div>
                                     <i class="fa-solid fa-caret-down"></i>
                                 </div>
                             </div>
-                            @foreach (website()->categories as $category)
-                            <div x-show="mobileCollection" class="grid grid-cols-2">
-                                <div class="text-start  text-sm">
-                                    <div class="font-semibold">
-                                        {{ $category->title }}
-                                    </div>
+                            <div x-show="mobileCollection" class="block w-full">
+                                @foreach (website()->categories as $category)
+                                <div x-data="{ openSub: false }" class="py-2 px-3 border-b border-secondary dark:border-slate-800 text-start text-sm w-full block">
                                     @if(count($category->front_sub_categories))
-                                    @foreach ($category->front_sub_categories as $sub_cat)
-                                        <a class="underline text-xs" href="{{ route('sub-categories',['slug' => $sub_cat->slug ]) }}">{{ $sub_cat->title }}</a>
-                                    @endforeach
+                                        <div x-on:click="openSub = !openSub" class="flex justify-between items-center cursor-pointer font-semibold py-1 w-full">
+                                            <span>{{ $category->title }}</span>
+                                            <i class="fa-solid fa-caret-down transition-transform duration-200" :class="openSub ? 'rotate-180' : ''"></i>
+                                        </div>
+                                        <div x-show="openSub" class="pl-4 py-2 flex flex-col gap-1 w-full">
+                                            @foreach ($category->front_sub_categories as $sub_cat)
+                                                <a class="underline text-xs hover:text-primary py-1" href="{{ route('sub-categories',['slug' => $sub_cat->slug ]) }}">{{ $sub_cat->title }}</a>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <a href="{{ route('categories', ['slug' => $category->slug]) }}" class="block font-semibold py-1 hover:text-primary w-full">
+                                            {{ $category->title }}
+                                        </a>
                                     @endif
                                 </div>
-                                <div class="px-5 py-5">
-                                    <img src="{{ asset('storage/'.$category->image) }}" alt=" {{ $category->title }}">
-                                </div>
-                                
+                                @endforeach
                             </div>
-                            @endforeach
                         </li>
                         <li class="text-start py-2">
                             <a @class(['hover:text-primary dark:text-secondary dark:hover:text-primary','text-primary' => Route::is('shop')])  href="{{ route('shop') }}">Shop</a>
