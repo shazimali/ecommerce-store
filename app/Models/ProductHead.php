@@ -48,7 +48,9 @@ class ProductHead extends Model
 
     public function price_detail(): HasOne
     {
-        return  $this->hasOne(ProductHeadPrice::class, 'product_head_id', 'id')->where('country_id', getLocation()->id);
+        $countryId = getLocation()?->id;
+        return $this->hasOne(ProductHeadPrice::class, 'product_head_id', 'id')
+            ->when($countryId, fn($query) => $query->where('country_id', $countryId));
     }
 
     public function scopeActive($query)

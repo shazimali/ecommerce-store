@@ -37,7 +37,9 @@ class Bundle extends Model
 
     public function price_detail(): HasOne
     {
-        return $this->hasOne(BundlePrice::class, 'bundle_id', 'id')->where('country_id', getLocation()->id);
+        $countryId = getLocation()?->id;
+        return $this->hasOne(BundlePrice::class, 'bundle_id', 'id')
+            ->when($countryId, fn($query) => $query->where('country_id', $countryId));
     }
 
     public function scopeActive($query)

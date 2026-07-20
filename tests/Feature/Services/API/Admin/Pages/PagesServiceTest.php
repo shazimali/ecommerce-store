@@ -9,6 +9,7 @@ use App\Services\API\Admin\Pages\PagesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PagesServiceTest extends TestCase
@@ -84,7 +85,7 @@ class PagesServiceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_get_all_pages_with_pagination()
     {
         // Arrange
@@ -99,7 +100,7 @@ class PagesServiceTest extends TestCase
         $this->assertCount(10, $result->collection);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_search_pages_by_id()
     {
         // Arrange
@@ -117,7 +118,7 @@ class PagesServiceTest extends TestCase
         $this->assertCount(1, $result->collection);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_get_all_countries()
     {
         // Arrange
@@ -130,8 +131,7 @@ class PagesServiceTest extends TestCase
         $this->assertCount(5, $result->collection);
     }
 
-
-    /** @test */
+    #[Test]
     public function test_it_can_edit_a_page()
     {
         // Arrange
@@ -148,8 +148,8 @@ class PagesServiceTest extends TestCase
         $this->assertInstanceOf(\App\Http\Resources\API\Admin\Pages\PagesEditResource::class, $result);
     }
 
-    /** @test */
-    public function it_returns_error_when_editing_non_existent_page()
+    #[Test]
+    public function test_it_returns_error_when_editing_non_existent_page()
     {
         // Act
         $result = $this->pagesService->edit(999);
@@ -159,7 +159,7 @@ class PagesServiceTest extends TestCase
         $this->assertEquals('Page not fount', $result->getData()->message);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_destroy_a_page()
     {
         // Arrange
@@ -182,8 +182,8 @@ class PagesServiceTest extends TestCase
         $this->assertDatabaseMissing('page_country', ['page_id' => $page->id]);
     }
 
-    /** @test */
-    public function it_returns_error_when_destroying_non_existent_page()
+    #[Test]
+    public function test_it_returns_error_when_destroying_non_existent_page()
     {
         // Act
         $result = $this->pagesService->destroy(999);
@@ -193,7 +193,7 @@ class PagesServiceTest extends TestCase
         $this->assertEquals('Page not found.', $result->getData()->message);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_filter_active_pages()
     {
         // Arrange
@@ -208,7 +208,7 @@ class PagesServiceTest extends TestCase
         $this->assertCount(2, $activePages);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_filter_header_pages()
     {
         // Arrange
@@ -224,7 +224,7 @@ class PagesServiceTest extends TestCase
         $this->assertTrue($headerPages->every(fn($page) => $page->position === 'HEADER'));
     }
 
-    /** @test */
+    #[Test]
     public function test_it_can_filter_footer_pages()
     {
         // Arrange
