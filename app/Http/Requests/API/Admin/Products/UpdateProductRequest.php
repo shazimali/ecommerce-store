@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\API\Admin\Products;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\JsonFormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateProductRequest extends FormRequest
+class UpdateProductRequest extends JsonFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,22 +22,24 @@ class UpdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $productId = $this->route('id');
+
         return [
             'title' => [
                 'required',
-                'unique:product_heads,title,' . $this->route('id'),
+                Rule::unique('product_heads', 'title')->ignore($productId),
             ],
             'slug' => [
                 'required',
-                'unique:product_heads,slug,' . $this->route('id'),
+                Rule::unique('product_heads', 'slug')->ignore($productId),
             ],
             'code' => [
                 'required',
-                'unique:product_heads,code,' . $this->route('id'),
+                Rule::unique('product_heads', 'code')->ignore($productId),
             ],
             'sku' => [
                 'required',
-                'unique:product_heads,sku,' . $this->route('id'),
+                Rule::unique('product_heads', 'sku')->ignore($productId),
             ],
             'order' => 'required|numeric',
             'short_desc' => 'required',
@@ -48,8 +51,7 @@ class UpdateProductRequest extends FormRequest
             'image3' => 'nullable|image|max:500',
             'image4' => 'nullable|image|max:500',
             'image5' => 'nullable|image|max:500',
-
-
         ];
     }
 }
+

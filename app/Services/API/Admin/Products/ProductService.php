@@ -11,6 +11,8 @@ use App\Models\ProductHead;
 use App\Models\ProductHeadPrice;
 use App\Models\ProductHeadSubCategory;
 use App\Models\SubCategory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
 
 class ProductService implements ProductInterface
 {
@@ -18,54 +20,48 @@ class ProductService implements ProductInterface
 
     public function getAll(array $filters, int $perPage)
     {
-        $product = ProductHead::paginate($perPage);
-        if ($product) {
-            return ProductListResource::collection($product);
-        } else {
-            return response()->json(['message', 'Product Not exist'], 201);
-        }
+        $products = ProductHead::with(['sub_categories', 'price_detail', 'colors'])->paginate($perPage);
+        return ProductListResource::collection($products);
     }
 
     public function store(array $data)
     {
-        $sub_categories = $data['sub_categories'] ?? [];
+        $subCategories = $data['sub_categories'] ?? [];
         unset($data['sub_categories']);
 
-        $data['is_new'] = ($data['is_new'] ?? false) == true ? 1 : 0;
-        $data['is_trending'] = ($data['is_trending'] ?? false) == true ? 1 : 0;
-        $data['is_featured'] = ($data['is_featured'] ?? false) == true ? 1 : 0;
-        $data['coming_soon'] = ($data['coming_soon'] ?? false) == true ? 1 : 0;
+        $data['is_new'] = filter_var($data['is_new'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_trending'] = filter_var($data['is_trending'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_featured'] = filter_var($data['is_featured'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['coming_soon'] = filter_var($data['coming_soon'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
 
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             $data['image'] = $this->uploadFile($data['image']);
             $data['nav_image'] = $this->createThumbnailFromPath($data['image'], 208, 208);
         }
         
         foreach (range(1, 5) as $i) {
             $key = "image$i";
-            if (isset($data[$key]) && $data[$key] instanceof \Illuminate\Http\UploadedFile) {
+            if (isset($data[$key]) && $data[$key] instanceof UploadedFile) {
                 $data[$key] = $this->uploadFile($data[$key]);
             }
         }
 
-        $product = ProductHead::create($data);
-        $product->sub_categories()->attach($sub_categories);
-        
-        if ($product) {
+        return DB::transaction(function () use ($data, $subCategories) {
+            $product = ProductHead::create($data);
+            if (!empty($subCategories)) {
+                $product->sub_categories()->attach($subCategories);
+            }
             return response()->json(['message' => 'Product Stored Successfully '], 200);
-        } else {
-            return response()->json(['message' => 'Product Not Stored'], 201);
-        }
+        });
     }
 
     public function edit(int $id)
     {
-        $product = ProductHead::find($id);
+        $product = ProductHead::with(['sub_categories', 'price_detail', 'colors'])->find($id);
         if ($product) {
             return new ProductEditResource($product);
-        } else {
-            return response()->json(['message', 'Product not exist'], 201);
         }
+        return response()->json(['message' => 'Product not exist'], 201);
     }
 
     public function update(int $id, array $data)
@@ -75,15 +71,15 @@ class ProductService implements ProductInterface
             return response()->json(['message' => 'Product not found'], 201);
         }
 
-        $sub_categories = $data['sub_categories'] ?? [];
+        $subCategories = $data['sub_categories'] ?? [];
         unset($data['sub_categories']);
 
-        $data['is_new'] = ($data['is_new'] ?? 'false') == 'true' ? 1 : 0;
-        $data['is_featured'] = ($data['is_featured'] ?? 'false') == 'true' ? 1 : 0;
-        $data['is_trending'] = ($data['is_trending'] ?? 'false') == 'true' ? 1 : 0;
-        $data['coming_soon'] = ($data['coming_soon'] ?? 'false') == 'true' ? 1 : 0;
+        $data['is_new'] = filter_var($data['is_new'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_featured'] = filter_var($data['is_featured'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_trending'] = filter_var($data['is_trending'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['coming_soon'] = filter_var($data['coming_soon'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
 
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             $this->deleteFile($product->image);
             $this->deleteFile($product->nav_image);
 
@@ -93,59 +89,63 @@ class ProductService implements ProductInterface
 
         foreach (range(1, 5) as $i) {
             $key = "image$i";
-            if (isset($data[$key]) && $data[$key] instanceof \Illuminate\Http\UploadedFile) {
+            if (isset($data[$key]) && $data[$key] instanceof UploadedFile) {
                 $this->deleteFile($product->$key);
                 $data[$key] = $this->uploadFile($data[$key]);
             }
         }
 
-        $product->update($data);
-        $product->sub_categories()->sync($sub_categories);
-        
-        return response()->json(['message' => 'Product Updated Successfully'], 200);
+        return DB::transaction(function () use ($product, $data, $subCategories) {
+            $product->update($data);
+            $product->sub_categories()->sync($subCategories);
+            return response()->json(['message' => 'Product Updated Successfully'], 200);
+        });
     }
 
     public function destroy(int $id)
     {
         $product = ProductHead::find($id);
-        if ($product) {
-            $is_sub_category_attached = ProductHeadSubCategory::where('product_head_id', $id)->first();
-            if ($is_sub_category_attached)
-                return  response()->json(['message' => 'Product attached with sub category, can not delete.'], 201);
-
-            $this->deleteFile($product->image);
-            $this->deleteFile($product->image1);
-            $this->deleteFile($product->image2);
-            $this->deleteFile($product->image3);
-            $this->deleteFile($product->image4);
-            $this->deleteFile($product->image5);
-            $this->deleteFile($product->nav_image);
-
-            //Deleting related product colors
-            $productColors = ProductColor::where('product_head_id', $id)->get();
-            if (count($productColors)) {
-                foreach ($productColors  as $key => $product_color) {
-                    $this->deleteFile($product_color->color_image);
-                    $this->deleteFile($product_color->image1);
-                    $this->deleteFile($product_color->image2);
-                    $this->deleteFile($product_color->image3);
-                    $this->deleteFile($product_color->image4);
-                    $this->deleteFile($product_color->image5);
-                }
-            }
-            //Deleting related product prices
-            $productPrices = ProductHeadPrice::where('product_head_id', $id)->get();
-            if ($productPrices) {
-                foreach ($productPrices as $key => $product_price) {
-                    $product_price->delete();
-                }
-            }
-            //Deleting product
-            $product->delete();
-            return response()->json(['message' => 'Product deleted successfully'], 200);
-        } else {
+        if (!$product) {
             return response()->json(['message' => 'Product not found'], 201);
         }
+
+        $is_sub_category_attached = ProductHeadSubCategory::where('product_head_id', $id)->first();
+        if ($is_sub_category_attached) {
+            return response()->json(['message' => 'Product attached with sub category, can not delete.'], 201);
+        }
+
+        return DB::transaction(function () use ($product, $id) {
+            $this->deleteMultipleFiles([
+                $product->image,
+                $product->image1,
+                $product->image2,
+                $product->image3,
+                $product->image4,
+                $product->image5,
+                $product->nav_image,
+            ]);
+
+            // Deleting related product colors
+            $productColors = ProductColor::where('product_head_id', $id)->get();
+            foreach ($productColors as $product_color) {
+                $this->deleteMultipleFiles([
+                    $product_color->color_image,
+                    $product_color->image1,
+                    $product_color->image2,
+                    $product_color->image3,
+                    $product_color->image4,
+                    $product_color->image5,
+                ]);
+                $product_color->delete();
+            }
+
+            // Deleting related product prices
+            ProductHeadPrice::where('product_head_id', $id)->delete();
+
+            // Deleting product
+            $product->delete();
+            return response()->json(['message' => 'Product deleted successfully'], 200);
+        });
     }
 
     public function getAllSubCategories()
@@ -153,3 +153,4 @@ class ProductService implements ProductInterface
         return SubCategoryListResource::collection(SubCategory::all());
     }
 }
+

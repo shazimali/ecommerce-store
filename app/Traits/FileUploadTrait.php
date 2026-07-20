@@ -37,6 +37,22 @@ trait FileUploadTrait
     }
 
     /**
+     * Delete multiple files from storage.
+     *
+     * @param array $paths
+     * @param string $disk
+     * @return void
+     */
+    public function deleteMultipleFiles(array $paths, string $disk = 'public')
+    {
+        foreach ($paths as $path) {
+            if (!empty($path)) {
+                $this->deleteFile($path, $disk);
+            }
+        }
+    }
+
+    /**
      * Create a resized thumbnail from an uploaded image.
      *
      * @param string $sourcePath Relative path of the uploaded image in storage
@@ -47,15 +63,12 @@ trait FileUploadTrait
      */
     public function createThumbnailFromPath($sourcePath, $width, $height, $disk = 'public')
     {
-        // Get absolute path
         $absolutePath = Storage::disk($disk)->path($sourcePath);
         
-        // Generate thumbnail name
         $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
         $thumbnailName = time() . '.' . $extension;
         $thumbnailPath = Storage::disk($disk)->path($thumbnailName);
 
-        // Resize and save
         $manager = new ImageManager(new Driver());
         $image = $manager->read($absolutePath);
         $image->resize($width, $height);

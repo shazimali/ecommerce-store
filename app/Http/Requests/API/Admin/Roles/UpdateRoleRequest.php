@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\Admin\Roles;
 
 use App\Http\Requests\JsonFormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRoleRequest extends JsonFormRequest
 {
@@ -22,12 +23,13 @@ class UpdateRoleRequest extends JsonFormRequest
     public function rules(): array
     {
         return [
-            'name'     => [
+            'name' => [
                 'required',
-                'unique:roles,name,'.$this->route('id'),
+                'string',
+                Rule::unique('roles', 'name')->ignore($this->route('id')),
                 'max:50',
             ],
-            'permissions'    => [
+            'permissions' => [
                 'required',
                 'array',
             ],
