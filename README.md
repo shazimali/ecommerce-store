@@ -1,66 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <h1 align="center">🛍️ Everyday Shops — Modern E-Commerce Platform</h1>
+  <p align="center">
+    A robust, high-performance Full-Stack E-Commerce & Admin API Platform built with Laravel 11, Livewire 3, Tailwind CSS, Docker, and GitHub Actions CI/CD.
+  </p>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌟 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🛒 Storefront & Customer Experience
+* **Dynamic Multi-Currency Pricing:** Country-specific pricing engine with real-time currency conversions and promotional discount calculation.
+* **Product Catalog & Bundles:** Support for single products, multi-color variations, gallery images, subcategories, and promotional bundle packages.
+* **Cookie-Backed Cart Engine:** High-performance, session-resilient shopping cart supporting quantity adjustments, bundle additions, and dynamic tax/discount calculations.
+* **Instant Checkout & Order Tracking:** Streamlined checkout workflow with order detail lookup, Cash on Delivery (COD) processing, and real-time status updates.
+* **Interactive Frontend:** Responsive Livewire 3 components and Blade templates styled with Tailwind CSS for fast, seamless page transitions.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🛡️ Admin Headless REST API (Vue.js Frontend Integration)
+* **Decoupled Vue.js Admin SPA:** Serves as a headless backend API for a separate **Vue.js Single Page Application (SPA)** admin dashboard.
+* **Role-Based Access Control (RBAC):** Granular permission and role management for administrative users via Sanctum authentication.
+* **Comprehensive Resource APIs:** Sanctum-authenticated RESTful endpoints for managing Products, Categories, Collections, Bundles, Coupons, Customers, Facilities, Pages, Roles, Suppliers, and Site Settings.
+* **Order Management & Shipping:** Centralized order booking, status updates, invoice retrieval, and supplier tracking.
 
-## Learning Laravel
+### ⚙️ Architecture & Code Quality
+* **Layered Service-Interface Architecture:** Clean separation of concerns (Controllers ➔ Form Requests ➔ Interfaces ➔ Services ➔ API Resources ➔ Eloquent Models).
+* **N+1 Query Optimization:** Eager-loaded relationships (`with(['sub_categories', 'price_detail', 'colors'])`) to guarantee optimal database query performance.
+* **Database Transactions:** Atomic operations using `DB::transaction(...)` blocks for data integrity during bulk updates and deletions.
+* **Type-Safe Validation:** Fluent validation rules (`Rule::unique(...)`) and strict PHP 8.3 typing.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Technology Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* **Backend Framework:** Laravel 11 (PHP 8.3)
+* **Storefront Frontend:** Livewire 3, Alpine.js, Blade, Tailwind CSS, Vite
+* **Admin Panel Frontend:** Decoupled Vue.js Single Page Application (SPA) consuming Sanctum REST API
+* **Database:** MySQL 8.0 (Production) / SQLite in-memory (Testing)
+* **API Architecture:** Headless RESTful JSON APIs, Eloquent API Resources, Sanctum Authentication
+* **Containerization & Deployment:** Docker, Docker Compose, GitHub Actions (CI/CD Pipeline), Docker Hub
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Getting Started
 
-### Premium Partners
+### Prerequisites
+* PHP >= 8.3
+* Composer >= 2.x
+* Node.js >= 18.x & NPM
+* Docker & Docker Compose *(Optional for containerized setup)*
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+### Local Installation Guide
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/shazimali/everyday-shops.git
+   cd everyday-shops
+   ```
 
-## Code of Conduct
+2. **Install PHP & Node dependencies:**
+   ```bash
+   composer install
+   npm install && npm run build
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. **Configure Environment:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Security Vulnerabilities
+4. **Database Migration & Seeding:**
+   Update your database credentials in `.env`, then run:
+   ```bash
+   php artisan migrate --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. **Link Storage & Run Development Server:**
+   ```bash
+   php artisan storage:link
+   php artisan serve
+   ```
+   Visit `http://localhost:8000` in your browser.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🐳 Docker Setup
+
+Run the application locally using Docker Compose:
+
+```bash
+# Start all services (App & Worker)
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f
+```
+
+---
+
+## 🧪 Automated Testing
+
+The project includes unit and feature test suites configured with SQLite in-memory database execution:
+
+```bash
+# Run all tests
+php artisan test
+```
+
+---
+
+## 🚢 CI/CD Deployment Pipeline
+
+This repository uses **GitHub Actions** (`.github/workflows/deploy.yml`) for continuous integration and automated deployment:
+
+1. **Automated Testing:** Runs `php artisan test` against a MySQL test service container on every commit to `main`.
+2. **Containerization:** Builds a cached multi-stage Docker image and pushes it to **Docker Hub** (`shazimali/everyday-shop:latest`).
+3. **Automated VPS Deployment:** Connects securely over SSH to the production server, pulls the latest image, runs database optimization/cache clear commands, and restarts containers with zero downtime.
+
+---
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](LICENSE).
