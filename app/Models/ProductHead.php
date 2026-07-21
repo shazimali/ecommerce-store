@@ -37,8 +37,13 @@ class ProductHead extends Model
         'image3',
         'image4',
         'image5',
+        'embedding',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'embedding' => 'array',
     ];
 
     public function sub_categories(): BelongsToMany

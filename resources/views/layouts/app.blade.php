@@ -60,6 +60,7 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     @include('inc.navbar')
     @yield('content')
     @include('layouts.footer')
+    <livewire:chat-widget />
     @livewireScripts
     @stack('scripts')
   </body>

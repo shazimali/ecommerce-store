@@ -46,4 +46,9 @@ return [
         'redirect'      => '/auth/google/callback',
     ],
 
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'model'   => env('OPENROUTER_MODEL', 'google/gemini-2.0-flash-exp:free'),
+    ],
+
 ];
