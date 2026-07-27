@@ -259,7 +259,9 @@ class AIChatbotService
             if ($products->isEmpty()) {
                 $products = ProductHead::active()
                     ->with(['price_detail', 'price_detail.country', 'reviews'])
-                    ->orderByRaw('FIELD(is_trending, 1, 0) DESC, FIELD(is_featured, 1, 0) DESC, `order` ASC')
+                    ->orderBy('is_trending', 'desc')
+                    ->orderBy('is_featured', 'desc')
+                    ->orderBy('order', 'asc')
                     ->take(6)->get();
             }
 
