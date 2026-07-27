@@ -66,6 +66,19 @@ class AIChatbotService
                 $systemPrompt .= "\n\n[Real-time Database Context]\n" . $context;
             }
 
+            // Tell the LLM exactly what the user searched for so it stays relevant
+            $extractedSearch = trim((string) preg_replace(
+                '/\b(?:please|kindly|can|you|find|search|show|get|of|for|about|me|any|some|all|list|what|have|do|is|are|your|the|a|an|i|want|need|looking|tell|give|suggest|recommend)\b/i',
+                '',
+                $userPrompt
+            ));
+            $extractedSearch = trim((string) preg_replace('/\s+/', ' ', $extractedSearch));
+
+            if (!empty($extractedSearch) && !in_array(strtolower($extractedSearch), ['product', 'products', 'item', 'items', 'price', 'buy', 'detail', 'catalog'])) {
+                $systemPrompt .= "\n\n[Search Instruction] The user searched for: \"{$extractedSearch}\". ONLY list products from the context that are relevant to this search. Do NOT list unrelated products. If the context has no matching products, apologize and suggest browsing the store or contacting support.";
+            }
+
+
             $messages = [
                 ['role' => 'system', 'content' => $systemPrompt],
             ];
@@ -88,7 +101,7 @@ class AIChatbotService
             ])->timeout(12)->post('https://openrouter.ai/api/v1/chat/completions', [
                 'model'      => $model,
                 'messages'   => $messages,
-                'max_tokens' => 450,
+                'max_tokens' => 700,
             ]);
 
             if ($response->successful()) {
@@ -190,44 +203,64 @@ class AIChatbotService
         }
 
         if ($isProductQuery) {
-            $cleaned = trim((string) preg_replace('/\b(?:please|kindly|can|you|find|search|show|get|buy|price|detail|details|of|for|about|me|any|some|products|product|items|item|all|list|what|have)\\b/i', '', $userPrompt));
+            // Strip only true filler words — preserve product nouns like rack, kitchen, chair, box
+            $cleaned = trim((string) preg_replace(
+                '/\b(?:please|kindly|can|you|find|search|show|get|of|for|about|me|any|some|all|list|what|have|do|is|are|your|the|a|an|i|want|need|looking|tell|give|suggest|recommend)\b/i',
+                '',
+                $userPrompt
+            ));
             $searchQuery = trim((string) preg_replace('/\s+/', ' ', $cleaned));
 
             // Best sellers / trending / new detection
             $isTrending = preg_match('/\b(?:best|popular|trending|top|seller|bestsell)\b/i', $userPrompt);
-            $isNew = preg_match('/\b(?:new|latest|recent|fresh)\b/i', $userPrompt);
+            $isNew      = preg_match('/\b(?:new|latest|recent|fresh)\b/i', $userPrompt);
             $isFeatured = preg_match('/\b(?:featured|special|recommended|suggest)\b/i', $userPrompt);
 
-            $query = ProductHead::active()->with(['price_detail', 'price_detail.country', 'reviews']);
+            $terms = array_filter(
+                array_map('trim', explode(' ', $searchQuery)),
+                fn($t) => strlen($t) >= 3
+            );
+
+            $query = ProductHead::active()
+                ->with(['price_detail', 'price_detail.country', 'reviews', 'sub_categories']);
 
             if ($isTrending) {
-                $query->where('is_trending', 1)->orWhere('is_featured', 1);
+                $query->where(fn($q) => $q->where('is_trending', 1)->orWhere('is_featured', 1));
             } elseif ($isNew) {
                 $query->where('is_new', 1);
             } elseif ($isFeatured) {
                 $query->where('is_featured', 1);
-            } elseif (strlen($searchQuery) >= 2 && !in_array(strtolower($searchQuery), ['all', 'list', 'show', 'products', 'items', 'have', 'store', 'seller', 'best', 'trending', 'category'])) {
-                // Specific keyword search
-                $terms = array_filter(explode(' ', $searchQuery));
-                $query->where(function ($sub) use ($searchQuery, $terms) {
-                    $sub->where('title', 'LIKE', "%{$searchQuery}%")
-                        ->orWhere('code', 'LIKE', "%{$searchQuery}%")
-                        ->orWhere('short_desc', 'LIKE', "%{$searchQuery}%");
+            } elseif (!empty($terms) && !in_array(strtolower($searchQuery), ['all', 'list', 'show', 'products', 'items', 'have', 'store', 'seller', 'best', 'trending', 'category'])) {
+                // Search by title / description AND sub-category name
+                $query->where(function ($q) use ($searchQuery, $terms) {
+                    // Direct product fields
+                    $q->where('title', 'LIKE', "%{$searchQuery}%")
+                      ->orWhere('code', 'LIKE', "%{$searchQuery}%")
+                      ->orWhere('short_desc', 'LIKE', "%{$searchQuery}%");
 
                     foreach ($terms as $term) {
-                        if (strlen($term) >= 3) {
-                            $sub->orWhere('title', 'LIKE', "%{$term}%")
-                                ->orWhere('short_desc', 'LIKE', "%{$term}%");
-                        }
+                        $q->orWhere('title', 'LIKE', "%{$term}%")
+                          ->orWhere('short_desc', 'LIKE', "%{$term}%");
                     }
+
+                    // Also match via sub-category title
+                    $q->orWhereHas('sub_categories', function ($sub) use ($searchQuery, $terms) {
+                        $sub->where('title', 'LIKE', "%{$searchQuery}%");
+                        foreach ($terms as $term) {
+                            $sub->orWhere('title', 'LIKE', "%{$term}%");
+                        }
+                    });
                 });
             }
 
             $products = $query->orderBy('order', 'ASC')->take(6)->get();
 
-            // If specific search yields 0 matches, fallback to top active catalog products
+            // If specific search yields 0 matches, fallback to featured/trending then order
             if ($products->isEmpty()) {
-                $products = ProductHead::active()->with(['price_detail', 'price_detail.country', 'reviews'])->orderBy('order', 'ASC')->take(6)->get();
+                $products = ProductHead::active()
+                    ->with(['price_detail', 'price_detail.country', 'reviews'])
+                    ->orderByRaw('FIELD(is_trending, 1, 0) DESC, FIELD(is_featured, 1, 0) DESC, `order` ASC')
+                    ->take(6)->get();
             }
 
             // RAG Semantic Ranking using Cosine Similarity if embeddings exist
