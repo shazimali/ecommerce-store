@@ -253,7 +253,7 @@ class AIChatbotService
                 });
             }
 
-            $products = $query->orderBy('order', 'ASC')->take(6)->get();
+            $products = $query->orderBy('order', 'ASC')->take(30)->get(); // wider net for semantic re-ranking
 
             // If specific search yields 0 matches, fallback to featured/trending then order
             if ($products->isEmpty()) {
@@ -262,10 +262,11 @@ class AIChatbotService
                     ->orderBy('is_trending', 'desc')
                     ->orderBy('is_featured', 'desc')
                     ->orderBy('order', 'asc')
-                    ->take(6)->get();
+                    ->take(30)->get(); // wider net for semantic re-ranking
             }
 
             // RAG Semantic Ranking using Cosine Similarity if embeddings exist
+            // Re-rank all 30 candidates by semantic similarity, then trim to top 6
             if ($products->count() > 0 && $products->contains(fn($p) => !empty($p->embedding))) {
                 $queryEmbedding = $this->generateEmbedding($userPrompt);
                 $products = $products->sortByDesc(function ($product) use ($queryEmbedding) {
@@ -273,7 +274,10 @@ class AIChatbotService
                         return 0.0;
                     }
                     return $this->cosineSimilarity($queryEmbedding, $product->embedding);
-                })->values();
+                })->take(6)->values();
+            } else {
+                // No embeddings available — just take the top 6 by SQL order
+                $products = $products->take(6);
             }
 
             // Fetch Store Categories & Collections
