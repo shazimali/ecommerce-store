@@ -1,6 +1,11 @@
 @extends('layouts.app')
-@section('title','Home')
+@section('seo_title', 'Everyday Plastic – Quality Plastic Homeware & Kitchen Storage in Pakistan')
+@section('seo_description', 'Shop premium plastic kitchen storage, baby furniture, shoe racks & home organizers. Free delivery on orders above Rs. 3,999. Quality products for Pakistani homes.')
+@section('og_title', 'Everyday Plastic – Quality Homeware Solutions')
+@section('og_description', 'Premium plastic products for your home. Free delivery above Rs. 3,999.')
 @section('content')
+{{-- SEO: One true h1 per page (visually hidden, screen-reader accessible) --}}
+<h1 class="sr-only">Everyday Plastic – Quality Plastic Homeware &amp; Kitchen Storage Solutions in Pakistan</h1>
 @if($start_collection)
 <div x-data="{ isOpen: true }">
     <dialog id="dialog" 
@@ -36,7 +41,7 @@
             @foreach (facilities() as $facility)
             <div class="p-5 border border-secondary flex justify-center dark:border-slate-800">
                 <span><i class="{{ $facility->class }} text-primary text-5xl"></i></span>
-                <h1 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">{{ $facility->title }}</h1>
+                <h3 class="lg:text-2xl md:text-2xl xs:text-1xl mt-2 font-bold ml-3">{{ $facility->title }}</h3>
             </div>
             @endforeach    
         </div>
@@ -45,7 +50,7 @@
     @endif
     @if(count($trending_products))
       <div class="mt-16 text-center">
-        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Trending Products</h1>
+        <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Trending Products</h2>
     </div>
     @include('inc.trending_slider')
     @endif
@@ -84,12 +89,12 @@
     @endif
 
     <div class="mt-16 text-center">
-        <h1 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h1>
+        <h2 class="font-bold lg:text-4xl md:text-4xl sm:text-2xl xs:text-2xl dark:text-secondary">Our Collection</h2>
     </div>
     @include('inc.SubCategoriesSlider')
 @if(count($featured_products))
 <div class="mt-16 text-center">
-    <h1 class="font-bold text-4xl dark:text-secondary">Featured Products</h1>
+    <h2 class="font-bold text-4xl dark:text-secondary">Featured Products</h2>
 </div>
 <div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2">
     @foreach ($featured_products as $featured_product)
@@ -116,7 +121,7 @@
 @endif
     @if(count($new_products))
 <div class="text-center">
-    <h1 class="font-bold text-4xl dark:text-secondary">Just Arrived</h1>
+    <h2 class="font-bold text-4xl dark:text-secondary">Just Arrived</h2>
 </div>
 <div class="mt-10 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-2 gap-5 lg:px-8 md:px-8 sm:px-2 xs:px-2">
     @foreach ($new_products as $new_product)

@@ -9,21 +9,29 @@
         @endif
 
         {{-- Primary image --}}
-        <img src="{{ asset('storage/' . $product->image) }}" class="transition duration-300 ease-in-out group-hover:scale-110 w-full
-                   {{ $product->image1 ? 'group-hover:opacity-0' : '' }}" alt="{{ $product->title }}" />
+        <img src="{{ asset('storage/' . $product->image) }}"
+             width="400" height="400"
+             loading="lazy"
+             class="transition duration-300 ease-in-out group-hover:scale-110 w-full
+                    {{ $product->image1 ? 'group-hover:opacity-0' : '' }}"
+             alt="{{ $product->title }} - Everyday Plastic" />
 
         {{-- Hover image (only rendered if image1 exists) --}}
         @if ($product->image1)
-            <img src="{{ asset('storage/' . $product->image1) }}" class="absolute inset-0 w-full h-full object-cover
-                           opacity-0 group-hover:opacity-100
-                           transition-opacity duration-300 ease-in-out" alt="{{ $product->title }} - alternate view" />
+            <img src="{{ asset('storage/' . $product->image1) }}"
+                 width="400" height="400"
+                 loading="lazy"
+                 class="absolute inset-0 w-full h-full object-cover
+                               opacity-0 group-hover:opacity-100
+                               transition-opacity duration-300 ease-in-out"
+                 alt="{{ $product->title }} - alternate view" />
         @endif
     </div>
 
     <div class="border-b border-secondary dark:border-slate-800 py-5 text-center dark:text-secondary">
-        <h1 class="group-hover:text-primary transition-colors duration-300">
+        <h2 class="group-hover:text-primary transition-colors duration-300">
             {{ $product->title }}
-        </h1>
+        </h2>
         @if($product->coming_soon)
             <h2 class="text-primary"><b>Coming Soon</b></h2>
         @else

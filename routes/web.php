@@ -14,7 +14,11 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SubCategoriesController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+
+// ── SEO: Dynamic Sitemap ───────────────────────────────────────────────────
+Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
