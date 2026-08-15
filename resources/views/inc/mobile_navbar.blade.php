@@ -3,8 +3,8 @@
     @include('inc.mobile_header')
     <div class="flex justify-center py-2 text-black">
         <a class="font-semibold text-4xl" href="{{ route('home') }}">
-            <span class="text-primary dark:text-secondary">EveryDay</span>
-            <span class="dark:text-primary">{{ website()->title }}</span>
+            <span class="text-primary dark:text-secondary uppercase">EveryDay</span>
+            <span class="dark:text-primary uppercase">{{ website()->title }}</span>
         </a>
     </div>
     <nav class="flex justify-between border-secondary border dark:border-slate-800 p-2">
@@ -37,9 +37,11 @@
                                         @if ($new_pr->price_detail && $new_pr->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $new_pr->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $new_pr->price_detail->discount_to))
                                             <div
                                                 class="absolute right-5  top-5 w-auto px-1 py-1 bg-green-600 text-white text-[8px] text-center">
-                                                {{ $new_pr->price_detail->discount}} % off</div>
+                                                {{ $new_pr->price_detail->discount}} % off
+                                            </div>
                                         @endif
-                                        <img src="{{ asset('storage/' . $new_pr->nav_image) }}" alt="{{ $new_pr->title }}" />
+                                        <img src="{{ asset('storage/' . $new_pr->nav_image) }}"
+                                            alt="{{ $new_pr->title }}" />
                                         <div class="pt-2 overflow-hidden  text-xs truncate">
                                             {{$new_pr->short_desc }}
                                         </div>
