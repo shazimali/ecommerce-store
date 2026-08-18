@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -10,14 +12,45 @@ trait FileUploadTrait
 {
     /**
      * Upload a file to the specified disk and path.
+     * Automatically converts and compresses images to WebP format.
      *
-     * @param \Illuminate\Http\UploadedFile $file
+     * @param \Illuminate\Http\UploadedFile|string $file
      * @param string $path
      * @param string $disk
+     * @param int $maxWidth
+     * @param int $quality
      * @return string|false
      */
-    public function uploadFile($file, $path = '/', $disk = 'public')
+    public function uploadFile($file, $path = '/', $disk = 'public', $maxWidth = 1200, $quality = 80)
     {
+        if ($file instanceof UploadedFile) {
+            $mime = $file->getMimeType();
+            $imageMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif', 'image/bmp'];
+
+            // Optimize raster images to WebP
+            if (in_array($mime, $imageMimes) && $mime !== 'image/svg+xml') {
+                try {
+                    $manager = new ImageManager(new Driver());
+                    $image = $manager->read($file->getRealPath());
+
+                    // Scale down if larger than max width
+                    if ($image->width() > $maxWidth) {
+                        $image->scaleDown(width: $maxWidth);
+                    }
+
+                    $encoded = $image->toWebp($quality);
+                    $filename = Str::random(40) . '.webp';
+                    $targetPath = ($path === '/' || $path === '') ? $filename : trim($path, '/') . '/' . $filename;
+
+                    Storage::disk($disk)->put($targetPath, (string) $encoded);
+
+                    return $targetPath;
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+            }
+        }
+
         return Storage::disk($disk)->put($path, $file);
     }
 
@@ -59,21 +92,30 @@ trait FileUploadTrait
      * @param int $width
      * @param int $height
      * @param string $disk
-     * @return string Name of the saved thumbnail file
+     * @return string|null Name of the saved thumbnail file
      */
     public function createThumbnailFromPath($sourcePath, $width, $height, $disk = 'public')
     {
-        $absolutePath = Storage::disk($disk)->path($sourcePath);
-        
-        $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
-        $thumbnailName = time() . '.' . $extension;
-        $thumbnailPath = Storage::disk($disk)->path($thumbnailName);
+        if (!$sourcePath || !Storage::disk($disk)->exists($sourcePath)) {
+            return null;
+        }
 
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($absolutePath);
-        $image->resize($width, $height);
-        $image->save($thumbnailPath);
+        try {
+            $absolutePath = Storage::disk($disk)->path($sourcePath);
+            $thumbnailName = Str::random(40) . '.webp';
+            $thumbnailPath = Storage::disk($disk)->path($thumbnailName);
 
-        return $thumbnailName;
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($absolutePath);
+            $image->cover($width, $height);
+            $encoded = $image->toWebp(80);
+            file_put_contents($thumbnailPath, (string) $encoded);
+
+            return $thumbnailName;
+        } catch (\Throwable $e) {
+            report($e);
+            return null;
+        }
     }
 }
+
