@@ -45,9 +45,9 @@ FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
     git curl zip unzip \
-    libpng-dev libjpeg-dev libfreetype6-dev \
+    libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev \
     libzip-dev libxml2-dev libicu-dev libonig-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install \
     pdo_mysql \
     mbstring \
@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y \
     posix \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && a2enmod rewrite headers ssl \
+    && a2enmod rewrite headers ssl expires deflate \
     && rm -rf /var/lib/apt/lists/*
 
 # Set main domain to avoid Apache warnings
