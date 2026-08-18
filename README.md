@@ -18,7 +18,7 @@
 
 ### ⚡ Speed & Caching Optimizations
 * **In-Memory Redis Layer:** High-speed Redis for caching, sessions, and asynchronous queue management.
-* **Multi-Project Redis Isolation:** Custom isolated database indices (`REDIS_DB=2` for queues/default, `REDIS_CACHE_DB=3` for cache) and app-specific key prefixing (`eshop_`) to prevent key collisions across shared VPS Redis instances.
+* **Multi-Project Redis Isolation:** Custom isolated database indices and key prefixing to prevent key collisions across shared Redis instances.
 * **Layered Query Caching:**
   * `website()`: Multi-tenant domain & website lookup cached for 10 minutes.
   * `getSettingVal()`: Bulk settings map loaded in a single query and cached for 30 minutes.
@@ -32,7 +32,7 @@
 ### 📊 Laravel Horizon Queue Supervision
 * **Real-time Queue Dashboard:** Live metrics, throughput, failed job tracking, and auto-scaling worker supervision at `/horizon`.
 * **Secret Token Authentication:** Secure dashboard access via URL query token (`/horizon?token=...`) with persistent session authorization and RBAC fallback for admin users.
-* **Containerized Horizon Worker:** Automated background queue handling supervised directly inside the `everyday_shop_worker` Docker container.
+* **Containerized Horizon Worker:** Automated background queue handling supervised directly inside the worker Docker container.
 
 ### 🛡️ Admin Headless REST API (Vue.js Frontend Integration)
 * **Decoupled Vue.js Admin SPA:** Serves as a headless backend API for a separate **Vue.js Single Page Application (SPA)** admin dashboard.
@@ -84,29 +84,12 @@
    php artisan key:generate
    ```
 
-4. **Configure Redis & Horizon in `.env`:**
-   ```env
-   SESSION_DRIVER=redis
-   QUEUE_CONNECTION=redis
-   CACHE_STORE=redis
-
-   REDIS_CLIENT=phpredis
-   REDIS_HOST=127.0.0.1
-   REDIS_PORT=6379
-   REDIS_DB=2
-   REDIS_CACHE_DB=3
-   REDIS_PREFIX=eshop_
-
-   HORIZON_NAME="Everyday Shop"
-   HORIZON_TOKEN=your_secure_secret_token_here
-   ```
-
-5. **Database Migration & Seeding:**
+4. **Database Migration & Seeding:**
    ```bash
    php artisan migrate --seed
    ```
 
-6. **Link Storage & Run Development Server:**
+5. **Link Storage & Run Development Server:**
    ```bash
    php artisan storage:link
    php artisan serve
@@ -119,15 +102,13 @@
 
 The application is containerized with a production multi-stage `Dockerfile` (including `pcntl`, `posix`, `intl`, `gd`, and `phpredis` extensions).
 
-### 1. Build and Push Container Image
+### 1. Build Container Image
 ```bash
-docker build -t shazimali/everyday-shop:latest .
-docker push shazimali/everyday-shop:latest
+docker build -t your-username/everyday-shop:latest .
 ```
 
-### 2. Run on VPS with Docker Compose
+### 2. Run with Docker Compose
 ```bash
-# Pull latest image and restart services with zero data loss
 docker-compose pull
 docker-compose up -d
 ```
@@ -135,7 +116,7 @@ docker-compose up -d
 ### 3. Accessing Horizon Dashboard
 Visit in browser:
 ```
-https://everydayplastic.co/horizon?token=your_secure_secret_token_here
+https://your-domain.com/horizon?token=your_secret_token
 ```
 
 ### 4. Check Horizon via Docker CLI:
@@ -158,3 +139,4 @@ php artisan test
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](LICENSE).
+

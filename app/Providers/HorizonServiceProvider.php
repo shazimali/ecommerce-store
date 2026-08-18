@@ -67,7 +67,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             }
 
             $allowedEmails = array_filter([
-                env('OWNER_EMAIL_ADDRESS', 'shazimdev@gmail.com'),
+                env('OWNER_EMAIL_ADDRESS'),
             ]);
 
             if (in_array($user->email, $allowedEmails)) {
