@@ -6,7 +6,7 @@ services:
     env_file:
       - /var/www/everyday_shop/.env
     environment:
-      # Override to connect to shared Redis on global_network (127.0.0.1 in .env is overridden here)
+      # Connect to shared Redis container running on global_network
       REDIS_HOST: everyday_redis
       REDIS_PORT: 6379
       REDIS_DB: 2          # other project uses DB=0 and DB=1 — keep isolated
@@ -20,8 +20,6 @@ services:
       - everyday_shop_storage:/var/www/everyday_shop/storage
       - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
-    depends_on:
-      - everyday_redis
 
   everyday_shop_worker:
     image: shazimali/everyday-shop:latest
@@ -31,7 +29,7 @@ services:
     env_file:
       - /var/www/everyday_shop/.env
     environment:
-      # Override to connect to shared Redis on global_network (127.0.0.1 in .env is overridden here)
+      # Connect to shared Redis container running on global_network
       REDIS_HOST: everyday_redis
       REDIS_PORT: 6379
       REDIS_DB: 2          # other project uses DB=0 and DB=1 — keep isolated
@@ -45,20 +43,6 @@ services:
       - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
     depends_on:
       - everyday_shop_app
-      - everyday_redis
-
-  # Shared Redis container on global_network.
-  # If already running from the other project's docker-compose, Docker will
-  # reuse the existing container — no conflict. If starting fresh on this VPS,
-  # this definition will create it.
-  everyday_redis:
-    image: redis:alpine
-    container_name: everyday_redis
-    restart: always
-    networks:
-      - global_network
-    volumes:
-      - everyday_redis_data:/data
 
 networks:
   global_network:
@@ -67,9 +51,6 @@ networks:
 volumes:
   everyday_shop_storage:
     external: true
-    name: everyday_shop_storage      # ← forces exact volume name, no prefix
+    name: everyday_shop_storage      # ← Persistent storage volume for images/uploads (SAFE & PROTECTED)
   everyday_shop_cache:
-    name: everyday_shop_cache        # ← forces exact volume name, no prefix
-  everyday_redis_data:
-    external: true
-    name: everyday_redis_data        # ← must match the name used in the other project
+    name: everyday_shop_cache        # ← Application bootstrap cache
