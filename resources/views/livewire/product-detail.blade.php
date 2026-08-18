@@ -1,5 +1,70 @@
+@php
+    $defaultImages = array_values(array_filter([
+        $product->image1 ? getWebsiteUrl() . '/storage/' . $product->image1 : '',
+        $product->image2 ? getWebsiteUrl() . '/storage/' . $product->image2 : '',
+        $product->image3 ? getWebsiteUrl() . '/storage/' . $product->image3 : '',
+        $product->image4 ? getWebsiteUrl() . '/storage/' . $product->image4 : '',
+        $product->image5 ? getWebsiteUrl() . '/storage/' . $product->image5 : '',
+    ]));
+
+    $colorMap = [];
+    foreach ($colors as $clr) {
+        $clrImages = array_values(array_filter([
+            $clr['image1'] ? getWebsiteUrl() . '/storage/' . $clr['image1'] : '',
+            $clr['image2'] ? getWebsiteUrl() . '/storage/' . $clr['image2'] : '',
+            $clr['image3'] ? getWebsiteUrl() . '/storage/' . $clr['image3'] : '',
+            $clr['image4'] ? getWebsiteUrl() . '/storage/' . $clr['image4'] : '',
+            $clr['image5'] ? getWebsiteUrl() . '/storage/' . $clr['image5'] : '',
+        ]));
+        $colorMap[(string) $clr['id']] = [
+            'id' => (string) $clr['id'],
+            'name' => $clr['color_name'],
+            'images' => count($clrImages) > 0 ? $clrImages : $defaultImages,
+        ];
+    }
+
+    $initialColor = count($colors) ? $colors->first()->color_name : '';
+    $initialColorId = count($colors) ? (string) $colors->first()->id : '';
+    $initialImages = ($initialColorId && !empty($colorMap[$initialColorId]['images'])) ? $colorMap[$initialColorId]['images'] : $defaultImages;
+    $initialActiveImage = count($initialImages) ? $initialImages[0] : ($defaultImages[0] ?? '');
+@endphp
+
 <div class="bg-white dark:bg-black"
-    x-data="{ tab: 0, isVideoOpen: false, videoEmbed: '{{ addslashes(str_replace(["\r", "\n"], '', $product->youtube_link)) }}' }">
+    x-data="{
+        tab: 0,
+        qty: {{ (int) ($qty ?: 1) }},
+        isVideoOpen: false,
+        videoEmbed: '{{ addslashes(str_replace(["\r", "\n"], '', $product->youtube_link)) }}',
+        currentColor: '{{ addslashes($initialColor) }}',
+        currentColorId: '{{ $initialColorId }}',
+        activeImage: '{{ $initialActiveImage }}',
+        images: {{ Js::from($initialImages) }},
+        colorMap: {{ Js::from($colorMap) }},
+        defaultImages: {{ Js::from($defaultImages) }},
+        selectColor(id, name) {
+            this.currentColor = name;
+            this.currentColorId = String(id);
+            const mapItem = this.colorMap[String(id)];
+            if (mapItem && mapItem.images && mapItem.images.length > 0) {
+                this.images = mapItem.images;
+                this.activeImage = this.images[0];
+            } else if (this.defaultImages.length > 0) {
+                this.images = this.defaultImages;
+                this.activeImage = this.defaultImages[0];
+            }
+        },
+        selectImage(img) {
+            this.activeImage = img;
+        },
+        increment() {
+            this.qty++;
+        },
+        decrement() {
+            if (this.qty > 1) {
+                this.qty--;
+            }
+        }
+    }">
     <!-- Main Product Section -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16 px-8 py-8 lg:py-16 text-black dark:text-secondary">
 
@@ -25,20 +90,19 @@
                         </button>
                     @endif
 
-                    <img :style="zoom ? `transform: scale(2.5); transform-origin: ${x}% ${y}%;` : ''"
+                    <img :src="activeImage" :style="zoom ? `transform: scale(2.5); transform-origin: ${x}% ${y}%;` : ''"
                         class="max-w-full max-h-full object-contain transition-transform duration-100 ease-out"
-                        src="{{ $activeImage }}" alt="{{ $product['title'] }}" />
+                        src="{{ $initialActiveImage }}" alt="{{ $product['title'] }}" />
                 </div>
                 <!-- Thumbnails Grid -->
                 <div class="flex flex-wrap justify-center gap-3 mt-4">
-                    @foreach ($images as $media)
-                        @if ($media)
-                            <button wire:click="changeActiveImage('{{ $media }}')"
-                                class="cursor-pointer border-2 transition-all duration-200 overflow-hidden h-16 w-16 flex items-center justify-center bg-neutral-50 dark:bg-zinc-900 {{ $activeImage == $media ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-transparent hover:border-neutral-300 dark:hover:border-neutral-700' }}">
-                                <img class="object-cover h-full w-full" src="{{ $media }}" alt="Thumbnail" />
-                            </button>
-                        @endif
-                    @endforeach
+                    <template x-for="(media, index) in images" :key="index">
+                        <button type="button" x-show="media" @click="selectImage(media)"
+                            class="cursor-pointer border-2 transition-all duration-200 overflow-hidden h-16 w-16 flex items-center justify-center bg-neutral-50 dark:bg-zinc-900"
+                            :class="activeImage === media ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-transparent hover:border-neutral-300 dark:hover:border-neutral-700'">
+                            <img class="object-cover h-full w-full" loading="lazy" decoding="async" :src="media" alt="Thumbnail" />
+                        </button>
+                    </template>
                 </div>
             </div>
 
@@ -52,27 +116,19 @@
                         <i class="fa-solid fa-play text-lg"></i>
                     </button>
                 @endif
-                <div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-4">
-                    @foreach ($images as $media)
-                        @if ($media)
-                            <div
-                                class="snap-center shrink-0 w-full bg-neutral-50 dark:bg-zinc-950 border border-secondary dark:border-slate-800 overflow-hidden aspect-square flex items-center justify-center">
-                                <img class="max-w-full max-h-full object-contain" src="{{ $media }}"
-                                    alt="{{ $product['title'] }}" />
-                            </div>
-                        @endif
-                    @endforeach
+                <div class="w-full bg-neutral-50 dark:bg-zinc-950 border border-secondary dark:border-slate-800 overflow-hidden aspect-square flex items-center justify-center">
+                    <img class="max-w-full max-h-full object-contain" :src="activeImage" src="{{ $initialActiveImage }}"
+                        alt="{{ $product['title'] }}" />
                 </div>
                 <!-- Mobile Thumbnails -->
                 <div class="flex justify-center gap-2 mt-4 overflow-x-auto py-1">
-                    @foreach ($images as $media)
-                        @if ($media)
-                            <button wire:click="changeActiveImage('{{ $media }}')"
-                                class="shrink-0 transition-all duration-200 overflow-hidden h-12 w-12 border-2 {{ $activeImage == $media ? 'border-primary ring-2 ring-primary/20' : 'border-transparent' }}">
-                                <img class="object-cover h-full w-full" src="{{ $media }}" alt="Thumbnail" />
-                            </button>
-                        @endif
-                    @endforeach
+                    <template x-for="(media, index) in images" :key="index">
+                        <button type="button" x-show="media" @click="selectImage(media)"
+                            class="shrink-0 transition-all duration-200 overflow-hidden h-12 w-12 border-2 cursor-pointer"
+                            :class="activeImage === media ? 'border-primary ring-2 ring-primary/20' : 'border-transparent'">
+                            <img class="object-cover h-full w-full" :src="media" alt="Thumbnail" />
+                        </button>
+                    </template>
                 </div>
             </div>
         </div>
@@ -147,7 +203,7 @@
                         <div class="flex items-baseline gap-4">
                             @if ($product->price_detail->discount > 0 && (Carbon\Carbon::today()->toDateString() >= $product->price_detail->discount_from && Carbon\Carbon::today()->toDateString() <= $product->price_detail->discount_to))
                                 <span class="text-3xl font-extrabold text-primary">
-                                    {{ $product->price_detail->country->currency }}
+                                     {{ $product->price_detail->country->currency }}
                                     {{ number_format(round($product->price_detail->price - ($product->price_detail->price / 100) * $product->price_detail->discount), 2) }}
                                 </span>
                                 <span class="text-lg text-neutral-400 line-through">
@@ -195,12 +251,14 @@
             @if (count($colors))
                 <div class="mb-6">
                     <span class="block text-sm font-semibold text-neutral-900 dark:text-white mb-2">
-                        Color: <span class="font-normal text-neutral-500 dark:text-neutral-400">{{ $current_color }}</span>
+                        Color: <span class="font-normal text-neutral-500 dark:text-neutral-400" x-text="currentColor">{{ $initialColor }}</span>
                     </span>
                     <div class="flex items-center gap-3">
                         @foreach ($colors as $key => $clr)
-                            <button wire:click="fetchColorWiseImages('{{ $clr['id'] }}','{{ $clr['color_name'] }}')"
-                                class="relative rounded-full h-8 w-8 focus:outline-none transition-all duration-200 {{ $clr['color_name'] == $current_color ? 'ring-2 ring-offset-2 ring-primary dark:ring-offset-black scale-105' : 'hover:scale-105 border border-neutral-200 dark:border-neutral-800' }}"
+                            <button type="button"
+                                @click="selectColor('{{ $clr['id'] }}','{{ addslashes($clr['color_name']) }}')"
+                                class="relative rounded-full h-8 w-8 focus:outline-none transition-all duration-200 cursor-pointer"
+                                :class="currentColor === '{{ addslashes($clr['color_name']) }}' ? 'ring-2 ring-offset-2 ring-primary dark:ring-offset-black scale-105' : 'hover:scale-105 border border-neutral-200 dark:border-neutral-800'"
                                 style="background-image: url({{ asset('storage/' . $clr['color_image']) }}); background-size: cover; background-position: center;"
                                 title="{{ $clr['color_name'] }}">
                             </button>
@@ -215,19 +273,19 @@
                     <!-- Quantity Box -->
                     <div
                         class="flex items-center border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-zinc-900 p-1">
-                        <button wire:click="decrementQty({{ $qty - 1 }})"
-                            class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+                        <button type="button" @click="decrement()"
+                            class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                             aria-label="subtract">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"
                                 stroke="currentColor" fill="none" stroke-width="2" class="size-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
                             </svg>
                         </button>
-                        <input wire:model="qty" value="{{ $qty }}" id="counterInput" type="text"
+                        <input x-model="qty" id="counterInput" type="text"
                             class="h-10 w-12 border-none bg-transparent text-center font-bold text-neutral-900 dark:text-white focus:ring-0 focus:outline-none"
                             readonly />
-                        <button wire:click="incrementQty({{ $qty + 1 }})"
-                            class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+                        <button type="button" @click="increment()"
+                            class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                             aria-label="add">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"
                                 stroke="currentColor" fill="none" stroke-width="2" class="size-4">
@@ -237,11 +295,11 @@
                     </div>
 
                     <!-- Add to Cart CTA -->
-                    <button wire:click="addToCart('{{ $product['slug'] }}')" wire:loading.attr="disabled"
+                    <button type="button" @click="$wire.addToCart('{{ $product['slug'] }}', currentColor, qty)" wire:loading.attr="disabled"
                         class="flex-1 sm:flex-none sm:min-w-[200px] flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-8 shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>Add to Cart</span>
-                        <svg wire:loading wire:target="addToCart('{{ $product['slug'] }}')" aria-hidden="true" role="status"
+                        <svg wire:loading wire:target="addToCart" aria-hidden="true" role="status"
                             class="inline w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -347,21 +405,21 @@
                                     @if ($review->image1)
                                         <div
                                             class="h-20 w-20 border border-secondary dark:border-slate-800 cursor-pointer bg-neutral-100 dark:bg-zinc-900 hover:opacity-90 transition-opacity">
-                                            <img class="object-cover h-full w-full" src="{{ asset('storage/' . $review->image1) }}"
+                                            <img class="object-cover h-full w-full" loading="lazy" decoding="async" src="{{ asset('storage/' . $review->image1) }}"
                                                 alt="Review attachment" />
                                         </div>
                                     @endif
                                     @if ($review->image2)
                                         <div
                                             class="h-20 w-20 border border-secondary dark:border-slate-800 cursor-pointer bg-neutral-100 dark:bg-zinc-900 hover:opacity-90 transition-opacity">
-                                            <img class="object-cover h-full w-full" src="{{ asset('storage/' . $review->image2) }}"
+                                            <img class="object-cover h-full w-full" loading="lazy" decoding="async" src="{{ asset('storage/' . $review->image2) }}"
                                                 alt="Review attachment" />
                                         </div>
                                     @endif
                                     @if ($review->image3)
                                         <div
                                             class="h-20 w-20 border border-secondary dark:border-slate-800 cursor-pointer bg-neutral-100 dark:bg-zinc-900 hover:opacity-90 transition-opacity">
-                                            <img class="object-cover h-full w-full" src="{{ asset('storage/' . $review->image3) }}"
+                                            <img class="object-cover h-full w-full" loading="lazy" decoding="async" src="{{ asset('storage/' . $review->image3) }}"
                                                 alt="Review attachment" />
                                         </div>
                                     @endif

@@ -4,7 +4,7 @@
         <div class="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1  gap-10 px-8">
             <div>
                 <a class="block px-10" href="{{ route('home') }}">
-                    <img src="{{ asset('storage/' . website()->logo) }}" alt="" class="border rounded-none">
+                    <img src="{{ asset('storage/' . website()->logo) }}" loading="lazy" decoding="async" alt="" class="border rounded-none">
                 </a>
                 <a class="block" href="{{ route('home') }}">
                     <h1 class="text-2xl font-semibold text-center my-2"><span

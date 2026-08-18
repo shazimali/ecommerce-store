@@ -123,20 +123,18 @@ class ProductDetail extends Component
         ];
     }
 
-    public function addToCart($slug)
+    public function addToCart($slug, $color = null, $qty = null)
     {
-        // if ($this->add_to_cart_active) {
-        CartManagementService::addCartItemsFromProductDetailPage($slug, $this->current_color, $this->qty);
+        $selectedColor = $color ?: $this->current_color;
+        $selectedQty = $qty ? (int) $qty : $this->qty;
+        if ($selectedQty < 1) {
+            $selectedQty = 1;
+        }
+
+        CartManagementService::addCartItemsFromProductDetailPage($slug, $selectedColor, $selectedQty);
         $data = ['type' => 'success', 'message' => 'Item added successfully.'];
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');
-        // } else {
-        //     $this->dispatch(
-        //         'alert',
-        //         type: 'error',
-        //         title: 'Please select at least one color.',
-        //     );
-        // }
     }
     public function incrementQty($val)
     {

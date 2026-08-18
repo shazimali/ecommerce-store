@@ -74,7 +74,7 @@
             @foreach ($collections as $collection)
                 <a  href="{{ route('collections',['slug' => $collection->slug]) }}" class="border border-secondary dark:border-slate-800">
                     <div class="w-full relative overflow-hidden bg-cover bg-no-repeat">
-                        <img src="{{ asset('storage/'.$collection->image) }}"
+                        <img src="{{ asset('storage/'.$collection->image) }}" loading="lazy" decoding="async"
                             class="transition duration-300 ease-in-out hover:scale-110"
                             alt="{{ $collection->title }}" />
                     </div>
@@ -103,12 +103,12 @@
 @if($bottom_collection)
     <div class="py-10">
         <a href="{{ route('collections',['slug' => $bottom_collection->slug]) }}" class="lg:block md:block sm:block xs:hidden w-full relative overflow-hidden bg-cover bg-no-repeat">
-            <img src="{{ asset('storage/'.$bottom_collection->image) }}"
+            <img src="{{ asset('storage/'.$bottom_collection->image) }}" loading="lazy" decoding="async"
                 class="transition duration-300 ease-in-out hover:scale-110"
                 alt="{{ $bottom_collection->title }}" />
         </a>
         <a href="{{ route('collections',['slug' => $bottom_collection->slug]) }}" class="lg:hidden md:hidden sm:hidden xs:block w-full relative overflow-hidden bg-cover bg-no-repeat">
-            <img src="{{ asset('storage/'.$bottom_collection->mob_image) }}"
+            <img src="{{ asset('storage/'.$bottom_collection->mob_image) }}" loading="lazy" decoding="async"
                 class="transition duration-300 ease-in-out hover:scale-110"
                 alt="{{ $bottom_collection->title }}" />
         </a>

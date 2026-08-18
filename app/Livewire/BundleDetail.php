@@ -70,9 +70,15 @@ class BundleDetail extends Component
         ];
     }
 
-    public function addToCart($slug)
+    public function addToCart($slug, $color = null, $qty = null)
     {
-        CartManagementService::addCartItemsFromProductDetailPage($slug, $this->current_color, $this->qty, true);
+        $selectedColor = $color ?: $this->current_color;
+        $selectedQty = $qty ? (int) $qty : $this->qty;
+        if ($selectedQty < 1) {
+            $selectedQty = 1;
+        }
+
+        CartManagementService::addCartItemsFromProductDetailPage($slug, $selectedColor, $selectedQty, true);
         $data = ['type' => 'success', 'message' => 'Bundle added to cart successfully.'];
         $this->dispatch('update-cart', data: $data);
         $this->dispatch('cart-refresh');

@@ -17,13 +17,13 @@
     {{-- Image wrapper --}}
     <div class="relative overflow-hidden">
         {{-- Primary image --}}
-        <img src="{{ asset('storage/' . ($pr['image'] ?? '')) }}"
+        <img src="{{ asset('storage/' . ($pr['image'] ?? '')) }}" loading="lazy" decoding="async"
             class="w-full transition-opacity duration-300 ease-in-out {{ ($pr['image1'] ?? '') ? 'group-hover:opacity-0' : '' }}"
             alt="{{ $pr['title'] ?? '' }}" />
 
         {{-- Hover image --}}
         @if ($pr['image1'] ?? '')
-            <img src="{{ asset('storage/' . $pr['image1']) }}"
+            <img src="{{ asset('storage/' . $pr['image1']) }}" loading="lazy" decoding="async"
                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
                 alt="{{ ($pr['title'] ?? '') }} - alternate view" />
         @endif

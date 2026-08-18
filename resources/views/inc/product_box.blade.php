@@ -9,12 +9,12 @@
         @endif
 
         {{-- Primary image --}}
-        <img src="{{ asset('storage/' . $product->image) }}" class="transition duration-300 ease-in-out group-hover:scale-110 w-full
+        <img src="{{ asset('storage/' . $product->image) }}" loading="lazy" decoding="async" class="transition duration-300 ease-in-out group-hover:scale-110 w-full
                    {{ $product->image1 ? 'group-hover:opacity-0' : '' }}" alt="{{ $product->title }}" />
 
         {{-- Hover image (only rendered if image1 exists) --}}
         @if ($product->image1)
-            <img src="{{ asset('storage/' . $product->image1) }}" class="absolute inset-0 w-full h-full object-cover
+            <img src="{{ asset('storage/' . $product->image1) }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover
                            opacity-0 group-hover:opacity-100
                            transition-opacity duration-300 ease-in-out" alt="{{ $product->title }} - alternate view" />
         @endif

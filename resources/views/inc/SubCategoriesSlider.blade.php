@@ -8,7 +8,7 @@
           <div class="swiper-slide py-4">
             <div class="bg-white dark:bg-black overflow-hidden cursor-pointer group pb-4">
               <div class="aspect-square relative overflow-hidden">
-                <img src="{{ asset('storage/' . $sub_cat->image) }}" alt="{{ $sub_cat->title }}"
+                <img src="{{ asset('storage/' . $sub_cat->image) }}" loading="lazy" decoding="async" alt="{{ $sub_cat->title }}"
                   class="w-full h-full object-cover" />
               </div>
               <div class="pt-2 px-0 pb-0 flex flex-col items-center">
