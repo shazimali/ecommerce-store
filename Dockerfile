@@ -15,7 +15,8 @@ RUN composer install \
     --no-interaction \
     --prefer-dist \
     --optimize-autoloader \
-    --no-scripts
+    --no-scripts \
+    --ignore-platform-reqs
 
 # Copy rest of PHP source
 COPY . .
@@ -54,6 +55,8 @@ RUN apt-get update && apt-get install -y \
     gd \
     zip \
     intl \
+    pcntl \
+    posix \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && a2enmod rewrite headers ssl \
