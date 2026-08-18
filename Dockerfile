@@ -54,6 +54,8 @@ RUN apt-get update && apt-get install -y \
     gd \
     zip \
     intl \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && a2enmod rewrite headers ssl \
     && rm -rf /var/lib/apt/lists/*
 

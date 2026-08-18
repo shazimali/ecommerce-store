@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\ProductHead;
+use App\Observers\ProductHeadObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -42,5 +44,8 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') !== 'local') {
             URL::forceScheme('https');
         }
+
+        // Auto-invalidate product caches on save/delete
+        ProductHead::observe(ProductHeadObserver::class);
     }
 }

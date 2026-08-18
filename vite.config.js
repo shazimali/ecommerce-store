@@ -21,4 +21,18 @@ export default defineConfig({
         strictPort: true,
         port: 5173,
     },
+    build: {
+        // Raise the warning threshold (Swiper + Alpine are legitimately large)
+        chunkSizeWarningLimit: 600,
+        rollupOptions: {
+            output: {
+                // Split heavy vendor libraries into separate cached chunks
+                manualChunks: {
+                    'vendor-alpine': ['alpinejs', '@alpinejs/persist'],
+                    'vendor-swiper': ['swiper'],
+                },
+            },
+        },
+    },
 });
+

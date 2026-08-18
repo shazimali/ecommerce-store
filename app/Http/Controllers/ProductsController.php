@@ -7,20 +7,30 @@ use App\Models\ProductColor;
 use App\Models\ProductHead;
 use App\Models\ProductReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductsController extends Controller
 {
     public function detail($slug)
     {
-        $product = ProductHead::whereSlug($slug)->first();
-        $reviews = ProductReview::where('product_id', $product->id)->get();
-        if ($product) {
-            return view('products.detail', [
-                'product' => $product,
-                'reviews' => $reviews,
-            ]);
+        $product = Cache::remember('product_detail_' . $slug, now()->addMinutes(30), function () use ($slug) {
+            return ProductHead::whereSlug($slug)
+                ->with('colors', 'sub_categories', 'price_detail')
+                ->first();
+        });
+
+        if (!$product) {
+            return abort(404);
         }
-        return abort('404'); // 404 Not Found
+
+        $reviews = Cache::remember('product_reviews_' . $product->id, now()->addMinutes(15), function () use ($product) {
+            return ProductReview::where('product_id', $product->id)->with('user')->get();
+        });
+
+        return view('products.detail', [
+            'product' => $product,
+            'reviews' => $reviews,
+        ]);
     }
 
     public function shop()

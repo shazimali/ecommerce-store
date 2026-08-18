@@ -9,25 +9,27 @@ use Stevebauman\Location\Facades\Location;
 
 function website()
 {
+    $domain = request()->headers->get('host');
+    $cacheKey = 'website_' . md5($domain);
 
-    $domain =  request()->headers->get('host');
+    return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($domain) {
+        $website = Website::active()
+            ->where('domain', $domain)
+            ->with('categories', 'banners', 'social_medias', 'collections')
+            ->first();
 
-    $website =  Website::active()->where('domain', $domain)
-        ->with('categories', 'banners', 'social_medias', 'collections')
-        ->first();
-
-    if ($website) {
-        return $website;
-    }
-
-    return  Website::active()->with('categories', 'banners')
-        ->where('id', 1)
-        ->first();
+        return $website ?? Website::active()
+            ->with('categories', 'banners')
+            ->where('id', 1)
+            ->first();
+    });
 }
 
 function newArrivals()
 {
-    return ProductHead::new()->active()->with('price_detail', 'stocks')->orderBy('order', 'ASC')->get()->take(4);
+    return Cache::remember('new_arrivals', now()->addMinutes(15), function () {
+        return ProductHead::new()->active()->with('price_detail')->orderBy('order', 'ASC')->limit(4)->get();
+    });
 }
 
 
@@ -86,8 +88,10 @@ function facilities()
 {
     $location = getLocation();
     if (!$location) return collect();
-    
-    return $location->facilities()->get();
+
+    return Cache::remember('facilities_' . $location->id, now()->addMinutes(30), function () use ($location) {
+        return $location->facilities()->get();
+    });
 }
 
 function header_pages()
@@ -95,7 +99,9 @@ function header_pages()
     $location = getLocation();
     if (!$location) return collect();
 
-    return $location->pages()->active()->header()->get();
+    return Cache::remember('header_pages_' . $location->id, now()->addMinutes(30), function () use ($location) {
+        return $location->pages()->active()->header()->get();
+    });
 }
 
 function footer_pages()
@@ -103,7 +109,9 @@ function footer_pages()
     $location = getLocation();
     if (!$location) return collect();
 
-    return $location->pages()->active()->footer()->get();
+    return Cache::remember('footer_pages_' . $location->id, now()->addMinutes(30), function () use ($location) {
+        return $location->pages()->active()->footer()->get();
+    });
 }
 
 function getSettingVal($key)
@@ -111,9 +119,14 @@ function getSettingVal($key)
     $location = getLocation();
     if (!$location) return 0;
 
-    $setting = Setting::where('country_id', $location->id)->where('key', $key)->first();
-    
-    return $setting ? $setting->value : 0;
+    // Load ALL settings for this country in one query, then cache the entire map
+    $settings = Cache::remember('settings_country_' . $location->id, now()->addMinutes(30), function () use ($location) {
+        return Setting::where('country_id', $location->id)
+            ->pluck('value', 'key')
+            ->toArray();
+    });
+
+    return $settings[$key] ?? 0;
 }
 
 function new_products() {}

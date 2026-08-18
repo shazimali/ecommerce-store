@@ -8,6 +8,7 @@ use App\Models\ProductHead;
 use App\Models\SubCategory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class ShopService
 {
@@ -16,10 +17,12 @@ class ShopService
      */
     public function getFilterData(): array
     {
-        return [
-            'categories' => Category::with('sub_categories')->get(),
-            'colors' => ProductColor::distinct()->select('color_name')->get(),
-        ];
+        return Cache::remember('shop_filter_data', now()->addMinutes(30), function () {
+            return [
+                'categories' => Category::with('sub_categories')->get(),
+                'colors'     => ProductColor::distinct()->select('color_name')->get(),
+            ];
+        });
     }
 
     /**
