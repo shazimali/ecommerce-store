@@ -21,7 +21,7 @@ trait FileUploadTrait
      * @param int $quality
      * @return string|false
      */
-    public function uploadFile($file, $path = '/', $disk = 'public', $maxWidth = 1200, $quality = 80)
+    public function uploadFile($file, $path = '/', $disk = 'public', $maxWidth = 700, $quality = 80)
     {
         if ($file instanceof UploadedFile) {
             $mime = $file->getMimeType();

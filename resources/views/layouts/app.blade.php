@@ -31,10 +31,15 @@ lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <link rel="icon" type="image/png" href="{{asset('favicon-96x96.png')}}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{asset('favicon.svg')}}" />
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('apple-touch-icon.png')}}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    </noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",

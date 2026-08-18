@@ -149,9 +149,9 @@ class OptimizeImagesToWebp extends Command
                         continue;
                     }
 
-                    // Skip already converted WebP or SVGs
+                    // Skip SVGs
                     $extension = strtolower(pathinfo($originalPath, PATHINFO_EXTENSION));
-                    if ($extension === 'webp' || $extension === 'svg') {
+                    if ($extension === 'svg') {
                         $this->skippedCount++;
                         continue;
                     }
@@ -167,6 +167,12 @@ class OptimizeImagesToWebp extends Command
                     try {
                         $image = $this->manager->read($absoluteSourcePath);
 
+                        // If already WebP and within maxWidth, skip
+                        if ($extension === 'webp' && $image->width() <= $maxWidth) {
+                            $this->skippedCount++;
+                            continue;
+                        }
+
                         if ($image->width() > $maxWidth) {
                             $image->scaleDown(width: $maxWidth);
                         }
@@ -174,7 +180,7 @@ class OptimizeImagesToWebp extends Command
                         $encoded = $image->toWebp($quality);
                         $newRelativePath = preg_replace('/\.[^.]+$/', '.webp', $originalPath);
 
-                        if ($newRelativePath === $originalPath) {
+                        if ($newRelativePath === $originalPath && $extension !== 'webp') {
                             $newRelativePath .= '.webp';
                         }
 
@@ -219,7 +225,7 @@ class OptimizeImagesToWebp extends Command
 
             foreach ($allFiles as $file) {
                 $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                if (!in_array($ext, ['png', 'jpg', 'jpeg', 'bmp', 'gif']) || in_array($file, $processedFiles)) {
+                if (!in_array($ext, ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp']) || $ext === 'svg' || in_array($file, $processedFiles)) {
                     continue;
                 }
 
@@ -228,6 +234,11 @@ class OptimizeImagesToWebp extends Command
 
                 try {
                     $image = $this->manager->read($absoluteSourcePath);
+                    if ($ext === 'webp' && $image->width() <= $maxWidth) {
+                        $this->skippedCount++;
+                        continue;
+                    }
+
                     if ($image->width() > $maxWidth) {
                         $image->scaleDown(width: $maxWidth);
                     }

@@ -3,7 +3,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import Swal from 'sweetalert2';
 import './bootstrap';
+
+window.Swal = Swal;
 
 window.addEventListener('alert', (event) => {
   let data = event.detail;

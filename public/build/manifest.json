@@ -1,4 +1,12 @@
 {
+  "_vendor-alpine-l0sNRNKZ.js": {
+    "file": "assets/vendor-alpine-l0sNRNKZ.js",
+    "name": "vendor-alpine"
+  },
+  "_vendor-swiper-lmBjDUkO.js": {
+    "file": "assets/vendor-swiper-lmBjDUkO.js",
+    "name": "vendor-swiper"
+  },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-D1LuMI3I.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
@@ -24,15 +32,18 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BFuypSoh.css",
+    "file": "assets/app-CqboBnhG.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DhmLeDR0.js",
+    "file": "assets/app-C_3mcUDJ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
+    "imports": [
+      "_vendor-swiper-lmBjDUkO.js"
+    ],
     "css": [
       "assets/app-B_l4pjL9.css"
     ]
