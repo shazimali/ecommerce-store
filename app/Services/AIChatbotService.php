@@ -122,34 +122,49 @@ class AIChatbotService
     {
         $contextParts = [];
 
-        // 1. Order Tracking Detection (with items breakdown)
-        if (preg_match('/(?:order|track|code|status|#)\s*#?([A-Za-z0-9-]+)/i', $userPrompt, $matches) || preg_match('/\b\d{1,10}\b/', $userPrompt, $matches)) {
-            $identifier = trim($matches[1] ?? $matches[0]);
+        // 1. Order Tracking Detection (Strict intent check to avoid false positives on prices/sizes)
+        $isTrackingIntent = preg_match('/\b(?:track|tracking|order\s+status|check\s+order|where\s+is\s+my\s+order|my\s+order|order\s+details?|order\s+info|order\s+history|lookup\s+order)\b/i', $userPrompt)
+            || preg_match('/^(?:order\s*#?|#|ord-|trk-)[A-Za-z0-9-]+$/i', trim($userPrompt));
 
-            $order = Order::with(['detail'])
-                ->where('id', $identifier)
-                ->orWhere('order_id', $identifier)
-                ->orWhere('track_number', $identifier)
-                ->first();
+        $hasExplicitOrderPrefix = preg_match('/(?:order|track|tracking|code|status|#)\s*(?:#|id|code|no|num|number)?\s*([A-Za-z0-9-]+)/i', $userPrompt, $orderMatches);
 
-            if ($order) {
-                $status = strtoupper((string) ($order->status ?? 'Processing'));
-                $total = number_format((float) ($order->total ?? 0));
-                $track = $order->track_number ?: 'N/A';
-                $orderInfo = "ORDER INFO: Found Order #{$order->id} (Code: {$order->order_id}). Status: {$status}. Total: Rs. {$total}. Tracking Number: {$track}. Created: {$order->created_at?->format('d M Y')}.";
+        if ($isTrackingIntent || $hasExplicitOrderPrefix) {
+            $identifier = trim($orderMatches[1] ?? '');
+            if (empty($identifier) && preg_match('/^(?:#|ord-|trk-)?([A-Za-z0-9-]+)$/i', trim($userPrompt), $pureMatch)) {
+                $identifier = trim($pureMatch[1]);
+            }
 
-                // Include items breakdown
-                if ($order->detail && $order->detail->count() > 0) {
-                    $itemLines = [];
-                    foreach ($order->detail as $item) {
-                        $itemName = $item->product_title ?? $item->title ?? 'Item';
-                        $qty = $item->qty ?? $item->quantity ?? 1;
-                        $itemLines[] = "  • {$qty}× {$itemName}";
+            if (!empty($identifier) && !in_array(strtolower($identifier), ['status', 'order', 'tracking', 'details', 'my', 'the', 'a', 'an'])) {
+                $numericId = preg_replace('/\D/', '', $identifier);
+
+                $order = Order::with(['detail'])
+                    ->where(function ($q) use ($identifier, $numericId) {
+                        if (!empty($numericId)) {
+                            $q->where('id', $numericId)->orWhere('order_id', (int) $numericId);
+                        }
+                        $q->orWhere('track_number', $identifier);
+                    })
+                    ->first();
+
+                if ($order) {
+                    $status = strtoupper((string) ($order->status ?? 'Processing'));
+                    $total = number_format((float) ($order->total ?? 0));
+                    $track = $order->track_number ?: 'N/A';
+                    $orderInfo = "ORDER INFO: Found Order #{$order->id} (Code: {$order->order_id}). Status: {$status}. Total: Rs. {$total}. Tracking Number: {$track}. Created: {$order->created_at?->format('d M Y')}.";
+
+                    // Include items breakdown
+                    if ($order->detail && $order->detail->count() > 0) {
+                        $itemLines = [];
+                        foreach ($order->detail as $item) {
+                            $itemName = $item->product_title ?? $item->title ?? 'Item';
+                            $qty = $item->qty ?? $item->quantity ?? 1;
+                            $itemLines[] = "  • {$qty}× {$itemName}";
+                        }
+                        $orderInfo .= "\nORDER ITEMS:\n" . implode("\n", $itemLines);
                     }
-                    $orderInfo .= "\nORDER ITEMS:\n" . implode("\n", $itemLines);
-                }
 
-                $contextParts[] = $orderInfo;
+                    $contextParts[] = $orderInfo;
+                }
             }
         }
 
@@ -192,8 +207,21 @@ class AIChatbotService
             }
         }
 
-        // 3. Product Search & Catalog Inquiry Detection
-        $keywords = ['product', 'item', 'buy', 'price', 'rack', 'chair', 'storage', 'kitchen', 'box', 'table', 'shelf', 'organizer', 'bottle', 'show', 'list', 'detail', 'catalog', 'all', 'have', 'collection', 'category', 'best', 'seller', 'popular', 'trending', 'new', 'featured'];
+        // 3. Price Filter Extraction (e.g. "under Rs. 3,000", "below 2000", "between 1000 and 3000")
+        $maxPrice = null;
+        $minPrice = null;
+
+        if (preg_match('/\b(?:under|below|less\s+than|max|maximum|within|upto|up\s+to)\s*(?:rs\.?|pkr)?\s*([\d,]+)/i', $userPrompt, $pMatch)) {
+            $maxPrice = (float) str_replace(',', '', $pMatch[1]);
+        } elseif (preg_match('/\b(?:above|over|more\s+than|min|minimum|greater\s+than|starting\s+from)\s*(?:rs\.?|pkr)?\s*([\d,]+)/i', $userPrompt, $pMatch)) {
+            $minPrice = (float) str_replace(',', '', $pMatch[1]);
+        } elseif (preg_match('/\b(?:between|from)\s*(?:rs\.?|pkr)?\s*([\d,]+)\s*(?:and|to|-)\s*(?:rs\.?|pkr)?\s*([\d,]+)/i', $userPrompt, $pMatch)) {
+            $minPrice = (float) str_replace(',', '', $pMatch[1]);
+            $maxPrice = (float) str_replace(',', '', $pMatch[2]);
+        }
+
+        // 4. Product Search & Catalog Inquiry Detection
+        $keywords = ['product', 'item', 'buy', 'price', 'rack', 'chair', 'storage', 'kitchen', 'box', 'table', 'shelf', 'organizer', 'bottle', 'show', 'list', 'detail', 'catalog', 'all', 'have', 'collection', 'category', 'best', 'seller', 'popular', 'trending', 'new', 'featured', 'under', 'below', 'above', 'rs', 'cost'];
         $isProductQuery = false;
         foreach ($keywords as $kw) {
             if (stripos($userPrompt, $kw) !== false) {
@@ -202,12 +230,14 @@ class AIChatbotService
             }
         }
 
-        if ($isProductQuery) {
-            // Strip only true filler words — preserve product nouns like rack, kitchen, chair, box
+        if ($isProductQuery || empty($contextParts)) {
+            // Strip price phrases and filler words to get clean product search terms
+            $cleaned = preg_replace('/\b(?:under|below|less\s+than|max|maximum|within|upto|up\s+to|above|over|more\s+than|min|minimum|greater\s+than|starting\s+from|between|from)\s*(?:rs\.?|pkr)?\s*[\d,]+/i', '', $userPrompt);
+            $cleaned = preg_replace('/\b(?:rs\.?|pkr|rupees)\b/i', '', (string) $cleaned);
             $cleaned = trim((string) preg_replace(
                 '/\b(?:please|kindly|can|you|find|search|show|get|of|for|about|me|any|some|all|list|what|have|do|is|are|your|the|a|an|i|want|need|looking|tell|give|suggest|recommend)\b/i',
                 '',
-                $userPrompt
+                (string) $cleaned
             ));
             $searchQuery = trim((string) preg_replace('/\s+/', ' ', $cleaned));
 
@@ -221,8 +251,32 @@ class AIChatbotService
                 fn($t) => strlen($t) >= 3
             );
 
+            // Expand plural words (e.g. racks -> rack, chairs -> chair, boxes -> box)
+            $expandedTerms = [];
+            foreach ($terms as $t) {
+                $expandedTerms[] = $t;
+                if (str_ends_with($t, 'es') && strlen($t) > 4) {
+                    $expandedTerms[] = substr($t, 0, -2);
+                } elseif (str_ends_with($t, 's') && strlen($t) > 3) {
+                    $expandedTerms[] = substr($t, 0, -1);
+                }
+            }
+            $expandedTerms = array_values(array_unique($expandedTerms));
+
             $query = ProductHead::active()
                 ->with(['price_detail', 'price_detail.country', 'reviews', 'sub_categories']);
+
+            // Apply price filter if specified
+            if ($maxPrice !== null || $minPrice !== null) {
+                $query->whereHas('price_detail', function ($pq) use ($maxPrice, $minPrice) {
+                    if ($maxPrice !== null) {
+                        $pq->where('price', '<=', $maxPrice);
+                    }
+                    if ($minPrice !== null) {
+                        $pq->where('price', '>=', $minPrice);
+                    }
+                });
+            }
 
             if ($isTrending) {
                 $query->where(fn($q) => $q->where('is_trending', 1)->orWhere('is_featured', 1));
@@ -230,43 +284,53 @@ class AIChatbotService
                 $query->where('is_new', 1);
             } elseif ($isFeatured) {
                 $query->where('is_featured', 1);
-            } elseif (!empty($terms) && !in_array(strtolower($searchQuery), ['all', 'list', 'show', 'products', 'items', 'have', 'store', 'seller', 'best', 'trending', 'category'])) {
+            } elseif (!empty($expandedTerms) && !in_array(strtolower($searchQuery), ['all', 'list', 'show', 'products', 'items', 'have', 'store', 'seller', 'best', 'trending', 'category'])) {
                 // Search by title / description AND sub-category name
-                $query->where(function ($q) use ($searchQuery, $terms) {
-                    // Direct product fields
+                $query->where(function ($q) use ($searchQuery, $expandedTerms) {
                     $q->where('title', 'LIKE', "%{$searchQuery}%")
                       ->orWhere('code', 'LIKE', "%{$searchQuery}%")
                       ->orWhere('short_desc', 'LIKE', "%{$searchQuery}%");
 
-                    foreach ($terms as $term) {
+                    foreach ($expandedTerms as $term) {
                         $q->orWhere('title', 'LIKE', "%{$term}%")
                           ->orWhere('short_desc', 'LIKE', "%{$term}%");
                     }
 
                     // Also match via sub-category title
-                    $q->orWhereHas('sub_categories', function ($sub) use ($searchQuery, $terms) {
+                    $q->orWhereHas('sub_categories', function ($sub) use ($searchQuery, $expandedTerms) {
                         $sub->where('title', 'LIKE', "%{$searchQuery}%");
-                        foreach ($terms as $term) {
+                        foreach ($expandedTerms as $term) {
                             $sub->orWhere('title', 'LIKE', "%{$term}%");
                         }
                     });
                 });
             }
 
-            $products = $query->orderBy('order', 'ASC')->take(30)->get(); // wider net for semantic re-ranking
+            $products = $query->orderBy('order', 'ASC')->take(30)->get();
 
-            // If specific search yields 0 matches, fallback to featured/trending then order
+            // If specific search yields 0 matches, fallback to featured/trending with same price filters
             if ($products->isEmpty()) {
-                $products = ProductHead::active()
+                $fallbackQuery = ProductHead::active()
                     ->with(['price_detail', 'price_detail.country', 'reviews'])
                     ->orderBy('is_trending', 'desc')
                     ->orderBy('is_featured', 'desc')
-                    ->orderBy('order', 'asc')
-                    ->take(30)->get(); // wider net for semantic re-ranking
+                    ->orderBy('order', 'asc');
+
+                if ($maxPrice !== null || $minPrice !== null) {
+                    $fallbackQuery->whereHas('price_detail', function ($pq) use ($maxPrice, $minPrice) {
+                        if ($maxPrice !== null) {
+                            $pq->where('price', '<=', $maxPrice);
+                        }
+                        if ($minPrice !== null) {
+                            $pq->where('price', '>=', $minPrice);
+                        }
+                    });
+                }
+
+                $products = $fallbackQuery->take(30)->get();
             }
 
             // RAG Semantic Ranking using Cosine Similarity if embeddings exist
-            // Re-rank all 30 candidates by semantic similarity, then trim to top 6
             if ($products->count() > 0 && $products->contains(fn($p) => !empty($p->embedding))) {
                 $queryEmbedding = $this->generateEmbedding($userPrompt);
                 $products = $products->sortByDesc(function ($product) use ($queryEmbedding) {
@@ -276,7 +340,6 @@ class AIChatbotService
                     return $this->cosineSimilarity($queryEmbedding, $product->embedding);
                 })->take(6)->values();
             } else {
-                // No embeddings available — just take the top 6 by SQL order
                 $products = $products->take(6);
             }
 
@@ -411,7 +474,9 @@ class AIChatbotService
         $phone = function_exists('website') && website() ? website()->phone : '0336 3413244';
 
         if (!empty($context)) {
-            if (str_contains($context, 'ORDER INFO:')) {
+            $isOrderInquiry = preg_match('/\b(?:track|tracking|order|status|#)\b/i', $userPrompt);
+
+            if ($isOrderInquiry && str_contains($context, 'ORDER INFO:')) {
                 preg_match('/ORDER INFO: (.*?)(?:\n|$)/s', $context, $m);
                 $orderSummary = $m[1] ?? '';
                 $itemsSection = '';
@@ -433,14 +498,14 @@ class AIChatbotService
                 return "Thank you for reaching out! Here is the latest update on your order:\n\n**{$orderSummary}**\n\n{$statusGuidance}{$itemsSection}\n\nIf you need further assistance with your shipment, our team is always happy to help:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
             }
 
+            if (str_contains($context, 'MATCHING PRODUCTS') || str_contains($context, 'STORE CATEGORIES')) {
+                $cleanContext = str_replace(["FEATURED/MATCHING PRODUCTS IN STORE:\n", "STORE CATEGORIES & SHOP COLLECTIONS:\n"], '', $context);
+                return "Here are our recommendations based on your request:\n\n" . $cleanContext . "\n\nFor custom inquiries or further assistance, connect with our support team:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
+            }
+
             if (str_contains($context, 'STORE POLICY')) {
                 $cleanPolicy = preg_replace('/STORE POLICY — [^:]+:\n/', '', $context);
                 return "Here is the information you need: 📄\n\n{$cleanPolicy}\n\nFor more clarification, our team is happy to assist:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
-            }
-
-            if (str_contains($context, 'MATCHING PRODUCTS') || str_contains($context, 'STORE CATEGORIES')) {
-                $cleanContext = str_replace(["FEATURED/MATCHING PRODUCTS IN STORE:\n", "STORE CATEGORIES & SHOP COLLECTIONS:\n"], '', $context);
-                return "Here are our store categories and top catalog recommendations:\n\n" . $cleanContext . "\n\nFor custom inquiries or further assistance, connect with our support team:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
             }
         }
 
