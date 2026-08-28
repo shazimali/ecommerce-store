@@ -20,6 +20,10 @@ class AIChatbotServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        \App\Models\Country::firstOrCreate(
+            ['id' => 1],
+            ['name' => 'Pakistan', 'iso' => 'PK', 'iso3' => 'PAK', 'dial' => '92', 'currency' => 'PKR', 'currency_name' => 'Rupees']
+        );
         $this->service = new AIChatbotService();
     }
 
@@ -34,7 +38,7 @@ class AIChatbotServiceTest extends TestCase
 
         $order = Order::create([
             'user_id'         => $user->id,
-            'order_id'        => 'ORD-10022',
+            'order_id'        => 10022,
             'phone'           => '03001234567',
             'address'         => '123 Main Street',
             'billing_address' => '123 Main Street',
@@ -182,12 +186,99 @@ class AIChatbotServiceTest extends TestCase
     }
 
     #[Test]
-    public function test_it_provides_fallback_response_when_api_key_is_not_configured()
+    public function test_it_does_not_confuse_price_queries_with_order_tracking()
     {
-        config(['services.openrouter.api_key' => null]);
+        $user = \App\Models\User::create([
+            'name' => 'Shopper',
+            'email' => 'shopper@example.com',
+            'password' => bcrypt('password'),
+        ]);
 
-        $reply = $this->service->chat('What is your shipping policy?');
+        // Order with ID/code 3 (which could collide with "3,000" if regex was loose)
+        Order::create([
+            'user_id'         => $user->id,
+            'order_id'        => 3,
+            'phone'           => '03001234567',
+            'address'         => '123 Main Street',
+            'billing_address' => '123 Main Street',
+            'country_id'      => 1,
+            'city_id'         => 1,
+            'status'          => 'DISPATCHED',
+            'total'           => 2199,
+            'track_number'    => 'TRK-333333',
+        ]);
 
-        $this->assertStringContainsString('WHATSAPP', $reply);
+        $rack = ProductHead::create([
+            'title'      => 'Shoe Rack (3 in 1)',
+            'slug'       => 'shoe-rack-3-in-1',
+            'code'       => 'SHOE-RACK-03',
+            'sku'        => 'SHOE-RACK-SKU',
+            'order'      => 1,
+            'short_desc' => '3-Tier Plastic Shoe Rack',
+            'description'=> 'Durable shoe storage rack',
+            'status'     => 'ACTIVE',
+            'image'      => 'rack.jpg',
+        ]);
+
+        \App\Models\ProductHeadPrice::create([
+            'product_head_id' => $rack->id,
+            'country_id'      => 1,
+            'price'           => 2899,
+        ]);
+
+        $context = $this->service->buildDatabaseContext('Show shoe racks under Rs. 3,000');
+
+        $this->assertStringNotContainsString('ORDER INFO', $context);
+        $this->assertStringContainsString('FEATURED/MATCHING PRODUCTS', $context);
+        $this->assertStringContainsString('Shoe Rack (3 in 1)', $context);
+
+        $reply = $this->service->chat('Show shoe racks under Rs. 3,000');
+        $this->assertStringNotContainsString('Found Order', $reply);
+        $this->assertStringContainsString('Shoe Rack', $reply);
+    }
+
+    #[Test]
+    public function test_it_filters_products_by_price_range()
+    {
+        $cheapRack = ProductHead::create([
+            'title'      => 'Shoe Rack Economy',
+            'slug'       => 'shoe-rack-economy',
+            'code'       => 'SHOE-RACK-ECO',
+            'sku'        => 'SHOE-RACK-ECO-SKU',
+            'order'      => 1,
+            'short_desc' => 'Compact shoe rack',
+            'description'=> 'Shoe rack description',
+            'status'     => 'ACTIVE',
+            'image'      => 'eco.jpg',
+        ]);
+
+        \App\Models\ProductHeadPrice::create([
+            'product_head_id' => $cheapRack->id,
+            'country_id'      => 1,
+            'price'           => 2500,
+        ]);
+
+        $expensiveRack = ProductHead::create([
+            'title'      => 'Shoe Rack Luxury Cabinet',
+            'slug'       => 'shoe-rack-luxury-cabinet',
+            'code'       => 'SHOE-RACK-LUX',
+            'sku'        => 'SHOE-RACK-LUX-SKU',
+            'order'      => 2,
+            'short_desc' => 'Premium shoe cabinet',
+            'description'=> 'Luxury shoe rack description',
+            'status'     => 'ACTIVE',
+            'image'      => 'lux.jpg',
+        ]);
+
+        \App\Models\ProductHeadPrice::create([
+            'product_head_id' => $expensiveRack->id,
+            'country_id'      => 1,
+            'price'           => 6500,
+        ]);
+
+        $context = $this->service->buildDatabaseContext('Show shoe racks under Rs. 3,000');
+
+        $this->assertStringContainsString('Shoe Rack Economy', $context);
+        $this->assertStringNotContainsString('Shoe Rack Luxury Cabinet', $context);
     }
 }
