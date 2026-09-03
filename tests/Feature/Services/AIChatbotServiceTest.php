@@ -53,7 +53,38 @@ class AIChatbotServiceTest extends TestCase
 
         $this->assertStringContainsString('ORDER INFO', $context);
         $this->assertStringContainsString('DISPATCHED', $context);
-        $this->assertStringContainsString('TRK-987654', $context);
+
+        // Also test pure numeric prompt "10022" or "423"
+        $numericContext = $this->service->buildDatabaseContext('10022');
+        $this->assertStringContainsString('ORDER INFO', $numericContext);
+        $this->assertStringContainsString('DISPATCHED', $numericContext);
+
+        // Test natural conversational phrase "please check my order number 10022 details"
+        $phraseContext = $this->service->buildDatabaseContext('please check my order number 10022 details');
+        $this->assertStringContainsString('ORDER INFO', $phraseContext);
+        $this->assertStringContainsString('Found Order #10022', $phraseContext);
+    }
+
+    #[Test]
+    public function test_it_does_not_return_random_featured_products_for_unmatched_numeric_prompt()
+    {
+        ProductHead::create([
+            'title'      => 'Everyday Plastic Chair',
+            'slug'       => 'everyday-plastic-chair',
+            'code'       => 'CHAIR-01',
+            'sku'        => 'CHAIR-SKU',
+            'order'      => 1,
+            'short_desc' => 'Durable plastic chair',
+            'description'=> 'Plastic chair for home',
+            'status'     => 'ACTIVE',
+            'image'      => 'chair.jpg',
+            'is_featured'=> 1,
+        ]);
+
+        $context = $this->service->buildDatabaseContext('423');
+
+        $this->assertStringNotContainsString('Everyday Plastic Chair', $context);
+        $this->assertStringContainsString('ORDER SEARCH RESULT', $context);
     }
 
     #[Test]
@@ -113,6 +144,33 @@ class AIChatbotServiceTest extends TestCase
         $this->assertStringContainsString('STORE CATEGORIES', $context);
         $this->assertStringContainsString('Kitchen Storage Solutions', $context);
         $this->assertStringContainsString('/shop', $context);
+    }
+
+    #[Test]
+    public function test_it_does_not_include_categories_for_specific_product_searches()
+    {
+        \App\Models\Category::create([
+            'title' => 'Kitchen Storage Solutions',
+            'slug'  => 'kitchen-storage-solutions',
+            'order' => 1,
+        ]);
+
+        ProductHead::create([
+            'title'      => 'Shoe Rack Stand',
+            'slug'       => 'shoe-rack-stand',
+            'code'       => 'SHOE-01',
+            'sku'        => 'SHOE-SKU',
+            'order'      => 1,
+            'short_desc' => 'Durable shoe rack',
+            'description'=> 'Shoe rack description',
+            'status'     => 'ACTIVE',
+            'image'      => 'rack.jpg',
+        ]);
+
+        $context = $this->service->buildDatabaseContext('Show shoe racks');
+
+        $this->assertStringNotContainsString('STORE CATEGORIES', $context);
+        $this->assertStringContainsString('FEATURED/MATCHING PRODUCTS', $context);
     }
 
     #[Test]
