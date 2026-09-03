@@ -27,7 +27,10 @@ class AIChatbotService
         }
 
         // ── Order tracking request without order ID/number ─────────────────────
-        if (preg_match('/^\s*(?:track\s+my\s+order|track\s+order|order\s+status|check\s+order|where\s+is\s+my\s+order)\s*$/i', $trimmedPrompt)) {
+        $isTrackingWithoutId = preg_match('/\b(?:track|tracking|check\s+(?:my\s+)?order|order\s+status|where\s+is\s+my\s+order|my\s+order)\b/i', $trimmedPrompt)
+            && !preg_match('/(?:#|ord-|trk-)?\d+/i', $trimmedPrompt);
+
+        if ($isTrackingWithoutId) {
             return "📦 I can certainly help you track your order!\n\nPlease reply with your **Order ID**, **Order Code** (e.g. *#12*), or your **Tracking Number** so I can look up the details for you. 😊";
         }
 
@@ -47,18 +50,20 @@ class AIChatbotService
         try {
             $systemPrompt = "You are Everyday Assistant, the warm, polite, and official shopping assistant for 'Everyday Plastic' (Everyday Shops). "
                 . "Always respond in a friendly, respectful, and professional tone using natural emojis! "
+                . "IMPORTANT: Do NOT list store categories or shop collections unless the user specifically asks about categories, catalog, or collections. Directly answer the user's specific request or list relevant products matching their search.\n\n"
                 . "When recommending or listing products, format each product in a neat, easy-to-read bullet block:\n"
                 . "🛍️ **Product Title**\n"
                 . "• Price: **Rs. X,XXX**\n"
                 . "• Details: Short summary\n"
                 . "[URL: /products/slug]\n\n"
                 . "When answering order tracking inquiries:\n"
-                . "• State the current status clearly and politely.\n"
-                . "• Explain what the next step/stage is for that status (e.g. Pending -> Processing & Packing -> Dispatched -> Out for Delivery -> Delivered).\n"
+                . "• State the current status of the order clearly and concisely (e.g. 'Order #12 Status: PLACED').\n"
+                . "• Explain what the next step/stage is for that status (e.g. Pending/Placed -> Processing & Packing -> Dispatched -> Out for Delivery -> Delivered).\n"
                 . "• Provide an estimated delivery timeline (Standard delivery takes 3 to 5 business days across Pakistan).\n"
+                . "• Do NOT output internal database ref IDs, total prices, tracking numbers, or creation dates unless specifically requested.\n"
                 . "• Keep the tone very polite, helpful, and reassuring.\n\n"
                 . "Use **bold** for important values. Use • bullet points for lists. Keep responses concise and helpful. "
-                . "If you cannot answer a specific question, or if the user needs human assistance, suggest contacting our support team using tags [WHATSAPP: {$whatsappNumber}] and [PHONE: {$phone}]. "
+                . "Do NOT include contact or support tags ([WHATSAPP] or [PHONE]) when you can answer the user's question or provide requested product/store information. ONLY suggest contacting our support team with tags [WHATSAPP: {$whatsappNumber}] and [PHONE: {$phone}] if you cannot answer the question or if the user explicitly asks for human support. "
                 . "Store Info: Everyday Plastic offers premium plastic homeware, kitchen storage, baby furniture, shoe racks, and home organizers in Pakistan. Free delivery on orders above Rs. 3,999. "
                 . "Return Policy: 7-day easy returns on all products. Terms apply.";
 
@@ -123,47 +128,61 @@ class AIChatbotService
         $contextParts = [];
 
         // 1. Order Tracking Detection (Strict intent check to avoid false positives on prices/sizes)
-        $isTrackingIntent = preg_match('/\b(?:track|tracking|order\s+status|check\s+order|where\s+is\s+my\s+order|my\s+order|order\s+details?|order\s+info|order\s+history|lookup\s+order)\b/i', $userPrompt)
-            || preg_match('/^(?:order\s*#?|#|ord-|trk-)[A-Za-z0-9-]+$/i', trim($userPrompt));
+        $isTrackingIntent = preg_match('/\b(?:track|tracking|order|status|#)\b/i', $userPrompt)
+            || preg_match('/^(?:order\s*#?|#|ord-|trk-)?\d+$/i', trim($userPrompt));
 
-        $hasExplicitOrderPrefix = preg_match('/(?:order|track|tracking|code|status|#)\s*(?:#|id|code|no|num|number)?\s*([A-Za-z0-9-]+)/i', $userPrompt, $orderMatches);
+        if ($isTrackingIntent) {
+            $identifier = '';
 
-        if ($isTrackingIntent || $hasExplicitOrderPrefix) {
-            $identifier = trim($orderMatches[1] ?? '');
-            if (empty($identifier) && preg_match('/^(?:#|ord-|trk-)?([A-Za-z0-9-]+)$/i', trim($userPrompt), $pureMatch)) {
-                $identifier = trim($pureMatch[1]);
+            // Priority 1: Explicit prefix like #12, ORD-10022, TRK-987654
+            if (preg_match('/(?:#|ord-|trk-)([A-Za-z0-9-]+)/i', $userPrompt, $m)) {
+                $identifier = trim($m[1]);
+            }
+            // Priority 2: Standalone or embedded digits (e.g. "order number 12", "order 12", "12")
+            elseif (preg_match('/\b(\d{1,10})\b/', $userPrompt, $m)) {
+                $identifier = trim($m[1]);
+            }
+            // Priority 3: Non-numeric alphanumeric token after order/track keywords
+            elseif (preg_match('/(?:order|track|tracking|code|status|number|no|id)\b\s*(?:#|id|code|no|num|number)?\s*[:#=]?\s*([A-Za-z0-9-]+)\b/i', $userPrompt, $m)) {
+                $candidate = trim($m[1]);
+                $stopwords = ['status', 'order', 'tracking', 'details', 'my', 'the', 'a', 'an', 'number', 'no', 'id', 'code', 'num', 'for', 'check', 'please'];
+                if (!in_array(strtolower($candidate), $stopwords)) {
+                    $identifier = $candidate;
+                }
             }
 
-            if (!empty($identifier) && !in_array(strtolower($identifier), ['status', 'order', 'tracking', 'details', 'my', 'the', 'a', 'an'])) {
+            if (!empty($identifier)) {
                 $numericId = preg_replace('/\D/', '', $identifier);
 
-                $order = Order::with(['detail'])
+                $order = Order::with(['detail', 'detail.product', 'detail.bundle'])
                     ->where(function ($q) use ($identifier, $numericId) {
                         if (!empty($numericId)) {
-                            $q->where('id', $numericId)->orWhere('order_id', (int) $numericId);
+                            $q->where('order_id', (int) $numericId)
+                              ->orWhere('id', (int) $numericId);
                         }
                         $q->orWhere('track_number', $identifier);
                     })
                     ->first();
 
                 if ($order) {
+                    $orderCode = $order->order_id ?: $order->id;
                     $status = strtoupper((string) ($order->status ?? 'Processing'));
-                    $total = number_format((float) ($order->total ?? 0));
-                    $track = $order->track_number ?: 'N/A';
-                    $orderInfo = "ORDER INFO: Found Order #{$order->id} (Code: {$order->order_id}). Status: {$status}. Total: Rs. {$total}. Tracking Number: {$track}. Created: {$order->created_at?->format('d M Y')}.";
+                    $orderInfo = "ORDER INFO: Found Order #{$orderCode}. Status: {$status}.";
 
                     // Include items breakdown
                     if ($order->detail && $order->detail->count() > 0) {
                         $itemLines = [];
                         foreach ($order->detail as $item) {
-                            $itemName = $item->product_title ?? $item->title ?? 'Item';
-                            $qty = $item->qty ?? $item->quantity ?? 1;
+                            $itemName = $item->product?->title ?? $item->bundle?->title ?? $item->product_title ?? $item->title ?? 'Item';
+                            $qty = $item->quantity ?? $item->qty ?? 1;
                             $itemLines[] = "  • {$qty}× {$itemName}";
                         }
                         $orderInfo .= "\nORDER ITEMS:\n" . implode("\n", $itemLines);
                     }
 
                     $contextParts[] = $orderInfo;
+                } else {
+                    $contextParts[] = "ORDER SEARCH RESULT: Searched for Order ID/Code '{$identifier}' but no matching order was found in database.";
                 }
             }
         }
@@ -308,8 +327,10 @@ class AIChatbotService
 
             $products = $query->orderBy('order', 'ASC')->take(30)->get();
 
-            // If specific search yields 0 matches, fallback to featured/trending with same price filters
-            if ($products->isEmpty()) {
+            // If specific search yields 0 matches, fallback to featured/trending ONLY if user asked for general/featured/all products or if prompt was general.
+            $isGeneralBrowse = $isTrending || $isNew || $isFeatured || empty($searchQuery) || in_array(strtolower($searchQuery), ['all', 'list', 'show', 'products', 'items', 'have', 'store', 'seller', 'best', 'trending', 'category', 'catalog', 'collection']);
+
+            if ($products->isEmpty() && $isGeneralBrowse) {
                 $fallbackQuery = ProductHead::active()
                     ->with(['price_detail', 'price_detail.country', 'reviews'])
                     ->orderBy('is_trending', 'desc')
@@ -343,19 +364,22 @@ class AIChatbotService
                 $products = $products->take(6);
             }
 
-            // Fetch Store Categories & Collections
-            try {
-                $categories = \App\Models\Category::take(8)->get();
-                if ($categories->count() > 0) {
-                    $catList = [];
-                    foreach ($categories as $cat) {
-                        $catList[] = "• 📁 **{$cat->title}** [URL: /categories/{$cat->slug}]";
+            // Fetch Store Categories & Collections (Only if user explicitly asks about catalog or categories)
+            $isCategoryQuery = (bool) preg_match('/\b(?:category|categories|catalog|catalogue|collection|collections|department|departments|sections)\b/i', $userPrompt);
+            if ($isCategoryQuery) {
+                try {
+                    $categories = \App\Models\Category::take(8)->get();
+                    if ($categories->count() > 0) {
+                        $catList = [];
+                        foreach ($categories as $cat) {
+                            $catList[] = "• 📁 **{$cat->title}** [URL: /categories/{$cat->slug}]";
+                        }
+                        $catList[] = "• 🔗 **Browse Full Store Catalog** [URL: /shop]";
+                        $contextParts[] = "STORE CATEGORIES & SHOP COLLECTIONS:\n" . implode("\n", $catList);
                     }
-                    $catList[] = "• 🔗 **Browse Full Store Catalog** [URL: /shop]";
-                    $contextParts[] = "STORE CATEGORIES & SHOP COLLECTIONS:\n" . implode("\n", $catList);
+                } catch (\Throwable $e) {
+                    // Graceful fallback
                 }
-            } catch (\Throwable $e) {
-                // Graceful fallback
             }
 
             if ($products->count() > 0) {
@@ -474,9 +498,7 @@ class AIChatbotService
         $phone = function_exists('website') && website() ? website()->phone : '0336 3413244';
 
         if (!empty($context)) {
-            $isOrderInquiry = preg_match('/\b(?:track|tracking|order|status|#)\b/i', $userPrompt);
-
-            if ($isOrderInquiry && str_contains($context, 'ORDER INFO:')) {
+            if (str_contains($context, 'ORDER INFO:')) {
                 preg_match('/ORDER INFO: (.*?)(?:\n|$)/s', $context, $m);
                 $orderSummary = $m[1] ?? '';
                 $itemsSection = '';
@@ -495,20 +517,20 @@ class AIChatbotService
                     $statusGuidance = "• **Status:** Cancelled\n• **Next Step:** Please contact support if you wish to re-order.";
                 }
 
-                return "Thank you for reaching out! Here is the latest update on your order:\n\n**{$orderSummary}**\n\n{$statusGuidance}{$itemsSection}\n\nIf you need further assistance with your shipment, our team is always happy to help:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
+                return "Thank you for reaching out! Here is the latest update on your order:\n\n**{$orderSummary}**\n\n{$statusGuidance}{$itemsSection}";
             }
 
             if (str_contains($context, 'MATCHING PRODUCTS') || str_contains($context, 'STORE CATEGORIES')) {
                 $cleanContext = str_replace(["FEATURED/MATCHING PRODUCTS IN STORE:\n", "STORE CATEGORIES & SHOP COLLECTIONS:\n"], '', $context);
-                return "Here are our recommendations based on your request:\n\n" . $cleanContext . "\n\nFor custom inquiries or further assistance, connect with our support team:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
+                return "Here are our recommendations based on your request:\n\n" . $cleanContext;
             }
 
             if (str_contains($context, 'STORE POLICY')) {
                 $cleanPolicy = preg_replace('/STORE POLICY — [^:]+:\n/', '', $context);
-                return "Here is the information you need: 📄\n\n{$cleanPolicy}\n\nFor more clarification, our team is happy to assist:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
+                return "Here is the information you need: 📄\n\n{$cleanPolicy}";
             }
         }
 
-        return "I'm sorry, I couldn't find exact details for your request right now. 😊\n\nFor instant assistance, please connect with our support team:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
+        return "I'm sorry, I couldn't find exact details for your request right now. 😊\n\nFor custom inquiries or further assistance, please connect with our support team:\n\n[WHATSAPP: {$whatsappNumber}] [PHONE: {$phone}]";
     }
 }
