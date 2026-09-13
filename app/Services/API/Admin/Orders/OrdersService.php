@@ -46,7 +46,7 @@ class OrdersService implements OrdersInterface
             
             Mail::mailer('noreply')
             ->to($order->user->email)
-            ->bcc(env('OWNER_EMAIL_ADDRESS'))
+            ->bcc(array_filter([env('OWNER_EMAIL_ADDRESS'), env('DEV_EMAIL_ADDRESS')]))
             ->send(new OrderShippedEmail($order,$request->cod_company,$request->track_number));
 
             if($request->cod_company == 'Leopards'){
@@ -113,7 +113,7 @@ class OrdersService implements OrdersInterface
         if($request->status == 'DELIVERED'){
             Mail::mailer('noreply')
                ->to($order->user->email)
-               ->bcc(env('OWNER_EMAIL_ADDRESS'))
+               ->bcc(array_filter([env('OWNER_EMAIL_ADDRESS'), env('DEV_EMAIL_ADDRESS')]))
                ->send(new OrderDeliveredEmail($order));
         }
         $order->status = $request->status;

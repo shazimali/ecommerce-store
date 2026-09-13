@@ -61,7 +61,7 @@ class CheckoutService
             \Illuminate\Support\Facades\Log::info('Dispatching User Register Email...');
             Mail::mailer('noreply')
                 ->to($email)
-                ->bcc(env('OWNER_EMAIL_ADDRESS'))
+                ->bcc(array_filter([env('OWNER_EMAIL_ADDRESS'), env('DEV_EMAIL_ADDRESS')]))
                 ->send(new UserRegisterEmail($email, $first_name, $password));
             \Illuminate\Support\Facades\Log::info('User Register Email Dispatched');
         }
@@ -153,7 +153,7 @@ class CheckoutService
         \Illuminate\Support\Facades\Log::info('Dispatching Order Email...');
         Mail::mailer('noreply')
             ->to($email)
-            ->bcc(env('OWNER_EMAIL_ADDRESS'))
+            ->bcc(array_filter([env('OWNER_EMAIL_ADDRESS'), env('DEV_EMAIL_ADDRESS')]))
             ->send(new OrderPlacedEmail($email_data));
         \Illuminate\Support\Facades\Log::info('Order Email Dispatched');
 
