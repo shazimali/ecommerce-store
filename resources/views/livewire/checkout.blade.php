@@ -5,7 +5,7 @@
          <form wire:submit="completeOrder">
              <h3 class="text-2xl font-semibold py-2">Contact</h3>
              <div class="py-1">
-                 <label class="block" for="email mb-2">Email</label>
+                 <label class="block" for="email mb-2">Email <span class="text-red-500">*</span></label>
                  <input type="text" id="email" wire:model="email" class="w-full border-secondary dark:bg-black dark:border-slate-800"  />
                  @error('email')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
              </div>
@@ -20,21 +20,21 @@
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                    <label class="block mb-2" for="first_name">
-                     First Name
+                     First Name <span class="text-red-500">*</span>
                    </label>
                    <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="first_name" id="first_name" type="text">
                    @error('first_name')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
                  </div>
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                      <label class="block mb-2" for="last-name">
-                       Last Name
+                       Last Name <span class="text-red-500">*</span>
                      </label>
                      <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="last_name" id="last-name" type="text">
                      @error('last_name')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
                    </div>
              </div> 
              <div>
-                 <label class="block mb-2" for="address">Address</label>
+                 <label class="block mb-2" for="address">Address <span class="text-red-500">*</span></label>
                  <input type="text" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="address" id="address">
                  @error('address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
              </div>
@@ -43,14 +43,14 @@
                 <span class="text-xs px-1">Same for billing address</span>
             </div>
             <div wire:show="!same_for_billing_address">
-                <label class="block mb-2" for="billing_address">Billing Address</label>
+                <label class="block mb-2" for="billing_address">Billing Address <span class="text-red-500">*</span></label>
                 <input type="text" class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="billing_address" id="billing_address">
                 @error('billing_address')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror 
             </div>  
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                    <label class="block mb-2 dark:bg-black" for="city">
-                     City
+                     City <span class="text-red-500">*</span>
                    </label>
                    <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city_id" id="city_id">
                     <option value="">Select City</option>
@@ -70,14 +70,14 @@
              <div class="flex flex-wrap -mx-3">
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
                      <label class="block mb-2 dark:bg-black" for="last-name">
-                       Country
+                       Country <span class="text-red-500">*</span>
                      </label>
                      <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="country" readonly id="country" type="text">
                      @error('country')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                 </div>
                 <div class="w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block mb-2 dark:bg-black" for="last-name">
-                      Phone
+                      Phone <span class="text-red-500">*</span>
                     </label>
                     <input class="block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800"  wire:model="phone" id="phone" type="text">
                     @error('phone')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
