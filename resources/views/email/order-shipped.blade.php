@@ -71,11 +71,16 @@
         <td style="text-align: start;padding: 5px 0px;">Order summary</td>
     </tr>
     @foreach ($email_data->detail as $order_detail)
+    @php
+        $order_item = $order_detail->product ?? $order_detail->bundle;
+    @endphp
     <tr style="color: #000000; font-size: 16px; font-family: Arial, sans-serif;">
         <td style="text-align: left;">
-            <img height="75" width="75" src="{{ asset('/storage/'.$order_detail->product->image) }}" alt="">
+            @if($order_item)
+            <img height="75" width="75" src="{{ asset('/storage/'.$order_item->image) }}" alt="">
+            @endif
         </td>
-        <td style="text-align: left;"><b>{{ $order_detail->product->title }} x {{ $order_detail->quantity }}</b></td>
+        <td style="text-align: left;"><b>{{ $order_item->title ?? '' }} x {{ $order_detail->quantity }}</b></td>
         <td><b> {{ getLocation()->currency }}  {{ number_format( $order_detail->total_amount,2) }}</b></td>
     </tr>
     @endforeach
