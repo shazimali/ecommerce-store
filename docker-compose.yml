@@ -44,6 +44,29 @@ services:
     depends_on:
       - everyday_shop_app
 
+  everyday_shop_scheduler:
+    image: shazimali/everyday-shop:latest
+    container_name: everyday_shop_scheduler
+    restart: always
+    command: ["php", "artisan", "schedule:work"]
+    env_file:
+      - /var/www/everyday_shop/.env
+    environment:
+      # Connect to shared Redis container running on global_network
+      REDIS_HOST: everyday_redis
+      REDIS_PORT: 6379
+      REDIS_DB: 2          # other project uses DB=0 and DB=1 — keep isolated
+      REDIS_CACHE_DB: 3
+      REDIS_PREFIX: eshop_
+    networks:
+      - global_network
+    volumes:
+      - everyday_shop_storage:/var/www/everyday_shop/storage
+      - everyday_shop_cache:/var/www/everyday_shop/bootstrap/cache
+      - /var/www/everyday_shop/.env:/var/www/everyday_shop/.env
+    depends_on:
+      - everyday_shop_app
+
 networks:
   global_network:
     external: true
