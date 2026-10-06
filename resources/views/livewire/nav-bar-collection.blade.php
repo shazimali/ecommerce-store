@@ -20,7 +20,7 @@
             x-on:mouseenter="sideBarOpen = true;"
             x-on:mouseleave="sideBarOpen = false;"
             class="bg-white text-black cursor-pointer pl-5 block font-normal py-2 border-secondary border-b border-l border-r bd-white dark:text-secondary dark:border-slate-800 dark:bg-black">
-                {{ $category->title }}
+                <a href="{{ route('categories', ['slug' => $category->slug]) }}" class="hover:text-primary">{{ $category->title }}</a>
                 <div class="float-end inline-block pr-5">
                     <i class="fa-solid fa-caret-right"></i>
                 </div>

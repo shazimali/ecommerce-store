@@ -1,7 +1,7 @@
 <div class="px-8 lg:py-10 md:py-10 sm:py-8 xs:py-8 text-black">
     @if(!$order_completed)
     <div class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-5">
-     <div class="pr-2 dark:text-white order-1 lg:order-1 md:order-1 sm:order-2 xs:order-2"> 
+     <div class="pr-2 dark:text-white order-1"> 
          <form wire:submit="completeOrder">
              <h3 class="text-2xl font-semibold py-2">Contact</h3>
              <div class="py-1">
@@ -52,12 +52,45 @@
                    <label class="block mb-2 dark:bg-black" for="city">
                      City <span class="text-red-500">*</span>
                    </label>
-                   <select class="city block w-full mb-3 border-secondary dark:bg-black dark:border-slate-800" wire:model="city_id" id="city_id">
-                    <option value="">Select City</option>
-                    @foreach ($cities as $get_city)
-                        <option value="{{ $get_city->id }}">{{ $get_city->name }}</option>
-                    @endforeach
-                   </select>
+                   <div class="relative mb-3"
+                        x-data="{
+                            cities: @js($cities->map(fn ($c) => ['id' => $c->id, 'name' => $c->name])),
+                            selected: $wire.entangle('city_id'),
+                            search: '',
+                            open: false,
+                            get filtered() {
+                                const q = this.search.toLowerCase().trim();
+                                return q ? this.cities.filter(c => c.name.toLowerCase().includes(q)) : this.cities;
+                            },
+                            get selectedName() {
+                                const city = this.cities.find(c => c.id == this.selected);
+                                return city ? city.name : '';
+                            },
+                            choose(city) {
+                                this.selected = city.id;
+                                this.search = '';
+                                this.open = false;
+                            },
+                        }"
+                        x-on:click.outside="open = false; search = ''">
+                       <input type="text" id="city_id" autocomplete="off"
+                           class="block w-full border-secondary dark:bg-black dark:border-slate-800"
+                           x-bind:placeholder="selectedName || 'Select City'"
+                           x-bind:value="open ? search : selectedName"
+                           x-on:input="search = $event.target.value"
+                           x-on:focus="open = true"
+                           x-on:keydown.escape="open = false; search = ''; $el.blur()"
+                           x-on:keydown.enter.prevent="filtered.length && choose(filtered[0])">
+                       <ul x-show="open" x-cloak
+                           class="absolute z-50 w-full max-h-60 overflow-y-auto bg-white border border-secondary dark:bg-black dark:border-slate-800">
+                           <template x-for="city in filtered" :key="city.id">
+                               <li x-text="city.name" x-on:click="choose(city)"
+                                   class="px-3 py-2 cursor-pointer hover:bg-secondary dark:hover:bg-slate-800"
+                                   x-bind:class="city.id == selected && 'font-semibold'"></li>
+                           </template>
+                           <li x-show="!filtered.length" class="px-3 py-2 text-gray-500">No city found</li>
+                       </ul>
+                   </div>
                    @error('city_id')  <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
                  </div>
                  <div class="w-1/2 px-3 mb-6 md:mb-0">
@@ -109,7 +142,7 @@
              </button>
          </form>
      </div>
-     <div class="bg-secondary p-5 order-2 lg:order-2 md:order-2 sm:order-1 xs:order-1">
+     <div class="bg-secondary p-5 order-2">
          @foreach ($cartItems as $crt)
          <div class="lg:block md:block sm:block xs:hidde">
             <div @class([

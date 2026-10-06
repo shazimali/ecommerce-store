@@ -269,10 +269,10 @@
 
             <!-- Quantity & Actions -->
             @if (!$product->coming_soon && $product->stocks->count() > 0)
-                <div class="flex flex-row items-center gap-4 py-4 mb-6 w-full">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 py-4 mb-6 w-full">
                     <!-- Quantity Box -->
                     <div
-                        class="flex items-center border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-zinc-900 p-1">
+                        class="flex w-full sm:w-auto items-center justify-between border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-zinc-900 p-1">
                         <button type="button" @click="decrement()"
                             class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                             aria-label="subtract">
@@ -282,7 +282,7 @@
                             </svg>
                         </button>
                         <input x-model="qty" id="counterInput" type="text"
-                            class="h-10 w-12 border-none bg-transparent text-center font-bold text-neutral-900 dark:text-white focus:ring-0 focus:outline-none"
+                            class="h-10 flex-1 min-w-0 sm:flex-none sm:w-12 border-none bg-transparent text-center font-bold text-neutral-900 dark:text-white focus:ring-0 focus:outline-none"
                             readonly />
                         <button type="button" @click="increment()"
                             class="flex h-10 w-10 items-center justify-center text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
@@ -296,7 +296,7 @@
 
                     <!-- Add to Cart CTA -->
                     <button type="button" @click="$wire.addToCart('{{ $product['slug'] }}', currentColor, qty)" wire:loading.attr="disabled"
-                        class="flex-1 sm:flex-none sm:min-w-[200px] flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-8 shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50">
+                        class="w-full sm:w-auto sm:min-w-[200px] flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-8 shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>Add to Cart</span>
                         <svg wire:loading wire:target="addToCart" aria-hidden="true" role="status"

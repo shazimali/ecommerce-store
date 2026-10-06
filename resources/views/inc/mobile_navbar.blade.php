@@ -86,11 +86,13 @@
                                     <div x-data="{ openSub: false }"
                                         class="py-2 px-3 border-b border-secondary dark:border-slate-800 text-start text-sm w-full block">
                                         @if(count($category->front_sub_categories))
-                                            <div x-on:click="openSub = !openSub"
-                                                class="flex justify-between items-center cursor-pointer font-semibold py-1 w-full">
-                                                <span>{{ $category->title }}</span>
-                                                <i class="fa-solid fa-caret-down transition-transform duration-200"
-                                                    :class="openSub ? 'rotate-180' : ''"></i>
+                                            <div class="flex justify-between items-center font-semibold py-1 w-full">
+                                                <a href="{{ route('categories', ['slug' => $category->slug]) }}"
+                                                    class="hover:text-primary">{{ $category->title }}</a>
+                                                <button type="button" x-on:click="openSub = !openSub" class="px-2 cursor-pointer">
+                                                    <i class="fa-solid fa-caret-down transition-transform duration-200"
+                                                        :class="openSub ? 'rotate-180' : ''"></i>
+                                                </button>
                                             </div>
                                             <div x-show="openSub" class="pl-4 py-2 flex flex-col gap-1 w-full">
                                                 @foreach ($category->front_sub_categories as $sub_cat)
