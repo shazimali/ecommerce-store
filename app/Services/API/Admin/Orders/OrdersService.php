@@ -5,6 +5,7 @@ namespace App\Services\API\Admin\Orders;
 use App\Http\Requests\API\Admin\Orders\BookOrderRequest;
 use App\Http\Requests\API\Admin\Orders\UpdateBookedOrderStatusRequest;
 use App\Http\Resources\API\Admin\Orders\OrderCODListResource;
+use App\Http\Resources\API\Admin\Orders\OrderDetailResource;
 use App\Http\Resources\API\Admin\Orders\OrdersListResource;
 use App\Interfaces\API\Admin\Orders\OrdersInterface;
 use App\Models\CashOnDelivery;
@@ -25,6 +26,18 @@ class OrdersService implements OrdersInterface
             return OrdersListResource::collection($order);
         } else {
             return response()->json(['message' => 'Order Not exist'], 200);
+        }
+    }
+
+    public function getDetail($order_id)
+    {
+        $order = Order::where('order_id', $order_id)
+            ->with('detail.product', 'detail.color', 'detail.bundle', 'detail.bundle_color', 'user', 'city', 'country', 'coupon', 'cod')
+            ->first();
+        if ($order) {
+            return new OrderDetailResource($order);
+        } else {
+            return response()->json(['message' => 'Order Not exist'], 404);
         }
     }
 

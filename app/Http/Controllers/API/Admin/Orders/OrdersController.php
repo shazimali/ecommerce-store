@@ -25,6 +25,13 @@ class OrdersController extends Controller
         return $this->ordersService->getAll($request);
     }
 
+    public function show($order_id)
+    {
+        $this->authorize('order_access');
+
+        return $this->ordersService->getDetail($order_id);
+    }
+
     public function CODList()
     {
         $this->authorize('order_access');

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 interface OrdersInterface
 {
     public function getAll(Request $request);
+    public function getDetail($order_id);
     public function getAllCODs();
     public function bookOrder(BookOrderRequest $request);
     public function bookedOrderStatus(UpdateBookedOrderStatusRequest $request);

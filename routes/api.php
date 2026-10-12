@@ -298,6 +298,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('/orders')->group(function () {
             Route::get('/', [OrdersController::class, 'index']);
             Route::get('/cod-list', [OrdersController::class, 'CODList']);
+            Route::get('/{order_id}/detail', [OrdersController::class, 'show']);
             Route::post('/book', [OrdersController::class, 'bookOrder']);
             Route::post('/book/status', [OrdersController::class, 'bookedOrderStatus']);
             Route::post('/delete/{id}', [OrdersController::class, 'deleteOrder']);
